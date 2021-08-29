@@ -19,8 +19,6 @@
 // @connect     www.geocaching.com
 // @icon        https://geo.inge.org.uk/userscripts/GeocachingMap48.png
 // @icon64      https://geo.inge.org.uk/userscripts/GeocachingMap64.png
-// @updateURL   https://geo.inge.org.uk/userscripts/GeocachingMapEnhancements.meta.js
-// @downloadURL https://openuserjs.org/install/JRI/Geocaching_Map_Enhancements.user.js
 // ==/UserScript==
 
 /* jshint multistr: true */
