@@ -1,7 +1,9 @@
 // ==UserScript==
-// @name        Geocaching Map Enhancements II
-// @version     0.8.2.1.2As
+// @name        Geocaching Map Enhancements
+// @version     0.8.2
 // @author      JRI
+// @oujs:author JRI
+// @namespace   inge.org.uk/userscripts
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
 // @include     https://www.geocaching.com/*
 // @license     MIT; http://www.opensource.org/licenses/mit-license.php
@@ -19,6 +21,8 @@
 // @connect     www.geocaching.com
 // @icon        https://geo.inge.org.uk/userscripts/GeocachingMap48.png
 // @icon64      https://geo.inge.org.uk/userscripts/GeocachingMap64.png
+// @updateURL   https://geo.inge.org.uk/userscripts/GeocachingMapEnhancements.meta.js
+// @downloadURL https://openuserjs.org/install/JRI/Geocaching_Map_Enhancements.user.js
 // ==/UserScript==
 
 /* jshint multistr: true */
