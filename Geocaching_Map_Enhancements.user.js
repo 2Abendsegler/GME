@@ -1,8 +1,7 @@
 // ==UserScript==
-// @name        Geocaching Map Enhancements
+// @name        Geocaching Map Enhancements II
 // @version     0.8.2.1.2As
 // @author      JRI
-// @namespace   2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
 // @include     https://www.geocaching.com/*
 // @license     MIT; http://www.opensource.org/licenses/mit-license.php
