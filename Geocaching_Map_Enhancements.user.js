@@ -3,7 +3,7 @@
 // @version     0.8.2
 // @author      JRI
 // @oujs:author JRI
-// @namespace   inge.org.uk/userscripts
+// @namespace   2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
 // @include     https://www.geocaching.com/*
 // @license     MIT; http://www.opensource.org/licenses/mit-license.php
