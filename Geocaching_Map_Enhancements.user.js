@@ -30,7 +30,7 @@
 var gmeResources = {
     parameters: {
         // Defaults
-        version: "0.8.2.2.2As",
+        version: "0.8.2.3.2As",
         versionMsg: "Bugfix: Cache listing minimap symbol",
         brightness: 1,    // Default brightness for maps (0-1), can be overridden by custom map parameters.
         filterFinds: false, // True filters finds out of list searches.
