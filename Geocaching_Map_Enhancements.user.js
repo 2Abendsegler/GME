@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
-// @version     0.8.2.2.2As
+// @version     0.8.2.3.2As
 // @author      JRI
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
 // @include     https://www.geocaching.com/*
