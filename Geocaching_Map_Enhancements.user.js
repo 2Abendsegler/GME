@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
-// @version     0.8.2.1.2As
+// @version     0.8.2.2.2As
 // @author      JRI
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
 // @include     https://www.geocaching.com/*
@@ -1278,6 +1278,10 @@ var gmeResources = {
 					$('#ctl00_ContentBody_MapLinks_MapLinks a[href*="geocaching.com"]').attr("href", function(i, val) {return val + uri;});
 				}
 				GME_displayPoints(cache_coords, GME_Map, "listing");
+//xxxx1
+                if ($('#map_canvas2 .leaflet-control-layers-toggle')[0]) {
+                    $('#map_canvas2 .leaflet-control-layers-toggle')[0].style.backgroundImage = 'url(/js/leaflet/0.5.1/images/layers.png)';
+                }
 			}
 			setEnv();
 		},
