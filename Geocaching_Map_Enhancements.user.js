@@ -13,15 +13,18 @@
 // @attribution Chris Veness (http://www.movable-type.co.uk/scripts/latlong-gridref.html)
 // @grant       GM_xmlhttpRequest
 // @grant       GM.xmlHttpRequest
-// @connect     raw.githubusercontent.com
+// @connect     github.com
 // @connect     geograph.org.uk
 // @connect     channel-islands.geographs.org
 // @connect     geo-en.hlipp.de
 // @connect     api.geonames.org
 // @connect     api.postcodes.io
 // @connect     www.geocaching.com
-// @icon        https://raw.githubusercontent.com/2Abendsegler/GME/main/images/GeocachingMap48.png
-// @icon64      https://raw.githubusercontent.com/2Abendsegler/GME/main/images/GeocachingMap64.png
+//xxxx
+// @updateURL   https://github.com/2Abendsegler/GME/raw/collector/Geocaching_Map_Enhancements.user.js
+// @downloadURL https://github.com/2Abendsegler/GME/raw/collector/Geocaching_Map_Enhancements.user.js
+// @icon        https://github.com/2Abendsegler/GME/raw/collector/images/gme_logo.png
+// @icon64      https://github.com/2Abendsegler/GME/raw/collector/images/gme_logo_64.png
 // ==/UserScript==
 
 /* jshint multistr: true */
@@ -88,7 +91,7 @@ var gmeResources = {
             .gme-button-clear-labels {background-position: -69px 4px;}\
             span.gme-distance-container {display: none;}\
             span.gme-distance-container.show {display: inline-block;}\
-            .GME_info {background-size: 16px 16px; background-position: center; background-image: url(https://raw.githubusercontent.com/2Abendsegler/GME/collector/images/GME_info.png)}\
+            .GME_info {background-size: 16px 16px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/collector/images/GME_info.png)}\
             .GME_info.gme-button-active {padding:1px 0.5px 1px 1px;}\
             #GME_loc, a.gme-button.leaflet-active {outline: none;}\
             .leaflet-control-zoomwarning {top: 94px;}\
@@ -2623,13 +2626,25 @@ if (!(typeof JSON === 'object' && typeof JSON.parse === 'function')) {
     return;
 }
 
-if (document.querySelector("head[data-gme-version]")) {
-    var mess = 'Geocaching Map Enhancements v' + gmeResources.parameters.version + ':\n- Aborting: GME already running with version ' + $('#Head1')[0].getAttribute('data-gme-version');
-    console.error(mess);
-    alert(mess);
-    return;
+// Publish running version.
+$('head').append('<meta data-gme-version="' + gmeResources.parameters.version + '">');
+// Check GME already running.
+function checkAlreadyRunning(waitCount) {
+    if ($('head[data-gme-version], meta[data-gme-version]').length > 1) {
+        var runners = $('head[data-gme-version], meta[data-gme-version]');
+        for (i = 0; i < runners.length; i++) {
+            if (runners[i].getAttribute('data-gme-version') != gmeResources.parameters.version) {
+                var mess = 'Geocaching Map Enhancements v' + gmeResources.parameters.version + ' aborting.\nMessage: GME already running with version ' + runners[i].getAttribute('data-gme-version');
+                console.error(mess);
+                alert(mess);
+                return;
+            }
+        }
+    }
+    waitCount++;
+    if (waitCount <= 200) setTimeout(function(){checkAlreadyRunning(waitCount);}, 50);
 }
-document.documentElement.firstChild.setAttribute("data-gme-version", gmeResources.parameters.version);
+checkAlreadyRunning(0);
 
 for (i = 0; i < pageTests.length; i++) {
     if (pageTests[i][1].test(document.location.pathname)) {
