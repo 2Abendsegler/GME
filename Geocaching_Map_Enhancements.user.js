@@ -1,50 +1,55 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
-// @version     0.8.2.3.2As
+//--> $$001
+// @version     0.8.2.2As.4
+//<-- $$001
 // @author      JRI
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
 // @include     https://www.geocaching.com/*
 // @license     MIT; http://www.opensource.org/licenses/mit-license.php
-// @copyright   2011-18, James Inge (http://geo.inge.org.uk/)
+// @copyright   2011-18, James Inge
 // @attribution GeoNames (http://www.geonames.org/)
 // @attribution Postcodes.io (https://postcodes.io/)
 // @attribution Chris Veness (http://www.movable-type.co.uk/scripts/latlong-gridref.html)
 // @grant       GM_xmlhttpRequest
 // @grant       GM.xmlHttpRequest
+// @connect     raw.githubusercontent.com
 // @connect     geograph.org.uk
 // @connect     channel-islands.geographs.org
 // @connect     geo-en.hlipp.de
 // @connect     api.geonames.org
 // @connect     api.postcodes.io
 // @connect     www.geocaching.com
-// @icon        https://geo.inge.org.uk/userscripts/GeocachingMap48.png
-// @icon64      https://geo.inge.org.uk/userscripts/GeocachingMap64.png
+// @icon        https://raw.githubusercontent.com/2Abendsegler/GME/main/images/GeocachingMap48.png
+// @icon64      https://raw.githubusercontent.com/2Abendsegler/GME/main/images/GeocachingMap64.png
 // ==/UserScript==
 
 /* jshint multistr: true */
 /* global $, amplify, DMM, FileReader, GM, GM_xmlhttpRequest, Groundspeak, L, LatLon, mapLatLng, MapSettings */
 
-(function () {
+(function() {
 "use strict";
 
 var gmeResources = {
     parameters: {
-        // Defaults
-        version: "0.8.2.3.2As",
-        versionMsg: "Bugfix: Cache listing minimap symbol",
-        brightness: 1,    // Default brightness for maps (0-1), can be overridden by custom map parameters.
+        // Defaults.
+//--> $$002
+        version: "0.8.2.2As.4",
+        versionMsg: "",
+//<-- $$002
+        brightness: 1, // Default brightness for maps (0-1), can be overridden by custom map parameters.
         filterFinds: false, // True filters finds out of list searches.
-        follow: false,    // Locator widget follows current location (moving map mode)
+        follow: false, // Locator widget follows current location (moving map mode).
         labels: "codes", // Label caches on the map with their GC code. Or "names" to use long name.
-        measure: "metric",    // Or "imperial" - used for the scale indicators
-        osgbSearch: true,    // Enhance search box with OSGB grid references, zooming, etc. (may interfere with postal code searches)
+        measure: "metric", // Or "imperial" - used for the scale indicators.
+        osgbSearch: true, // Enhance search box with OSGB grid references, zooming, etc. (may interfere with postal code searches)
         defaultMap: "OpenStreetMap",
         maps: [
-        //  {alt:"Readable Name", tileUrl: "URL template including {s} (subdomain) and either {q} (quadkey) or {x},{y},{z} (Google/TMS tile coordinates + zoom)", subdomains: "0123", minZoom: 0, maxZoom: 24, attribution: "Copyright message (HTML allowed)", name: "shortname", overlay:false }
+        //  {alt:"Readable Name", tileUrl: "URL template including {s} (subdomain) and either {q} (quadkey) or {x},{y},{z} (Google/TMS tile coordinates + zoom)", subdomains: "0123", minZoom: 0, maxZoom: 24, attribution: "Copyright message (HTML allowed)", name: "shortname", overlay:false}
             {alt:"OpenStreetMap",tileUrl:"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",name:"osm",subdomains:"abc"},
             {alt:"OpenCycleMap",tileUrl:"https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png",name:"ocm"},
             {alt:"Bing Maps", tileUrl: "https://ecn.t{s}.tiles.virtualearth.net/tiles/r{q}?g=864&mkt=en-gb&lbl=l1&stl=h&shading=hill&n=z", subdomains: "0123", minZoom: 1, maxZoom: 20, attribution: "<a href=\'https://www.bing.com/maps/\'>Bing</a> map data copyright Microsoft and its suppliers", name: "bingmap",ignore:true},
-            {alt:"Bing Aerial View", tileUrl:"https://ecn.t{s}.tiles.virtualearth.net/tiles/a{q}?g=737&n=z", subdomains: "0123", minZoom: 1, maxZoom: 20, attribution: "<a href=\'https://www.bing.com/maps/\'>Bing</a> map data copyright Microsoft and its suppliers", name: "bingaerial" },
+            {alt:"Bing Aerial View", tileUrl:"https://ecn.t{s}.tiles.virtualearth.net/tiles/a{q}?g=737&n=z", subdomains: "0123", minZoom: 1, maxZoom: 20, attribution: "<a href=\'https://www.bing.com/maps/\'>Bing</a> map data copyright Microsoft and its suppliers", name: "bingaerial"},
             {alt:"Google Maps",tileUrl:"https://mt.google.com/vt?&x={x}&y={y}&z={z}",name:"googlemaps",attribution:"<a href=\'https://maps.google.com/\'>Google</a> Maps",subdomains:"1234",tileSize:256,maxZoom:22},
             {alt:"Google Satellite",tileUrl:"https://mt.google.com/vt?lyrs=s&x={x}&y={y}&z={z}",name:"googlemapssat",attribution:"<a href=\'https://maps.google.com/\'>Google</a> Maps Satellite",subdomains:"1234",tileSize:256,maxZoom:22},
             {alt:"Freemap Slovakia Hiking", tileUrl: "http://t{s}.freemap.sk/T/{z}/{x}/{y}.jpeg", attribution: "Map &copy; <a href='http://www.freemap.sk/'>Freemap Slovakia</a>, data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors", subdomains: "1234", minZoom: 8, maxZoom: 16, ignore: true},
@@ -59,79 +64,74 @@ var gmeResources = {
             .gme-control-scale {bottom:5em !important;margin-left:13px !important; left: 385px;}\
             .gme-left {left: 385px; margin-left:13px !important;}\
             div.gme-identify-layer {margin-top:-1em;margin-left:1em;padding-left:0.1em;font-weight:bold;background:rgba(255,255,255,0.57);}\
-            #gme_caches table { margin-top: 0.5em; }\
-            .GME_search_list { border: 1px solid #679300; border-radius: 7px; padding: 0.5em; }\
-            div.GME_search_results { margin-right: -65px; }\
-            .GME_search_results.hidden { display: none; }\
-            .groundspeak-control-findmylocation { border: 1px solid #888; border-radius: 5px; box-shadow: 0 0 8px rgba(0, 0, 0, 0.4); padding:0; background:rgba(255,255,255,0.8);}\
-            .groundspeak-control-findmylocation a { padding: 3px; }\
-            .gme-button { display: inline-block; box-sizing: content-box; -moz-box-sizing: content-box; padding:3px; vertical-align:middle; background:url(https://www.geocaching.com/map/css/themes/images/icons-18-black.png) no-repeat #eee; background-color: rgba(255,255,255,0.8); border: 1px solid #888; border-right:0; height:19px; width:19px; text-decoration: none; }\
-            .gme-button-l { border-bottom-left-radius:5px; border-top-left-radius:5px; }\
-            .gme-button-r { border-right: 1px solid #888; border-bottom-right-radius: 5px; border-top-right-radius:5px; margin-right:0.5em;}\
-            .gme-button:hover { background-color: #fff; }\
+            #gme_caches table {margin-top: 0.5em;}\
+            .GME_search_list {border: 1px solid #679300; border-radius: 7px; padding: 0.5em;}\
+            div.GME_search_results {margin-right: -65px;}\
+            .GME_search_results.hidden {display: none;}\
+            .groundspeak-control-findmylocation {border: 1px solid #888; border-radius: 5px; box-shadow: 0 0 8px rgba(0, 0, 0, 0.4); padding:0; background:rgba(255,255,255,0.8);}\
+            .groundspeak-control-findmylocation a {padding: 3px;}\
+            .gme-button {display: inline-block; box-sizing: content-box; -moz-box-sizing: content-box; padding:3px; vertical-align:middle; background: no-repeat #eee; background-color: rgba(255,255,255,0.8); border: 1px solid #888; border-right:0; height:19px; width:19px; text-decoration: none;}\
+            .gme-button-l {border-bottom-left-radius:5px; border-top-left-radius:5px;}\
+            .gme-button-r {border-right: 1px solid #888; border-bottom-right-radius: 5px; border-top-right-radius:5px; margin-right:0.5em;}\
+            .gme-button:hover {background-color: #fff;}\
             .gme-button-active {border:solid 3px #02b; padding:1px 0 1px 1px; background-color:#fff;}\
             .gme-button-active:hover {border-color:#63f;filter:alpha(opacity=100);}\
-            span.gme-button, .gme-button-wide { padding-left:5px; padding-right:5px; font-size:12px; font-weight:bold; width:auto; background-image:none; color: #424242; }\
-//xxxx            .GME_home { background-position: -572px 4px;}\
-            .GME_home { background-size: 18px 18px; background-position: center;background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4IgogICAgIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIKICAgICB2aWV3Qm94PSIwIDAgMzAgMzAiCiAgICAgc3R5bGU9ImZpbGw6IzAwMDAwMDsiPiAgICA8cGF0aCBkPSJNIDE1IDIgQSAxIDEgMCAwIDAgMTQuMzAwNzgxIDIuMjg1MTU2MiBMIDMuMzkyNTc4MSAxMS4yMDcwMzEgQSAxIDEgMCAwIDAgMy4zNTU0Njg4IDExLjIzNjMyOCBMIDMuMzE4MzU5NCAxMS4yNjc1NzggTCAzLjMxODM1OTQgMTEuMjY5NTMxIEEgMSAxIDAgMCAwIDMgMTIgQSAxIDEgMCAwIDAgNCAxMyBMIDUgMTMgTCA1IDI0IEMgNSAyNS4xMDUgNS44OTUgMjYgNyAyNiBMIDIzIDI2IEMgMjQuMTA1IDI2IDI1IDI1LjEwNSAyNSAyNCBMIDI1IDEzIEwgMjYgMTMgQSAxIDEgMCAwIDAgMjcgMTIgQSAxIDEgMCAwIDAgMjYuNjgxNjQxIDExLjI2NzU3OCBMIDI2LjY2NjAxNiAxMS4yNTU4NTkgQSAxIDEgMCAwIDAgMjYuNTk3NjU2IDExLjE5OTIxOSBMIDI1IDkuODkyNTc4MSBMIDI1IDYgQyAyNSA1LjQ0OCAyNC41NTIgNSAyNCA1IEwgMjMgNSBDIDIyLjQ0OCA1IDIyIDUuNDQ4IDIyIDYgTCAyMiA3LjQzOTQ1MzEgTCAxNS42Nzc3MzQgMi4yNjc1NzgxIEEgMSAxIDAgMCAwIDE1IDIgeiBNIDE4IDE1IEwgMjIgMTUgTCAyMiAyMyBMIDE4IDIzIEwgMTggMTUgeiI+PC9wYXRoPjwvc3ZnPg==")}\
-//xxxx            .GME_config { background-position: -284px 4px;}\
-            .GME_config { background-size: 18px 18px; background-position: center;background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4IgogICAgIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIKICAgICB2aWV3Qm94PSIwIDAgMzIgMzIiCiAgICAgc3R5bGU9ImZpbGw6IzAwMDAwMDsiPjxnIGlkPSJzdXJmYWNlMSI+PHBhdGggc3R5bGU9IiAiIGQ9Ik0gMjEuNSAyLjUgTCAyMS41IDMuOTA2MjUgQyAyMC42NjQwNjMgNC4wNTQ2ODggMTkuODg2NzE5IDQuMzcxMDk0IDE5LjIxODc1IDQuODQzNzUgTCAxOC4xODc1IDMuODc1IEwgMTYuODEyNSA1LjM0Mzc1IEwgMTcuODEyNSA2LjI4MTI1IEMgMTcuMzYzMjgxIDYuOTM3NSAxNy4wNTA3ODEgNy42ODc1IDE2LjkwNjI1IDguNSBMIDE1LjUgOC41IEwgMTUuNSAxMC41IEwgMTYuOTA2MjUgMTAuNSBDIDE3LjA1MDc4MSAxMS4zMjgxMjUgMTcuMzc4OTA2IDEyLjA4NTkzOCAxNy44NDM3NSAxMi43NSBMIDE2Ljc4MTI1IDEzLjc4MTI1IEwgMTguMjE4NzUgMTUuMjE4NzUgTCAxOS4yNSAxNC4xNTYyNSBDIDE5LjkxNDA2MyAxNC42MjEwOTQgMjAuNjcxODc1IDE0Ljk0OTIxOSAyMS41IDE1LjA5Mzc1IEwgMjEuNSAxNi41IEwgMjMuNSAxNi41IEwgMjMuNSAxNS4wOTM3NSBDIDI0LjMxMjUgMTQuOTQ5MjE5IDI1LjA2MjUgMTQuNjM2NzE5IDI1LjcxODc1IDE0LjE4NzUgTCAyNi42NTYyNSAxNS4xODc1IEwgMjguMTI1IDEzLjgxMjUgTCAyNy4xNTYyNSAxMi43ODEyNSBDIDI3LjYyODkwNiAxMi4xMTMyODEgMjcuOTQ1MzEzIDExLjMzNTkzOCAyOC4wOTM3NSAxMC41IEwgMjkuNSAxMC41IEwgMjkuNSA4LjUgTCAyOC4wOTM3NSA4LjUgQyAyNy45NDkyMTkgNy42NzE4NzUgMjcuNjIxMDk0IDYuOTE0MDYzIDI3LjE1NjI1IDYuMjUgTCAyOC4wOTM3NSA1LjMxMjUgTCAyNi42ODc1IDMuOTA2MjUgTCAyNS43NSA0Ljg0Mzc1IEMgMjUuMDg1OTM4IDQuMzc4OTA2IDI0LjMyODEyNSA0LjA1MDc4MSAyMy41IDMuOTA2MjUgTCAyMy41IDIuNSBaIE0gMjIuNSA1LjgxMjUgQyAyNC41NTQ2ODggNS44MTI1IDI2LjE4NzUgNy40NDUzMTMgMjYuMTg3NSA5LjUgQyAyNi4xODc1IDExLjU1NDY4OCAyNC41NTQ2ODggMTMuMTg3NSAyMi41IDEzLjE4NzUgQyAyMC40NDUzMTMgMTMuMTg3NSAxOC44MTI1IDExLjU1NDY4OCAxOC44MTI1IDkuNSBDIDE4LjgxMjUgNy40NDUzMTMgMjAuNDQ1MzEzIDUuODEyNSAyMi41IDUuODEyNSBaIE0gOS41MzEyNSAxMS43MTg3NSBMIDcuNjg3NSAxMi40Njg3NSBMIDguNDA2MjUgMTQuMjgxMjUgQyA3LjQ1MzEyNSAxNC44NTE1NjMgNi42NDA2MjUgMTUuNjQ4NDM4IDYuMDYyNSAxNi41OTM3NSBMIDQuMjgxMjUgMTUuODc1IEwgMy41MzEyNSAxNy43MTg3NSBMIDUuMzEyNSAxOC40Mzc1IEMgNS4xNzk2ODggMTguOTY0ODQ0IDUuMDkzNzUgMTkuNTIzNDM4IDUuMDkzNzUgMjAuMDkzNzUgQyA1LjA5Mzc1IDIwLjY2NDA2MyA1LjE3OTY4OCAyMS4yMTg3NSA1LjMxMjUgMjEuNzUgTCAzLjUzMTI1IDIyLjQ2ODc1IEwgNC4yODEyNSAyNC4zMTI1IEwgNi4wNjI1IDIzLjU5Mzc1IEMgNi42NDA2MjUgMjQuNTU0Njg4IDcuNDQ1MzEzIDI1LjM1OTM3NSA4LjQwNjI1IDI1LjkzNzUgTCA3LjY4NzUgMjcuNzE4NzUgTCA5LjUzMTI1IDI4LjQ2ODc1IEwgMTAuMjUgMjYuNjg3NSBDIDEwLjc4MTI1IDI2LjgyMDMxMyAxMS4zMzIwMzEgMjYuOTA2MjUgMTEuOTA2MjUgMjYuOTA2MjUgQyAxMi40NzY1NjMgMjYuOTA2MjUgMTMuMDM1MTU2IDI2LjgyMDMxMyAxMy41NjI1IDI2LjY4NzUgTCAxNC4yODEyNSAyOC40Njg3NSBMIDE2LjEyNSAyNy43MTg3NSBMIDE1LjQwNjI1IDI1LjkzNzUgQyAxNi4zNTE1NjMgMjUuMzU5Mzc1IDE3LjE0ODQzOCAyNC41NDY4NzUgMTcuNzE4NzUgMjMuNTkzNzUgTCAxOS41MzEyNSAyNC4zMTI1IEwgMjAuMjgxMjUgMjIuNDY4NzUgTCAxOC40Njg3NSAyMS43NSBDIDE4LjYwMTU2MyAyMS4yMTg3NSAxOC42ODc1IDIwLjY2NDA2MyAxOC42ODc1IDIwLjA5Mzc1IEMgMTguNjg3NSAxOS41MjM0MzggMTguNjAxNTYzIDE4Ljk2NDg0NCAxOC40Njg3NSAxOC40Mzc1IEwgMjAuMjgxMjUgMTcuNzE4NzUgTCAxOS41MzEyNSAxNS44NzUgTCAxNy43MTg3NSAxNi41OTM3NSBDIDE3LjE0ODQzOCAxNS42NTIzNDQgMTYuMzUxNTYzIDE0Ljg1MTU2MyAxNS40MDYyNSAxNC4yODEyNSBMIDE2LjEyNSAxMi40Njg3NSBMIDE0LjI4MTI1IDExLjcxODc1IEwgMTMuNTYyNSAxMy41MzEyNSBDIDEzLjAzMTI1IDEzLjM5ODQzOCAxMi40NzY1NjMgMTMuMzEyNSAxMS45MDYyNSAxMy4zMTI1IEMgMTEuMzM1OTM4IDEzLjMxMjUgMTAuNzgxMjUgMTMuMzk4NDM4IDEwLjI1IDEzLjUzMTI1IFogTSAxMS45MDYyNSAxNS4zMTI1IEMgMTQuNTcwMzEzIDE1LjMxMjUgMTYuNjg3NSAxNy40Mjk2ODggMTYuNjg3NSAyMC4wOTM3NSBDIDE2LjY4NzUgMjIuNzU3ODEzIDE0LjU3MDMxMyAyNC45MDYyNSAxMS45MDYyNSAyNC45MDYyNSBDIDkuMjQyMTg4IDI0LjkwNjI1IDcuMDkzNzUgMjIuNzU3ODEzIDcuMDkzNzUgMjAuMDkzNzUgQyA3LjA5Mzc1IDE3LjQyOTY4OCA5LjI0MjE4OCAxNS4zMTI1IDExLjkwNjI1IDE1LjMxMjUgWiAiPjwvcGF0aD48L2c+PC9zdmc+")}\
+            span.gme-button, .gme-button-wide {padding-left:5px; padding-right:5px; font-size:12px; font-weight:bold; width:auto; background-image:none; color: #424242;}\
+            .GME_home {background-size: 18px 18px; background-position: center;background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4IgogICAgIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIKICAgICB2aWV3Qm94PSIwIDAgMzAgMzAiCiAgICAgc3R5bGU9ImZpbGw6IzAwMDAwMDsiPiAgICA8cGF0aCBkPSJNIDE1IDIgQSAxIDEgMCAwIDAgMTQuMzAwNzgxIDIuMjg1MTU2MiBMIDMuMzkyNTc4MSAxMS4yMDcwMzEgQSAxIDEgMCAwIDAgMy4zNTU0Njg4IDExLjIzNjMyOCBMIDMuMzE4MzU5NCAxMS4yNjc1NzggTCAzLjMxODM1OTQgMTEuMjY5NTMxIEEgMSAxIDAgMCAwIDMgMTIgQSAxIDEgMCAwIDAgNCAxMyBMIDUgMTMgTCA1IDI0IEMgNSAyNS4xMDUgNS44OTUgMjYgNyAyNiBMIDIzIDI2IEMgMjQuMTA1IDI2IDI1IDI1LjEwNSAyNSAyNCBMIDI1IDEzIEwgMjYgMTMgQSAxIDEgMCAwIDAgMjcgMTIgQSAxIDEgMCAwIDAgMjYuNjgxNjQxIDExLjI2NzU3OCBMIDI2LjY2NjAxNiAxMS4yNTU4NTkgQSAxIDEgMCAwIDAgMjYuNTk3NjU2IDExLjE5OTIxOSBMIDI1IDkuODkyNTc4MSBMIDI1IDYgQyAyNSA1LjQ0OCAyNC41NTIgNSAyNCA1IEwgMjMgNSBDIDIyLjQ0OCA1IDIyIDUuNDQ4IDIyIDYgTCAyMiA3LjQzOTQ1MzEgTCAxNS42Nzc3MzQgMi4yNjc1NzgxIEEgMSAxIDAgMCAwIDE1IDIgeiBNIDE4IDE1IEwgMjIgMTUgTCAyMiAyMyBMIDE4IDIzIEwgMTggMTUgeiI+PC9wYXRoPjwvc3ZnPg==")}\
+            .GME_config {background-size: 18px 18px; background-position: center;background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4IgogICAgIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIKICAgICB2aWV3Qm94PSIwIDAgMzIgMzIiCiAgICAgc3R5bGU9ImZpbGw6IzAwMDAwMDsiPjxnIGlkPSJzdXJmYWNlMSI+PHBhdGggc3R5bGU9IiAiIGQ9Ik0gMjEuNSAyLjUgTCAyMS41IDMuOTA2MjUgQyAyMC42NjQwNjMgNC4wNTQ2ODggMTkuODg2NzE5IDQuMzcxMDk0IDE5LjIxODc1IDQuODQzNzUgTCAxOC4xODc1IDMuODc1IEwgMTYuODEyNSA1LjM0Mzc1IEwgMTcuODEyNSA2LjI4MTI1IEMgMTcuMzYzMjgxIDYuOTM3NSAxNy4wNTA3ODEgNy42ODc1IDE2LjkwNjI1IDguNSBMIDE1LjUgOC41IEwgMTUuNSAxMC41IEwgMTYuOTA2MjUgMTAuNSBDIDE3LjA1MDc4MSAxMS4zMjgxMjUgMTcuMzc4OTA2IDEyLjA4NTkzOCAxNy44NDM3NSAxMi43NSBMIDE2Ljc4MTI1IDEzLjc4MTI1IEwgMTguMjE4NzUgMTUuMjE4NzUgTCAxOS4yNSAxNC4xNTYyNSBDIDE5LjkxNDA2MyAxNC42MjEwOTQgMjAuNjcxODc1IDE0Ljk0OTIxOSAyMS41IDE1LjA5Mzc1IEwgMjEuNSAxNi41IEwgMjMuNSAxNi41IEwgMjMuNSAxNS4wOTM3NSBDIDI0LjMxMjUgMTQuOTQ5MjE5IDI1LjA2MjUgMTQuNjM2NzE5IDI1LjcxODc1IDE0LjE4NzUgTCAyNi42NTYyNSAxNS4xODc1IEwgMjguMTI1IDEzLjgxMjUgTCAyNy4xNTYyNSAxMi43ODEyNSBDIDI3LjYyODkwNiAxMi4xMTMyODEgMjcuOTQ1MzEzIDExLjMzNTkzOCAyOC4wOTM3NSAxMC41IEwgMjkuNSAxMC41IEwgMjkuNSA4LjUgTCAyOC4wOTM3NSA4LjUgQyAyNy45NDkyMTkgNy42NzE4NzUgMjcuNjIxMDk0IDYuOTE0MDYzIDI3LjE1NjI1IDYuMjUgTCAyOC4wOTM3NSA1LjMxMjUgTCAyNi42ODc1IDMuOTA2MjUgTCAyNS43NSA0Ljg0Mzc1IEMgMjUuMDg1OTM4IDQuMzc4OTA2IDI0LjMyODEyNSA0LjA1MDc4MSAyMy41IDMuOTA2MjUgTCAyMy41IDIuNSBaIE0gMjIuNSA1LjgxMjUgQyAyNC41NTQ2ODggNS44MTI1IDI2LjE4NzUgNy40NDUzMTMgMjYuMTg3NSA5LjUgQyAyNi4xODc1IDExLjU1NDY4OCAyNC41NTQ2ODggMTMuMTg3NSAyMi41IDEzLjE4NzUgQyAyMC40NDUzMTMgMTMuMTg3NSAxOC44MTI1IDExLjU1NDY4OCAxOC44MTI1IDkuNSBDIDE4LjgxMjUgNy40NDUzMTMgMjAuNDQ1MzEzIDUuODEyNSAyMi41IDUuODEyNSBaIE0gOS41MzEyNSAxMS43MTg3NSBMIDcuNjg3NSAxMi40Njg3NSBMIDguNDA2MjUgMTQuMjgxMjUgQyA3LjQ1MzEyNSAxNC44NTE1NjMgNi42NDA2MjUgMTUuNjQ4NDM4IDYuMDYyNSAxNi41OTM3NSBMIDQuMjgxMjUgMTUuODc1IEwgMy41MzEyNSAxNy43MTg3NSBMIDUuMzEyNSAxOC40Mzc1IEMgNS4xNzk2ODggMTguOTY0ODQ0IDUuMDkzNzUgMTkuNTIzNDM4IDUuMDkzNzUgMjAuMDkzNzUgQyA1LjA5Mzc1IDIwLjY2NDA2MyA1LjE3OTY4OCAyMS4yMTg3NSA1LjMxMjUgMjEuNzUgTCAzLjUzMTI1IDIyLjQ2ODc1IEwgNC4yODEyNSAyNC4zMTI1IEwgNi4wNjI1IDIzLjU5Mzc1IEMgNi42NDA2MjUgMjQuNTU0Njg4IDcuNDQ1MzEzIDI1LjM1OTM3NSA4LjQwNjI1IDI1LjkzNzUgTCA3LjY4NzUgMjcuNzE4NzUgTCA5LjUzMTI1IDI4LjQ2ODc1IEwgMTAuMjUgMjYuNjg3NSBDIDEwLjc4MTI1IDI2LjgyMDMxMyAxMS4zMzIwMzEgMjYuOTA2MjUgMTEuOTA2MjUgMjYuOTA2MjUgQyAxMi40NzY1NjMgMjYuOTA2MjUgMTMuMDM1MTU2IDI2LjgyMDMxMyAxMy41NjI1IDI2LjY4NzUgTCAxNC4yODEyNSAyOC40Njg3NSBMIDE2LjEyNSAyNy43MTg3NSBMIDE1LjQwNjI1IDI1LjkzNzUgQyAxNi4zNTE1NjMgMjUuMzU5Mzc1IDE3LjE0ODQzOCAyNC41NDY4NzUgMTcuNzE4NzUgMjMuNTkzNzUgTCAxOS41MzEyNSAyNC4zMTI1IEwgMjAuMjgxMjUgMjIuNDY4NzUgTCAxOC40Njg3NSAyMS43NSBDIDE4LjYwMTU2MyAyMS4yMTg3NSAxOC42ODc1IDIwLjY2NDA2MyAxOC42ODc1IDIwLjA5Mzc1IEMgMTguNjg3NSAxOS41MjM0MzggMTguNjAxNTYzIDE4Ljk2NDg0NCAxOC40Njg3NSAxOC40Mzc1IEwgMjAuMjgxMjUgMTcuNzE4NzUgTCAxOS41MzEyNSAxNS44NzUgTCAxNy43MTg3NSAxNi41OTM3NSBDIDE3LjE0ODQzOCAxNS42NTIzNDQgMTYuMzUxNTYzIDE0Ljg1MTU2MyAxNS40MDYyNSAxNC4yODEyNSBMIDE2LjEyNSAxMi40Njg3NSBMIDE0LjI4MTI1IDExLjcxODc1IEwgMTMuNTYyNSAxMy41MzEyNSBDIDEzLjAzMTI1IDEzLjM5ODQzOCAxMi40NzY1NjMgMTMuMzEyNSAxMS45MDYyNSAxMy4zMTI1IEMgMTEuMzM1OTM4IDEzLjMxMjUgMTAuNzgxMjUgMTMuMzk4NDM4IDEwLjI1IDEzLjUzMTI1IFogTSAxMS45MDYyNSAxNS4zMTI1IEMgMTQuNTcwMzEzIDE1LjMxMjUgMTYuNjg3NSAxNy40Mjk2ODggMTYuNjg3NSAyMC4wOTM3NSBDIDE2LjY4NzUgMjIuNzU3ODEzIDE0LjU3MDMxMyAyNC45MDYyNSAxMS45MDYyNSAyNC45MDYyNSBDIDkuMjQyMTg4IDI0LjkwNjI1IDcuMDkzNzUgMjIuNzU3ODEzIDcuMDkzNzUgMjAuMDkzNzUgQyA3LjA5Mzc1IDE3LjQyOTY4OCA5LjI0MjE4OCAxNS4zMTI1IDExLjkwNjI1IDE1LjMxMjUgWiAiPjwvcGF0aD48L2c+PC9zdmc+")}\
             .GME_route, .GME_hide {background: url(https://geo.inge.org.uk/userscripts/gme_icons_0_8_0.png) no-repeat #eee;}\
-            .GME_route { background-position: 7px 3px;}\
-            .GME_route.gme-button-active { background-position: 5px 1px;}\
-            .GME_hide { background-position: -17px 3px;}\
-            .GME_hide.gme-button-active { background-position: -19px 1px;}\
-            .gme-button-refresh-labels { background-position: -320px 4px;}\
-            .gme-button-clear-labels { background-position: -69px 4px;}\
-            span.gme-distance-container { display: none; }\
-            span.gme-distance-container.show { display: inline-block; }\
-//xxxx            .GME_info { background-position: -537px 4px;}\
-            .GME_info { background-size: 16px 16px; background-position: center;background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/PjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDMyIDMyIiA+PHBhdGggc3R5bGU9ImZpbGw6IzAzMDEwNDsiIGQ9Ik0xMCwxNmMxLjEwNSwwLDIsMC44OTUsMiwydjhjMCwxLjEwNS0wLjg5NSwyLTIsMkg4djRoMTZ2LTRoLTEuOTkyYy0xLjEwMiwwLTItMC44OTUtMi0yTDIwLDEySDggdjRIMTB6Ii8+PGNpcmNsZSBzdHlsZT0iZmlsbDojMDMwMTA0OyIgY3g9IjE2IiBjeT0iNCIgcj0iNCIvPjwvc3ZnPg0K")}\
-//xxxx            .GME_info.gme-button-active {background-position: -540px 1px;}\
-            .GME_info.gme-button-active {}\
+            .GME_route {background-position: 7px 3px;}\
+            .GME_route.gme-button-active {background-position: 5px 1px;}\
+            .GME_hide {background-position: -17px 3px;}\
+            .GME_hide.gme-button-active {background-position: -19px 1px;}\
+            .gme-button-refresh-labels {background-position: -320px 4px;}\
+            .gme-button-clear-labels {background-position: -69px 4px;}\
+            span.gme-distance-container {display: none;}\
+            span.gme-distance-container.show {display: inline-block;}\
+            .GME_info {background-size: 16px 16px; background-position: center; background-image: url(https://raw.githubusercontent.com/2Abendsegler/GME/collector/images/GME_info.png)}\
+            .GME_info.gme-button-active {padding:1px 0.5px 1px 1px;}\
             #GME_loc, a.gme-button.leaflet-active {outline: none;}\
-            .leaflet-control-zoomwarning { top: 94px; }\
-            .leaflet-control-zoomwarning a { filter: progid:DXImageTransform.Microsoft.gradient(startColorStr="#BFC80000",EndColorStr="#BFC80000"); background-color:rgba(200,0,0,0.75); margin-left: -4px; background-position: -502px 2px;height:14px;width:14px; border-color: #b00; box-shadow: 0 0 8px rgba(0, 0, 0, 0.4); }\
-            .leaflet-control-zoomwarning a:hover { background-color:rgba(230,0,0,0.75); }\
-            .gme-event { cursor: pointer; }\
-            .gme-modalDialog {position: fixed; top: 0; right: 0; bottom: 0; left: 0; background: rgba(0,0,0,0.5); z-index: 1000; opacity:.5; -webkit-transition: opacity 400ms ease-in; -moz-transition: opacity 400ms ease-in; transition: opacity 400ms ease-in; pointer-events: none; display:none; }\
-            .gme-modalDialog:target, .gme-modalDialog.gme-targetted { opacity:1; display:block; pointer-events: auto; }\
-            .gme-modalDialog > div { position: relative; margin: 4% 12.5%; height: 30em; max-height: 75%; padding: 0 0 13px 0; border: 1px solid #000; border-radius: 10px; background: #fff; background: -moz-linear-gradient(#fff, #999); background: -webkit-linear-gradient(#fff, #999); background: -o-linear-gradient(#fff, #999); }\
-            .gme-modalDialog header { color: #eee; background: none #454545; font-size: 15px; text-align: center; border-top-left-radius: 10px; padding: 0.5em 0; font-weight: bold; text-shadow: none; height: auto; min-height: auto; min-width: auto; }\
-            .gme-modal-content { position: absolute; top: 3.5em; left: 0.75em; right: 0.75em; bottom: 0.5em; overflow: auto; }\
-            .gme-modal-content > .leaflet-control-gme { position: absolute; left: 0.5em; bottom: 0.5em; top: auto; }\
-            .gme-close-dialog { background: #606061; color: #fff; line-height: 25px; position: absolute; right: -12px; text-align: center; top: -10px; width: 24px; text-decoration: none; font-weight: bold; -webkit-border-radius: 12px; -moz-border-radius: 12px; border-radius: 12px; -moz-box-shadow: 1px 1px 3px #000; -webkit-box-shadow: 1px 1px 3px #000; box-shadow: 1px 1px 3px #000; }\
-            .gme-close-dialog:hover { background: #00d9ff; }\
-            #searchtabs li a { padding: 1em 0.5em; }\
-            @media print { #search { display: none !important}}\
-            .tab-switcher { position: relative; font-family: Arial, sans-serif; font-size: 14px; }\
-            .gme-tab { float: left; }\
-            .gme-tab-label { border-radius: 8px 8px 0 0; border: 1px solid #ccc; color: #454545; background: #ddd; display: block; position: relative; margin-left: 15px; padding: 3px 0; font-weight: bold; z-index: 0; }\
-            .gme-tab-label:after { border-bottom: 1px solid #ccc; border-bottom-left-radius: 8px; border-left: 1px solid #ccc; box-shadow: -2px 2px 0 #ddd; bottom: -8px; content: ""; display: inline-block; height: 8px; left: 9px; position: relative; width: 8px; z-index: 3;}\
-            .gme-tab-label:before { border-bottom: 1px solid #ccc; border-bottom-right-radius: 8px; border-right: 1px solid #ccc; box-shadow: 2px 2px 0 #ddd; bottom: -8px; content: ""; display: inline-block; height: 8px; left: -9px; position: relative; width: 8px; z-index: 3; }\
-            .gme-tab-label:hover { cursor: pointer; }\
-            .gme-tab-content { position: absolute; top: 25px; bottom: 3.5em; left: 0; right: 0; padding: 0.5em; background: #000; border: 1px solid #ccc; border-radius: 8px; color: #555; z-index: 1; opacity: 0; overflow: auto; }\
-            .gme-tab-content ul { margin: 0.5em 0; }\
-            .gme-tab input[type=radio] { display: none; }\
-            .gme-tab input[type=radio]:checked ~ .gme-tab-content { z-index: 2; opacity: 1; background: #fff; color: #454545; }\
-            .gme-tab input[type=radio]:checked ~ .gme-tab-label { background: #fff; color: #454545; border-bottom: 1px solid #fff; z-index: 3; }\
-            .gme-tab input[type=radio]:checked ~ .gme-tab-label:after { box-shadow: -2px 2px 0 #fff; }\
-            .gme-tab input[type=radio]:checked ~ .gme-tab-label:before { box-shadow: 2px 2px 0 #fff; }\
-            .gme-fieldgroup { position: relative; border: 1px solid #ccc; border-radius: 6px; background: #eee; margin: 0.5em 0 1.5em; padding: 0.5em; }\
-            .gme-fieldgroup h3 { position:absolute; top: -0.7em; left: 0.5em; padding: 0 0.5em; background: #eee; border-top: 1px solid #ccc; border-radius: 6px; z-index:1; display:inline-block; font-weight: bold; font-size: 12px; }\
-            .gme-fieldgroup ul { margin: 0.5em 0; padding: 0; }\
-            .gme-fieldgroup li { display: inline-block; margin: 0 -1px -1px 0; background: #ddd; border: 1px solid #ccc; border-radius: 6px; padding: 0 0.5em; }\
-            .gme-xhair { cursor: crosshair; }\
-            .map-button-container { margin-right: 5em; }\
-            #map_canvas2 .leaflet-control-layers-toggle {background-image: url(/js/leaflet/0.5.1/images/layers.png)',
-        drag: '#cacheDetails .cacheImage { border: solid 1px #ccc; border-radius: 7px; padding-left: 5px; }\
-            .moveable { cursor: move; box-shadow: 0 1px 4px rgba(102, 51, 255, 0.3); }'
+            .leaflet-control-zoomwarning {top: 94px;}\
+            .leaflet-control-zoomwarning a {filter: progid:DXImageTransform.Microsoft.gradient(startColorStr="#BFC80000",EndColorStr="#BFC80000"); background-color:rgba(200,0,0,0.75); margin-left: -4px; background-position: -502px 2px;height:14px;width:14px; border-color: #b00; box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);}\
+            .leaflet-control-zoomwarning a:hover {background-color:rgba(230,0,0,0.75);}\
+            .gme-event {cursor: pointer;}\
+            .gme-modalDialog {position: fixed; top: 0; right: 0; bottom: 0; left: 0; background: rgba(0,0,0,0.5); z-index: 1000; opacity:.5; -webkit-transition: opacity 400ms ease-in; -moz-transition: opacity 400ms ease-in; transition: opacity 400ms ease-in; pointer-events: none; display:none;}\
+            .gme-modalDialog:target, .gme-modalDialog.gme-targetted {opacity:1; display:block; pointer-events: auto;}\
+            .gme-modalDialog > div {position: relative; margin: 4% 12.5%; height: 30em; max-height: 75%; padding: 0 0 13px 0; border: 1px solid #000; border-radius: 10px; background: #fff; background: -moz-linear-gradient(#fff, #999); background: -webkit-linear-gradient(#fff, #999); background: -o-linear-gradient(#fff, #999);}\
+            .gme-modalDialog header {color: #eee; background: none #454545; font-size: 15px; text-align: center; border-top-left-radius: 10px; padding: 0.5em 0; font-weight: bold; text-shadow: none; height: auto; min-height: auto; min-width: auto;}\
+            .gme-modal-content {position: absolute; top: 3.5em; left: 0.75em; right: 0.75em; bottom: 0.5em; overflow: auto;}\
+            .gme-modal-content > .leaflet-control-gme {position: absolute; left: 0.5em; bottom: 0.5em; top: auto;}\
+            .gme-close-dialog {background: #606061; color: #fff; line-height: 25px; position: absolute; right: -12px; text-align: center; top: -10px; width: 24px; text-decoration: none; font-weight: bold; -webkit-border-radius: 12px; -moz-border-radius: 12px; border-radius: 12px; -moz-box-shadow: 1px 1px 3px #000; -webkit-box-shadow: 1px 1px 3px #000; box-shadow: 1px 1px 3px #000;}\
+            .gme-close-dialog:hover {background: #00d9ff;}\
+            #searchtabs li a {padding: 1em 0.5em;}\
+            @media print {#search {display: none !important}}\
+            .tab-switcher {position: relative; font-family: Arial, sans-serif; font-size: 14px;}\
+            .gme-tab {float: left;}\
+            .gme-tab-label {border-radius: 8px 8px 0 0; border: 1px solid #ccc; color: #454545; background: #ddd; display: block; position: relative; margin-left: 15px; padding: 3px 0; font-weight: bold; z-index: 0;}\
+            .gme-tab-label:after {border-bottom: 1px solid #ccc; border-bottom-left-radius: 8px; border-left: 1px solid #ccc; box-shadow: -2px 2px 0 #ddd; bottom: -8px; content: ""; display: inline-block; height: 8px; left: 9px; position: relative; width: 8px; z-index: 3;}\
+            .gme-tab-label:before {border-bottom: 1px solid #ccc; border-bottom-right-radius: 8px; border-right: 1px solid #ccc; box-shadow: 2px 2px 0 #ddd; bottom: -8px; content: ""; display: inline-block; height: 8px; left: -9px; position: relative; width: 8px; z-index: 3;}\
+            .gme-tab-label:hover {cursor: pointer;}\
+            .gme-tab-content {position: absolute; top: 25px; bottom: 3.5em; left: 0; right: 0; padding: 0.5em; background: #000; border: 1px solid #ccc; border-radius: 8px; color: #555; z-index: 1; opacity: 0; overflow: auto;}\
+            .gme-tab-content ul {margin: 0.5em 0;}\
+            .gme-tab input[type=radio] {display: none;}\
+            .gme-tab input[type=radio]:checked ~ .gme-tab-content {z-index: 2; opacity: 1; background: #fff; color: #454545;}\
+            .gme-tab input[type=radio]:checked ~ .gme-tab-label {background: #fff; color: #454545; border-bottom: 1px solid #fff; z-index: 3;}\
+            .gme-tab input[type=radio]:checked ~ .gme-tab-label:after {box-shadow: -2px 2px 0 #fff;}\
+            .gme-tab input[type=radio]:checked ~ .gme-tab-label:before {box-shadow: 2px 2px 0 #fff;}\
+            .gme-fieldgroup {position: relative; border: 1px solid #ccc; border-radius: 6px; background: #eee; margin: 0.5em 0 1.5em; padding: 0.5em;}\
+            .gme-fieldgroup h3 {position:absolute; top: -0.7em; left: 0.5em; padding: 0 0.5em; background: #eee; border-top: 1px solid #ccc; border-radius: 6px; z-index:1; display:inline-block; font-weight: bold; font-size: 12px;}\
+            .gme-fieldgroup ul {margin: 0.5em 0; padding: 0;}\
+            .gme-fieldgroup li {display: inline-block; margin: 0 -1px -1px 0; background: #ddd; border: 1px solid #ccc; border-radius: 6px; padding: 0 0.5em;}\
+            .gme-xhair {cursor: crosshair;}\
+            .map-button-container {margin-right: 5em;}\
+            #map_canvas2 .leaflet-control-layers-toggle {background-image: url(/js/leaflet/0.5.1/images/layers.png)}',
+        drag: '#cacheDetails .cacheImage {border: solid 1px #ccc; border-radius: 7px; padding-left: 5px;}\
+            .moveable {cursor: move; box-shadow: 0 1px 4px rgba(102, 51, 255, 0.3);}'
     },
     env: {
         dragdrop: (document.createElement('span').draggable !== undefined),
         geolocation: !!navigator.geolocation,
         init: [],
-//xxxx        loggedin: (!!document.getElementById("ctl00_uxLoginStatus_divSignedIn") || !!document.getElementById("uxLoginStatus_divSignedIn")),
         loggedin: true,
         page: "default",
         storage: false,
@@ -210,7 +210,7 @@ var gmeResources = {
                 <a href="#" class="gme-button gme-button-wide gme-button-l" rel="back" title="Cancel">Cancel</a><button type="button" class="gme-button gme-button-wide" id="GME_default" title="Reset to defaults">Defaults</button><button type="button" class="gme-button gme-button-wide gme-button-r" id="GME_set" title="Confirm settings">Save</button>\
             </div>',
         customInfo: '<p>Custom mapsources can be added by supplying entering a <a rel="external" href="http://www.json.org/">JSON</a> configuration string that tells GME what to call the map, where to find it, and how it is set up. e.g.</p>\
-            <p><code>{"alt":"OS NPE (GB only)","tileUrl":"https://ooc.openstreetmap.org/npe/{z}/{x}/{y}.png", "minZoom":6, "maxZoom": 15, "attribution": "OpenStreetMap NPE" }</code></p>\
+            <p><code>{"alt":"OS NPE (GB only)","tileUrl":"https://ooc.openstreetmap.org/npe/{z}/{x}/{y}.png", "minZoom":6, "maxZoom": 15, "attribution": "OpenStreetMap NPE"}</code></p>\
             <p>The <code>"alt"</code> and <code>"tileUrl"</code> parameters are mandatory. <code>"tileUrl"</code> can contain {x}, {y} and {z} for Google-style coordinate systems (also works with TMS systems like Eniro, but needs the <code>"scheme":"tms"</code> parameter), or {q} for Bing-style quadkeys. GME can also connect with WMS servers, in which case a <code>"layers"</code> parameter is required.</p>\
             <p>The other parameters are the same as those used by the <a rel="external" href="http://leafletjs.com/reference-versions.html">Leaflet API</a>, with the addition of a <code>"overlay":true</code> option, that makes the mapsource appear as a selectable overlay.</p>\
             <ul><li><a rel="external" href="http://geo.inge.org.uk/gme_config.htm">Detailed documentation</a></li><li><a rel="external" href="http://geo.inge.org.uk/gme_maps.htm">More mapsource examples</a></li></ul>',
@@ -223,7 +223,7 @@ var gmeResources = {
             </div>'
     },
     script: {
-        common: function () {
+        common: function() {
             var that = this, callbackCount = 0, load_count = 0, JSONP;
             function setEnv() {
                 // The script waits for the Leaflet API to load, and will abort if it does not find it after a minute.
@@ -281,7 +281,7 @@ var gmeResources = {
             function gmeInit(scriptArray) {
                 // Init routines that need either JQuery or Leaflet API, so must be run from load() rather than on script insertion.
                 var initScripts = {
-                    "config": function () {
+                    "config": function() {
                         if (gmeConfig.env.storage) {
                             setConfig();
                             $("#GME_set").bind("click", storeSettings);
@@ -291,15 +291,15 @@ var gmeResources = {
                             $("li.li-user ul").append("<li class='li-settings'><a class='icon-settings' id='gme-config-link' href='#GME_config' title='Configure Geocaching Map Enhancements extension'>Geocaching Map Enhancements</a></li>");
                         }
                     },
-                    "drop": function () {
+                    "drop": function() {
                         $.fn.filterNode = function(name) {
-                            return this.find("*").filter(function () {
+                            return this.find("*").filter(function() {
                                 return this.nodeName === name;
                             });
                         };
                         L.GME_dropHandler = L.Control.extend(dropHandlerObj);
                     },
-                    "map": function () {
+                    "map": function() {
                         bounds_GB = new L.LatLngBounds(new L.LatLng(49,-9.5),new L.LatLng(62,2.3));
                         bounds_IE = new L.LatLngBounds(new L.LatLng(51.2,-12.2),new L.LatLng(55.73,-5.366));
                         bounds_NI = new L.LatLngBounds(new L.LatLng(54,-8.25),new L.LatLng(55.73,-5.25));
@@ -310,14 +310,14 @@ var gmeResources = {
                         L.GME_complexLayer = L.TileLayer.extend(complexLayerObj);
                         L.GME_genericLayer = genericLayerFn;
                     },
-                    "widget": function () {
+                    "widget": function() {
                         L.GME_Widget=L.Control.extend(widgetControlObj);
                         if (window.Groundspeak && Groundspeak.Map && Groundspeak.Map.Control && Groundspeak.Map.Control.FindMyLocation) {
                             L.GME_FollowMyLocationControl=Groundspeak.Map.Control.FindMyLocation.extend(locationControlObj);
                         }
                         L.GME_ZoomWarning=L.Control.extend(zoomWarningObj);
                         if (L.LatLng.prototype.toUrl === undefined) {
-                            L.LatLng.prototype.toUrl = function() { return this.lat.toFixed(6) + "," + this.lng.toFixed(6); };
+                            L.LatLng.prototype.toUrl = function() {return this.lat.toFixed(6) + "," + this.lng.toFixed(6); };
                         }
                         if ($.fancybox === undefined) {
                             console.info("GME: Fetching Fancybox");
@@ -414,23 +414,23 @@ var gmeResources = {
                         case 6:
                             break;
                         case 4:
-                            if (c[15] === undefined) { c[15] = c[12]; c[12] = c[8]; c[8] = undefined; }
+                            if (c[15] === undefined) {c[15] = c[12]; c[12] = c[8]; c[8] = undefined;}
                             break;
                         case 2:
-                            if (c[12] === undefined && c[5]) { c[12] = c[5]; c[5] = undefined; }
+                            if (c[12] === undefined && c[5]) {c[12] = c[5]; c[5] = undefined;}
                             break;
                         default:
                             alert("Couldnt understand coordinates");
                             return false;
                     }
-                    if (c[2] !== undefined) { lat = +c[2]; }
-                    if (c[5] !== undefined) { lat += c[5]/60; }
-                    if (c[8] !== undefined) { lat += c[8]/3600; }
-                    if (c[1] !== undefined || c[10] !== undefined) { lat *= -1; }
-                    if (c[12] !== undefined) { lng = +c[12]; }
-                    if (c[15] !== undefined) { lng += c[15]/60; }
-                    if (c[18] !== undefined) { lng += c[18]/3600; }
-                    if (c[11] !== undefined || c[20] !== undefined) { lng *= -1; }
+                    if (c[2] !== undefined) {lat = +c[2];}
+                    if (c[5] !== undefined) {lat += c[5]/60;}
+                    if (c[8] !== undefined) {lat += c[8]/3600;}
+                    if (c[1] !== undefined || c[10] !== undefined) {lat *= -1;}
+                    if (c[12] !== undefined) {lng = +c[12];}
+                    if (c[15] !== undefined) {lng += c[15]/60;}
+                    if (c[18] !== undefined) {lng += c[18]/3600;}
+                    if (c[11] !== undefined || c[20] !== undefined) {lng *= -1;}
                 }
                 if (validCoords(lat, lng)) {
                     return {lat:lat,lng:lng};
@@ -459,7 +459,7 @@ var gmeResources = {
             }
 
             if (window.console === undefined) {
-                var logFn = function (text) {};
+                var logFn = function(text) {};
                 window.console = {
                     error: logFn,
                     log: logFn,
@@ -469,7 +469,7 @@ var gmeResources = {
             }
 
             if (gmeConfig.env.xhr) {
-                JSONP = function (url, id) {
+                JSONP = function(url, id) {
                     console.log("GME: Using GM_xhr to fetch " + url);
                     var s = document.getElementById("gme_jsonp_node");
                     if (!s) {
@@ -482,7 +482,7 @@ var gmeResources = {
                     s.setAttribute("data-gme-callback", id);
                     document.dispatchEvent(new Event("GME_XHR_event"));
                 };
-                document.addEventListener("GME_XHR_callback", function (e) {
+                document.addEventListener("GME_XHR_callback", function(e) {
                     var s = document.getElementById("gme_jsonp_node"),
                         callback = s.getAttribute("data-gme-callback");
                     if (typeof window[callback] === "function") {
@@ -497,12 +497,12 @@ var gmeResources = {
                     return false;
                 });
             } else {
-                JSONP = function (url, id) {
+                JSONP = function(url, id) {
                     console.log("GME: Using JSONP to fetch " + url);
                     if (validURL(url)) {
                         var s=document.createElement("script");
                         s.type="text/javascript";
-                        if (id) { s.id=id; }
+                        if (id) {s.id=id;}
                         s.src=url;
                         document.documentElement.firstChild.appendChild(s);
                     }
@@ -512,12 +512,12 @@ var gmeResources = {
             gmeConfig.env.home = getHomeCoords();
 
             this.parameters = gmeConfig.parameters;
-            this.getVersion = function() { return gmeConfig.parameters.version; };
+            this.getVersion = function() {return gmeConfig.parameters.version;};
             this.getGeograph = function(coords) {
                 var callprefix="GME_geograph_callback", call, host = "";
                 function searchLink(coords) {
                     // URIs for website search pages.
-                    if (coords === undefined) { return false; }
+                    if (coords === undefined) {return false;}
                     var host="";
                     if (bounds_GB.contains(coords) || bounds_IE.contains(coords)) {
                         host="https://geograph.org.uk/";
@@ -530,7 +530,7 @@ var gmeResources = {
                     }
                     return host?[host,"search.php?location=", coords.toUrl()].join(""):false;
                 }
-                function makeCallback(callname) { callbackCount++; return function(json) {
+                function makeCallback(callname) {callbackCount++; return function(json) {
                     var html, i, p;
                     if (json.items && json.items.length>0) {
                         html = ["<h3>Geograph images near ", DMM(coords), "</h3><p>"].join("");
@@ -544,13 +544,14 @@ var gmeResources = {
                         $.fancybox(["<p>No photos found nearby. <a target='_blank' rel='noopener noreferrer' href='",searchLink(coords),"'>Search on Geograph</a></p>"].join(""));
                     }
                     $("#"+callname).remove();
-                    if (window[callname] !== undefined) { delete window[callname]; }
+                    if (window[callname] !== undefined) {delete window[callname];}
                 };}
                 if (validCoords(coords) && this.isGeographAvailable(coords)) {
                     if (!bounds_CI.contains(coords) && (bounds_GB.contains(coords) || bounds_IE.contains(coords))) {
                         host="https://api.geograph.org.uk/";
                         call = callprefix + callbackCount;
                         window[call] = makeCallback(call);
+//xxxx todo?
                         JSONP(host + "syndicator.php?key=geo.inge.org.uk&location=" + coords.toUrl() + "&format=JSON&callback=" + call, call);
                     } else {
                         window.open(searchLink(coords), "_blank");
@@ -561,7 +562,7 @@ var gmeResources = {
             };
             this.getHeight = function(coords) {
                 var callprefix="GME_height_callback",call;
-                function makeCallback(callname) { callbackCount++; return function (json) {
+                function makeCallback(callname) {callbackCount++; return function(json) {
                     if (typeof json.astergdem === "number" && typeof json.lat === "number" && typeof json.lng === "number") {
                         var h, m;
                         if (json.astergdem === -9999) {
@@ -573,7 +574,7 @@ var gmeResources = {
                         $.fancybox(m);
                     }
                     $("#"+callname).remove();
-                    if (window[callname] !== undefined) { delete window[callname]; }
+                    if (window[callname] !== undefined) {delete window[callname];}
                 };}
                 if (validCoords(coords)) {
                     call = callprefix + callbackCount;
@@ -627,8 +628,8 @@ var gmeResources = {
                 }
             };
         },
-        config: function () {
-            function addSources(json){
+        config: function() {
+            function addSources(json) {
                 function setSrc(src) {
                     if (src.alt && src.tileUrl) {
                         var m = that.parameters.maps.concat(src);
@@ -651,7 +652,7 @@ var gmeResources = {
                     $("#gme-tab-maps")[0].checked = true;
                 }
             }
-            function addCustom(){
+            function addCustom() {
                 try{
                     var n = JSON.parse(document.getElementById("GME_map_custom").value);
                     addSources(n);
@@ -660,13 +661,13 @@ var gmeResources = {
                     return;
                 }
             }
-            function exportCustom(){
+            function exportCustom() {
                 $.fancybox($("<p/>").text(JSON.stringify(that.parameters.maps)).html());
             }
-            function setDefault(){
-                if (localStorage.GME_custom) { delete localStorage.GME_custom; }
-                if (localStorage.GME_parameters) { delete localStorage.GME_parameters; }
-                if (localStorage.GME_cache) { delete localStorage.GME_cache; }
+            function setDefault() {
+                if (localStorage.GME_custom) {delete localStorage.GME_custom;}
+                if (localStorage.GME_parameters) {delete localStorage.GME_parameters;}
+                if (localStorage.GME_cache) {delete localStorage.GME_cache;}
                 refresh();
             }
             function refresh(config) {
@@ -693,7 +694,7 @@ var gmeResources = {
                 for (i = 0; i < allMaps.length; i++) {
                     alt = allMaps[i].alt;
                     overlay = allMaps[i].overlay;
-                    if (!overlay) { mapselect += "<option value='" + htmlEntities(alt) + "'>" + htmlEntities(alt) + "</option>"; }
+                    if (!overlay) {mapselect += "<option value='" + htmlEntities(alt) + "'>" + htmlEntities(alt) + "</option>";}
                     mapfields += "<li><label><input type='checkbox' " + (allMaps[i].ignore ? "" : "checked='checked' ") + "name='" + htmlEntities(alt) + "' id='checkbox-" + i + "' /> " + htmlEntities(alt) + (overlay ? " (Overlay)" : "") + "</label></li>";
                 }
                 if (allMaps.length > 0) {
@@ -721,7 +722,7 @@ var gmeResources = {
                 $("#GME_brightness").val(that.parameters.brightness * 100);
                 $("#GME_version").html(that.parameters.version);
             }
-            function storeSettings(){
+            function storeSettings() {
                 var i, j, list;
                 that.parameters.defaultMap = $("#GME_map_default")[0].value;
                 list = $("#GME_mapfields input");
@@ -758,17 +759,15 @@ var gmeResources = {
                 refresh();
             }
         },
-        cssTransitionsFix: function () {
-        //    <bugfix>
+        cssTransitionsFix: function() {
             // Work around bug that breaks JQuery Mobile dialog boxes in Opera 12.
             if (window.$ && $.support) {
                 $.support.cssTransitions = false;
             }
-        //    </bugfix>
         },
-        dist: function () {
+        dist: function() {
             $("#lblDistFromHome").parent().append("<br/><span id='gme-dist'><a href='#' id='gme-dist-link'>Check distance from here</a></span>");
-            $("#gme-dist-link").click(function () {
+            $("#gme-dist-link").click(function() {
                 var there = new LatLon(mapLatLng.lat, mapLatLng.lng),
                     rose = [[22.5,67.5,112.5,157.5,202.5,247.5,292.5,337.5],["N","NE","E","SE","S","SW","W","NW"]],
                     watcher;
@@ -776,8 +775,8 @@ var gmeResources = {
                     var here = new LatLon(pos.coords.latitude, pos.coords.longitude),
                     bearing = here.bearingTo(there),
                     dir = "N", i;
-                    for (i = 0; i < 8; i++){
-                        if (bearing < rose[0][i]){
+                    for (i = 0; i < 8; i++) {
+                        if (bearing < rose[0][i]) {
                             dir = rose[1][i];
                             break;
                         }
@@ -798,8 +797,8 @@ var gmeResources = {
                 return false;
             });
         },
-        drag: function () {
-            that.dragStart = function (event) {
+        drag: function() {
+            that.dragStart = function(event) {
                 function GME_formatLOC(wpts) {
                     return wpts ? ['<?xml version="1.0" encoding="UTF-8"?>\n<loc version="1.0" src="Geocaching Map Enhancements v' + that.getVersion() + '">' + wpts.join('\n') + '</loc>'].join('\n'):null;
                 }
@@ -846,21 +845,21 @@ var gmeResources = {
                 dt.setDragImage($('a[title="About Cache Types"] img')[0],0,0);
             };
         },
-        drop: function () {
+        drop: function() {
             var dropHandlerObj = {
-                onAdd:function (map) {
+                onAdd: function(map) {
                     var container = $(map.getContainer());
                     this._map = map;
                     container.on("drop",this.drop(map));
                     container.on("dragover",this.dragOver);
                     return document.createElement("div");
                 },
-                onRemove:function (map) {
+                onRemove: function(map) {
                     var container = $(map.getContainer());
                     container.off("drop",this.drop(map));
                     container.off("dragover",this.dragOver);
                 },
-                drop:function (map) { return function (e) {
+                drop: function(map) {return function(e) {
                     function typeToIcon(t) {
                         var j, type=t;
                         for (j = wptTypes.length - 1; j>=0; j--) {
@@ -870,22 +869,22 @@ var gmeResources = {
                     }
                     function parseLOC(text) {
                         var i, l, w, t, len, lat, lng, name, points={primary:[], additional:[]}, wpts = $($.parseXML(text)).find("waypoint");
-                        for (i=0,len=wpts.length;i<len;i++){
+                        for (i=0,len=wpts.length;i<len;i++) {
                             w=$(wpts[i]);
                             lat=w.find("coord").attr("lat");
                             lng=w.find("coord").attr("lon");
                             name=w.find("name").attr("id") + ": " + w.find("name").text().trim();
-                            if (isNaN(+lat)||isNaN(+lng)||lat < -90||lat >90) { return false; }
+                            if (isNaN(+lat)||isNaN(+lng)||lat < -90||lat >90) {return false;}
                             t = w.find("type").text();
                             if (/Geocache/i.test(t)) {
-                                points.primary.push({ lat:lat, lng:lng, name:name, type:2 });
+                                points.primary.push({lat:lat, lng:lng, name:name, type:2});
                             } else {
                                 l = points.primary.length;
                                 if (l && /Original Coordinates/i.test(t)) {
                                     points.primary[l-1].oldLatLng = [lat, lng];
                                     points.primary[l-1].isUserDefined = true;
                                 } else {
-                                    points.additional.push({ lat:lat, lng:lng, name:name, type:typeToIcon(t) });
+                                    points.additional.push({lat:lat, lng:lng, name:name, type:typeToIcon(t)});
                                 }
                             }
                         }
@@ -900,7 +899,7 @@ var gmeResources = {
                     }
                     function parseGPX(text) {
                         var d, i, j, k, w, r, t, lat, lng, len, n, name="", poly, type, points={primary:[], additional:[], routes:[]}, gpx = $($.parseXML(text)), wpts = gpx.find("wpt"), tracks = gpx.find("trk"), segs, routes = gpx.find("rte");
-                        for (i=0,len=wpts.length;i<len;i++){
+                        for (i=0,len=wpts.length;i<len;i++) {
                             w=$(wpts[i]);
                             lat=w.attr("lat");
                             lng=w.attr("lon");
@@ -909,7 +908,7 @@ var gmeResources = {
                             name=n.length>0?n[0].textContent:"Point "+i;
                             name+=(n.length>0&&d.length>0)?" : ":"";
                             name+=d.length>0?d[0].textContent:"";
-                            if (isNaN(+lat)||isNaN(+lng)||lat < -90||lat >90) { return false;}
+                            if (isNaN(+lat)||isNaN(+lng)||lat < -90||lat >90) {return false;}
                             t = w.find("sym").text();
                             if (/Geocache/i.test(t)) {
                                 t = w.filterNode("groundspeak:type");
@@ -921,7 +920,7 @@ var gmeResources = {
                             } else {
                                 type = t;
                             }
-                            points[/Geocache/i.test(t)?"primary":"additional"].push({ lat:lat, lng:lng, name:name, type:typeToIcon(type) });
+                            points[/Geocache/i.test(t)?"primary":"additional"].push({lat:lat, lng:lng, name:name, type:typeToIcon(type)});
                         }
                         for (i=routes.length-1;i>=0;i--) {
                             poly = [];
@@ -984,8 +983,8 @@ var gmeResources = {
                                 return;
                             }
                         }
-                    } catch (E) { console.warn("GME: Drop: " + E); }
-                    for (i=files.length-1; i>=0; i--){
+                    } catch (E) {console.warn("GME: Drop: " + E);}
+                    for (i=files.length-1; i>=0; i--) {
                         file = files[i];
                         if (/application\/xml-loc/.test(file.type)||/\.loc$/i.test(file.name)) {
                             reader = new FileReader();
@@ -1002,7 +1001,7 @@ var gmeResources = {
                         }
                     }
                 };},
-                dragOver:function (e) {
+                dragOver: function(e) {
                     var dt=e.originalEvent.dataTransfer;
                     function contains(array, value) {
                         if (array.indexOf) {
@@ -1016,7 +1015,7 @@ var gmeResources = {
                     }
                     if (dt && dt.types) {
                         try {
-                            if (contains(dt.types, "application/gme-cache-coords") || contains(dt.types,"application/xml-gpx") || contains(dt.types,"application/xml-loc") || contains(dt.types,"text/plain") || contains(dt.types,"Files")){
+                            if (contains(dt.types, "application/gme-cache-coords") || contains(dt.types,"application/xml-gpx") || contains(dt.types,"application/xml-loc") || contains(dt.types,"text/plain") || contains(dt.types,"Files")) {
                                 e.preventDefault();
                                 return false;
                             }
@@ -1027,12 +1026,12 @@ var gmeResources = {
                 }
             };
         },
-        loadDefault: function () {
+        loadDefault: function() {
             if (typeof window.$ === "function") {
                 gmeInit(gmeConfig.env.init);
             }
         },
-        labels: function () {
+        labels: function() {
             function GME_load_labels(control, div) {
                 function labelHandler() {
                     var action = this.getAttribute("data-gme-action"), cache = this.getAttribute("data-gme-cache");
@@ -1058,11 +1057,11 @@ var gmeResources = {
                     return false;
                 }
                 L.GME_identifyLayer = L.Class.extend({
-                    initialize: function (latlng, options) {
+                    initialize: function(latlng, options) {
                         L.Util.setOptions(this, options);
                         this._latlng = latlng;
                     },
-                    onAdd: function (map) {
+                    onAdd: function(map) {
                         this._map = map;
                         this._el = L.DomUtil.create("div", "gme-identify-layer leaflet-zoom-hide");
                         this._el.innerHTML = this.options.label;
@@ -1072,7 +1071,7 @@ var gmeResources = {
                         map.on("viewreset", this._reset, this);
                         this._reset();
                     },
-                    onRemove: function (map) {
+                    onRemove: function(map) {
                         map.getPanes().overlayPane.removeChild(this._el);
                         map.off("viewreset", this._reset, this);
                     },
@@ -1080,11 +1079,11 @@ var gmeResources = {
                         label: "Cache",
                         desc: "Long cache name"
                     },
-                    setPosition: function (ll) {
+                    setPosition: function(ll) {
                         this._latlng = ll;
                         this._reset();
                     },
-                    _reset: function () {
+                    _reset: function() {
                         if (this._map) {
                             var pos = this._map.latLngToLayerPoint(this._latlng);
                             L.DomUtil.setPosition(this._el, pos);
@@ -1096,13 +1095,13 @@ var gmeResources = {
                     autoUpdate: false,
                     labels: {},
                     labelLayer: new L.LayerGroup(),
-                    clearLabels:function () {
+                    clearLabels: function() {
                         control._map.removeLayer(control.labels.labelLayer);
                     },
-                    displayLabels:function () {
+                    displayLabels: function() {
                         control._map.addLayer(control.labels.labelLayer);
                     },
-                    refresh:function () {
+                    refresh: function() {
                         if (!(window.MapSettings && MapSettings.MapLayers && MapSettings.MapLayers.UTFGrid)) {
                             return;
                         }
@@ -1115,7 +1114,7 @@ var gmeResources = {
                         }
                         setTimeout(control.labels.refreshLabels, 500);
                     },
-                    refreshLabels:function () {
+                    refreshLabels: function() {
                         var c, p, q, r, tile, tilepos, tileref, gridref, zoom = control._map.getZoom();
                         if (!(window.MapSettings && MapSettings.MapLayers && MapSettings.MapLayers.UTFGrid)) {
                             return;
@@ -1165,12 +1164,12 @@ var gmeResources = {
                             control.labels.displayLabels();
                         }
                     },
-                    removeLabels:function () {
+                    removeLabels: function() {
                         $("#gme_cachelist").html("");
                         control.labels.labelLayer.clearLayers();
                         control.labels.labels = {};
                     },
-                    toggleAuto:function () {
+                    toggleAuto: function() {
                         if (control.labels.autoUpdate) {
                             control.labels.autoUpdate = false;
                             control._map.off("moveend",control.labels.refresh);
@@ -1182,7 +1181,7 @@ var gmeResources = {
                             control.labels.refresh();
                         }
                     },
-                    toggleShow:function () {
+                    toggleShow: function() {
                         if (control.labels.showLabels) {
                             control.labels.showLabels = false;
                             $(".gme-button-labels-show").removeClass("gme-button-active");
@@ -1193,7 +1192,7 @@ var gmeResources = {
                             control.labels.refresh();
                         }
                     },
-                    updateCachePanel:function () {
+                    updateCachePanel: function() {
                         var i, j, sortorder =[], html = "";
                         for (i in control.labels.labels) {
                             if (control.labels.labels.hasOwnProperty(i)) {
@@ -1202,7 +1201,7 @@ var gmeResources = {
                         }
                         sortorder.sort();
                         j = sortorder.length;
-                        for (i =0; i<j; i++){
+                        for (i = 0; i < j; i++) {
                             html += "<tr><td><a href='https://coord.info/" + sortorder[i] + "' target='_blank' rel='noopener noreferrer'>" + control.labels.labels[sortorder[i]][1] + "</a></td><td class='gme-cache-code'>&nbsp;" + sortorder[i] + "</td><td><a class='gme-event' title='Pan map to cache location' data-gme-action='panTo' data-gme-cache='" + sortorder[i] + "'><img src='../images/silk/map.png' width='16' height='16' alt='Pan' /></a></td></tr>";
                         }
                         $("#gme_cachelist").html(html);
@@ -1223,7 +1222,7 @@ var gmeResources = {
                 $("#gme-labels-auto").on("change", control.labels.toggleAuto);
             }
         },
-        loadHide: function () {
+        loadHide: function() {
             function load() {
                 window.GME_control = new L.GME_Widget().addTo(map);
                 GME_control._layerControl = GME_load_map(map);
@@ -1233,53 +1232,57 @@ var gmeResources = {
             }
             window.setTimeout(setEnv, 3000);
         },
-        loadListing: function () {
-            var cache_coords = {},
-                mapLink = document.getElementById("ctl00_ContentBody_uxViewLargerMap");
+        loadListing: function() {
             function load() {
-//xxxx Hier könnte man eine Schleife einbauen und "#ctl00_ContentBody_uxViewLargerMap" und "#map_canvas" abfragen.
-                var parkUrl="", label="", i, parking, uri="&pop=";
-                if (L.LatLng.prototype.toUrl === undefined) {
-                    L.LatLng.prototype.toUrl = function () {var obj=this; if(!(obj instanceof L.LatLng)) {return false;} return [L.Util.formatNum(obj.lat,5),L.Util.formatNum(obj.lng,5)].join(",");};
-                }
-                $("#map_canvas").replaceWith("<div style=\'width: 325px; height: 325px; position: relative;\' id=\'map_canvas2\'></div>");
-                if (gmeConfig.env.dragdrop) {
-                    $("#cacheDetails .cacheImage").hover(function(e) { $("#cacheDetails .cacheImage").addClass("moveable"); },function(e) { $("#cacheDetails .cacheImage").removeClass("moveable"); });
-                    $("#cacheDetails .cacheImage").attr("draggable","true").on("dragstart", that.dragStart);
-                    $("#cacheDetails .cacheImage a").removeAttr("href");
-                }
-                window.GME_Map = new L.Map("map_canvas2",{center: new L.LatLng(mapLatLng.lat, mapLatLng.lng), zoom:14});
-                GME_Map.addControl(new L.control.scale());
-                GME_load_map(GME_Map);
-                cache_coords = { primary:[mapLatLng], additional:[] };
-                if (cmapAdditionalWaypoints && cmapAdditionalWaypoints.length > 0) {
-                    cache_coords.additional = cmapAdditionalWaypoints;
-                    if (gmeConfig.env.home) {
-                        for (i=cmapAdditionalWaypoints.length-1;i>=0;i--){
-                            if (cmapAdditionalWaypoints[i].hasOwnProperty("editurl")) {
-                                delete cache_coords.additional[i].editurl;
-                            }
-                            parking = cmapAdditionalWaypoints[i];
-                            if (parking.type === 217 || parking.type === 221) {
-                                label = parking.type===217?"Parking Area":"Trailhead";
-                                parkUrl = `https://www.google.com/maps/dir/${gmeConfig.env.home.toUrl()}/${parking.lat},${parking.lng}/`;
-                                $("#awpt_"+parking.pf)[0].parentNode.parentNode.children[1].innerHTML +=
-                                    `<a target="_blank" rel="noopener noreferrer" href="${parkUrl}"><img width="16" height="16" title="[GME] Directions to ${label}" alt="${label}" src="https://www.geocaching.com/images/icons/16/directions.png" /></a>`;
+                function checkMinimap(waitCount) {
+                    if ($('#ctl00_ContentBody_uxViewLargerMap')[0] && $('#map_canvas')[0]) {
+                        var cache_coords = {};
+                        var mapLink = document.getElementById("ctl00_ContentBody_uxViewLargerMap");
+                        var parkUrl="", label="", i, parking, uri="&pop=";
+                        if (L.LatLng.prototype.toUrl === undefined) {
+                            L.LatLng.prototype.toUrl = function() {var obj=this; if (!(obj instanceof L.LatLng)) {return false;} return [L.Util.formatNum(obj.lat,5),L.Util.formatNum(obj.lng,5)].join(",");};
+                        }
+                        $("#map_canvas").replaceWith("<div style=\'width: 325px; height: 325px; position: relative;\' id=\'map_canvas2\'></div>");
+                        if (gmeConfig.env.dragdrop) {
+                            $("#cacheDetails .cacheImage").hover(function(e) {$("#cacheDetails .cacheImage").addClass("moveable");},function(e) {$("#cacheDetails .cacheImage").removeClass("moveable");});
+                            $("#cacheDetails .cacheImage").attr("draggable","true").on("dragstart", that.dragStart);
+                            $("#cacheDetails .cacheImage a").removeAttr("href");
+                        }
+                        window.GME_Map = new L.Map("map_canvas2",{center: new L.LatLng(mapLatLng.lat, mapLatLng.lng), zoom:14});
+                        GME_Map.addControl(new L.control.scale());
+                        GME_load_map(GME_Map);
+                        cache_coords = {primary:[mapLatLng], additional:[]};
+                        if (cmapAdditionalWaypoints && cmapAdditionalWaypoints.length > 0) {
+                            cache_coords.additional = cmapAdditionalWaypoints;
+                            if (gmeConfig.env.home) {
+                                for (i=cmapAdditionalWaypoints.length-1;i>=0;i--) {
+                                    if (cmapAdditionalWaypoints[i].hasOwnProperty("editurl")) {
+                                        delete cache_coords.additional[i].editurl;
+                                    }
+                                    parking = cmapAdditionalWaypoints[i];
+                                    if (parking.type === 217 || parking.type === 221) {
+                                        label = parking.type===217?"Parking Area":"Trailhead";
+                                        parkUrl = `https://www.google.com/maps/dir/${gmeConfig.env.home.toUrl()}/${parking.lat},${parking.lng}/`;
+                                        $("#awpt_"+parking.pf)[0].parentNode.parentNode.children[1].innerHTML +=
+                                            `<a target="_blank" rel="noopener noreferrer" href="${parkUrl}"><img width="16" height="16" title="[GME] Directions to ${label}" alt="${label}" src="https://www.geocaching.com/images/icons/16/directions.png" /></a>`;
+                                    }
+                                }
                             }
                         }
-                    }
-                }
-                if (gmeConfig.env.dragdrop) {
-                    GME_Map.addControl(new L.GME_dropHandler());
-                }
-                if (cache_coords.primary[0].oldLatLng || cache_coords.primary.length + cache_coords.additional.length > 1) {
-                    uri += b64encode(JSON.stringify(cache_coords));
+                        if (gmeConfig.env.dragdrop) {
+                            GME_Map.addControl(new L.GME_dropHandler());
+                        }
+                        if (cache_coords.primary[0].oldLatLng || cache_coords.primary.length + cache_coords.additional.length > 1) {
+                            uri += b64encode(JSON.stringify(cache_coords));
 //xxxx
-                    uri = '';
-                    mapLink.href = mapLink.href.replace("http:", "https:") + uri;
-                    $('#ctl00_ContentBody_MapLinks_MapLinks a[href*="geocaching.com"]').attr("href", function(i, val) {return val + uri;});
+                            uri = '';
+                            mapLink.href = mapLink.href.replace("http:", "https:") + uri;
+                            $('#ctl00_ContentBody_MapLinks_MapLinks a[href*="geocaching.com"]').attr("href", function(i, val) {return val + uri;});
+                        }
+                        GME_displayPoints(cache_coords, GME_Map, "listing");
+                    } else {waitCount++; if (waitCount <= 50) setTimeout(function(){checkMinimap(waitCount);}, 100);}
                 }
-                GME_displayPoints(cache_coords, GME_Map, "listing");
+                checkMinimap(0);
             }
             setEnv();
         },
@@ -1320,7 +1323,7 @@ var gmeResources = {
             }
             setEnv();
         },
-        loadSeek: function () {
+        loadSeek: function() {
             function load() {
                 function goGR(e) {
                     if (e.type === "click" || (e.type === "keypress" && (e.which || e.keyCode) === 13)) {
@@ -1364,7 +1367,7 @@ var gmeResources = {
             }
             setEnv();
         },
-        loadType: function () {
+        loadType: function() {
             function load() {
                 window.GME_control = new L.GME_Widget();
                 GME_control._layerControl = GME_get_layerControl();
@@ -1390,7 +1393,7 @@ var gmeResources = {
             }
             window.setTimeout(setEnv, 3000);
         },
-        loadTrack: function () {
+        loadTrack: function() {
             function load() {
                 var caches, coords, i, name;
                 function getLogPoints (layer) {
@@ -1408,11 +1411,11 @@ var gmeResources = {
                     name = caches[i].textContent.trim();
                     map.eachLayer(getLogPoints, this);
                 }
-                $(".TrackableLogTable").on("click", ".gme-action", function(e) { map.panTo(L.latLng(this.getAttribute("data-gme-ref").split(","))); });
+                $(".TrackableLogTable").on("click", ".gme-action", function(e) {map.panTo(L.latLng(this.getAttribute("data-gme-ref").split(",")));});
             }
             setEnv();
         },
-        map: function () {
+        map: function() {
             var bounds_CI,
                 bounds_DE,
                 bounds_GB,
@@ -1424,13 +1427,13 @@ var gmeResources = {
                 },
                 wptTypes = [[/Geocache/i,"2"],[/Traditional Cache/i,"2"],[/Multi-cache/i,"3"],[/Virtual Cache/i,"4"],[/Letterbox Hybrid/i,"5"],[/Event Cache/i,"6"],[/Unknown cache/i,"8"],[/Webcam Cache/i,"11"],[/Cache In Trash Out Event/i,"13"],[/Wherigo Cache/i,"1858"],[/Locationless \(Reverse\) Cache/i,"12"],[/Mega-Event Cache/i,"453"],[/GPS Adventures Exhibit/i,"1304"],[/Groundspeak Block Party/i,"4738"],[/Groundspeak HQ/i,"3773"],[/Groundspeak Lost and Found Celebration/i,"3774"],[/Lost and Found Event Cache/i,"3653"],[/Project APE Cache/i,"9"],[/Earthcache/i,"137"],[/Question to Answer/i,"218"],[/Parking Area/i,"217"],[/Stages of a Multicache/i,"219"],[/Final Location/i,"220"],[/Trailhead/i,"221"],[/Reference Point/i,"452"]],
                 polylineObj = {
-                    initialize: function (pts, ops) {
+                    initialize: function(pts, ops) {
                         L.Polyline.prototype.initialize.call(this, pts, ops);
                         this._length = 0;
                         this._markers = L.layerGroup();
                         this._updateMarkers();
                     },
-                    addLatLng: function (pt) {
+                    addLatLng: function(pt) {
                         L.Polyline.prototype.addLatLng.call(this, pt);
                         var len = this._latlngs.length;
                         this._addMarker(pt, len);
@@ -1440,10 +1443,10 @@ var gmeResources = {
                         }
                         return this;
                     },
-                    getData:function() {
+                    getData: function() {
                         return ((typeof window.btoa === "function") ? "data:application/xml-gpx;base64," : "data:application/xml-gpx,") + b64encode(this.getGPX());
                     },
-                    getGPX:function() {
+                    getGPX: function() {
                         var name = $(".CommonUsername").attr("title"),
                             author = name ?
                                 (name + '</name>\r\n\t\t\t<link href="https://www.geocaching.com/profile/?u=' + name + '"><text>' + name + '\'s profile</text></link>\r\n') :
@@ -1526,8 +1529,8 @@ var gmeResources = {
                         for (i = z; i > 0; i--) {
                             digit = 0;
                             mask = 1 << (i - 1);
-                            if ((x & mask) !== 0) { digit += 1; }
-                            if ((y & mask) !== 0) { digit += 2; }
+                            if ((x & mask) !== 0) {digit += 1;}
+                            if ((y & mask) !== 0) {digit += 2;}
                             quad = quad + digit;
                         }
                         return quad;
@@ -1566,7 +1569,7 @@ var gmeResources = {
                 for (i=plist.primary.length-1; i>= 0; i--) {
                     p = plist.primary[i];
                     ll = L.latLng(p.lat, p.lng);
-                    if (context === "listing" || context === "dragdrop" || p.isUserDefined){
+                    if (context === "listing" || context === "dragdrop" || p.isUserDefined) {
                         layers.addLayer(L.marker(ll, {icon: new PinIcon({iconUrl:"/images/wpttypes/pins/" + checkType(p.type) + ".png",iconAnchor: L.point(10,23)}),clickable: false, zIndexOffset:98, title: p.name + (p.isUserDefined?" (Corrected coordinates)":"")}));
                         if (p.isUserDefined) {
                             layers.addLayer(L.marker(ll, {icon: new PinIcon({iconSize: new L.Point(28,23), iconAnchor: L.point(10,23), iconUrl:icons.tick}),clickable: false, zIndexOffset:99, title: p.name + " (Corrected coordinates)"}));
@@ -1576,7 +1579,7 @@ var gmeResources = {
                     }
                     if (p.isUserDefined) {
                         op = L.latLng(p.oldLatLng[0], p.oldLatLng[1]);
-                        layers.addLayer(L.polyline([op, ll], { clickable:false, weight:3 }));
+                        layers.addLayer(L.polyline([op, ll], {clickable:false, weight:3}));
                         if (context === "listing") {
                             layers.addLayer(L.circleMarker(op, {clickable:false, weight:3, radius:6}));
                         }
@@ -1619,7 +1622,7 @@ var gmeResources = {
             }
             function genericLayerFn(url, options) {
                 function filterOpts(opts) {
-                    /* Remove GME's internal options, so they don't get passed to servers (WMS in particular). */
+                    // Remove GME's internal options, so they don't get passed to servers (WMS in particular).
                     var opt, filtered = {}, exclude = ["tileUrl", "ignore", "alt"];
                     for (opt in opts) {
                         if (exclude.indexOf(opt) === -1) {
@@ -1656,12 +1659,12 @@ var gmeResources = {
                         this._zoomBoundLayers[L.stamp(layer)] = layer;
                         this._updateZoomLevels();
                     }
-                    if (this.getZoom() > this.layersMaxZoom) { this.setZoom(this.layersMaxZoom); }
-                    if (this.getZoom() < this.layersMinZoom) { this.setZoom(this.layersMinZoom); }
+                    if (this.getZoom() > this.layersMaxZoom) {this.setZoom(this.layersMaxZoom);}
+                    if (this.getZoom() < this.layersMinZoom) {this.setZoom(this.layersMinZoom);}
                     this.brightness = e.layer.options.brightness||that.parameters.brightness;
                 }
             }
-            function GME_get_layerControl(map){
+            function GME_get_layerControl(map) {
                 var maps={},overlays={},allMaps=that.parameters.maps,baseMaps,control,i,layer,src;
                 for (baseMaps=0,i=0;i<allMaps.length;i++) {
                     src = allMaps[i];
@@ -1683,7 +1686,7 @@ var gmeResources = {
                 if (baseMaps > 0) {
                     // Only return a new control if we have some basemaps.
                     control = L.control.layers(maps, overlays);
-                    control.setDefault = function () {
+                    control.setDefault = function() {
                         var defLayer, j;
                         for (j in this._layers) {
                             if (this._layers.hasOwnProperty(j) && this._layers[j].layer.default) {
@@ -1701,7 +1704,7 @@ var gmeResources = {
                 }
                 return control;
             }
-            function GME_load_map(map){
+            function GME_load_map(map) {
                 var control = GME_get_layerControl(),
                     layer;
 
@@ -1710,15 +1713,15 @@ var gmeResources = {
                     map.on("layeradd", setBrightness);
                 }
 
-                /* If we're adding our own map selector control, we need to manually remove any pre-existing map layers.  Otherwise, they persist in the background underneath
-                 * the layers provided by GME.    We check for the _url or _google attribute to distinguish map layers from other Leaflet layers like controls or popups */
+                // If we're adding our own map selector control, we need to manually remove any pre-existing map layers.  Otherwise, they persist in the background underneath
+                // the layers provided by GME. We check for the _url or _google attribute to distinguish map layers from other Leaflet layers like controls or popups.
                 if (control) {
                     if (gmeConfig.env.page === "maps" || gmeConfig.env.page === "track" || gmeConfig.env.page === "hide" || gmeConfig.env.page === "hide") {
                         $($(".leaflet-control-layers")[0]).remove();
                         for (layer in map._layers) {
                             if (map._layers[layer] instanceof L.TileLayer) {
                                 if (window.MapSettings !== undefined && MapSettings.MapLayers !== undefined && MapSettings.MapLayers.Geocache === map._layers[layer]) {
-                                    // Leave geocache layer in place
+                                    // Leave geocache layer in place.
                                 } else {
                                     map.removeLayer(map._layers[layer]);
                                 }
@@ -1730,7 +1733,7 @@ var gmeResources = {
                 }
             }
         },
-        osgb: function () {
+        osgb: function() {
             function OSGridToLatLng(E,N) {
                 var a = 6377563.396,
                     b = 6356256.910,
@@ -1823,8 +1826,8 @@ var gmeResources = {
                 var e, n,
                     l1 = letters.charCodeAt(0) - "A".charCodeAt(0),
                     l2 = letters.charCodeAt(1) - "A".charCodeAt(0);
-                if (l1 > 7) { l1--; }
-                if (l2 > 7) { l2--; }
+                if (l1 > 7) {l1--;}
+                if (l2 > 7) {l2--;}
                 e = ((l1-2)%5)*5 + (l2%5);
                 n = (19-Math.floor(l1/5)*5) - Math.floor(l2/5);
                 e += numbers.slice(0, numbers.length/2);
@@ -1840,8 +1843,8 @@ var gmeResources = {
             function parseGR(searchVal) {
                 var ngr, gr = searchVal.match(/^\s*([hnstHNST][A-Ha-hJ-Zj-z])\s*((?:\d\d){1,5})\s*$/);
                 if (gr) {
-                    if (gr.length===3){
-                        if (2* Math.floor(gr[2].length / 2) === gr[2].length){
+                    if (gr.length === 3) {
+                        if (2* Math.floor(gr[2].length / 2) === gr[2].length) {
                             ngr = gridrefLetToNum(gr[1], gr[2]);
                             return OSGridToLatLng(ngr[0], ngr[1]);
                         }
@@ -1850,14 +1853,14 @@ var gmeResources = {
                 }
                 gr = searchVal.match(/^\s*(\d{3,6})\s*,\s*(\d{4,7})\s*$/);
                 if (gr) {
-                    if (gr.length===3){
+                    if (gr.length === 3) {
                         return OSGridToLatLng(gr[1], gr[2]);
                     }
                 }
                 return null;
             }
         },
-        seek: function () {
+        seek: function() {
             this.seekGR = function(searchVal) {
                 if (searchVal.length > 0) {
                     var coords = parseGR(searchVal);
@@ -1869,14 +1872,14 @@ var gmeResources = {
                 }
             };
         },
-        widget: function () {
+        widget: function() {
             var locationControlObj = {
-                onAdd:function(map){
+                onAdd: function(map) {
                     var el, tracking=false, container=L.DomUtil.create("div", "leaflet-control-toolbar groundspeak-control-findmylocation gme-left");
-                    function located(l){
+                    function located(l) {
                         this.panTo(l.latlng);
                     }
-                    function click(e){
+                    function click(e) {
                         L.DomEvent.stopPropagation(e);
                         if (tracking) {
                             map.stopLocate();
@@ -1910,8 +1913,8 @@ var gmeResources = {
                 }
             },
             widgetControlObj = {
-                options:{position:"bottomleft"},
-                onAdd:function(contextmap){
+                options: {position:"bottomleft"},
+                onAdd: function(contextmap) {
                     var elem, container=L.DomUtil.create("div","leaflet-control-gme"), control=this, html="";
                     function onPopup(e) {
                         if (e.layer._container && /leaflet-popup/.test(e.layer._container.className)) {
@@ -1941,18 +1944,18 @@ var gmeResources = {
                                 coords = new L.LatLng(c2[1], c2[3]);
                             }
                         }
-                        if (action === "clearDist") { control.clearDist(); }
-                        if (action === "clearMarkers") { control.clearMarkers(); }
-                        if (action === "dropDist" && coords) { control.dropDist(coords); }
-                        if (action === "dropMarker" && coords) { control.dropMarker(coords); }
-                        if (action === "exportDist") { control.exportDist(this); }
-                        if (action === "getGeograph" && coords) { that.getGeograph(coords); }
-                        if (action === "getHeight" && coords) { that.getHeight(coords); }
-                        if (action === "getPostcode" && coords) { control.getPostcode(coords); }
-                        if (action === "panTo" && coords) { e.data.panTo(coords); }
-                        if (action === "removeMarker" && data) { control.removeMarker(data); }
-                        if (action === "removeDistMarker" && data) { control.removeDistMarker(data); }
-                        if (action === "toggleCaches") { control.toggleCaches(); }
+                        if (action === "clearDist") {control.clearDist();}
+                        if (action === "clearMarkers") {control.clearMarkers();}
+                        if (action === "dropDist" && coords) {control.dropDist(coords);}
+                        if (action === "dropMarker" && coords) {control.dropMarker(coords);}
+                        if (action === "exportDist") {control.exportDist(this);}
+                        if (action === "getGeograph" && coords) {that.getGeograph(coords);}
+                        if (action === "getHeight" && coords) {that.getHeight(coords);}
+                        if (action === "getPostcode" && coords) {control.getPostcode(coords);}
+                        if (action === "panTo" && coords) {e.data.panTo(coords);}
+                        if (action === "removeMarker" && data) {control.removeMarker(data);}
+                        if (action === "removeDistMarker" && data) {control.removeDistMarker(data);}
+                        if (action === "toggleCaches") {control.toggleCaches();}
                         $(".leaflet-popup-close-button").each(function() {this.click();});
                     }
                     function dragGPXHandler(e) {
@@ -1966,10 +1969,10 @@ var gmeResources = {
                     function widgetHandler(e) {
                         var action = this.getAttribute("data-gme-action");
                         e.stopPropagation();
-                        if (action === "panToHome") { control.panToHome(); }
-                        if (action === "toggleInfo") { control.toggleTool("info"); }
-                        if (action === "toggleRoute") { control.toggleTool("route"); }
-                        if (action === "toggleCaches") { control.toggleCaches(); }
+                        if (action === "panToHome") {control.panToHome();}
+                        if (action === "toggleInfo") {control.toggleTool("info");}
+                        if (action === "toggleRoute") {control.toggleTool("route");}
+                        if (action === "toggleCaches") {control.toggleCaches();}
                     }
                     this._map = contextmap;
                     this._map.infoMode = false;
@@ -1992,10 +1995,10 @@ var gmeResources = {
                     container.innerHTML += "<span class=\'gme-button gme-button-l gme-button-r gme-scale-container\' title=\'Approximate width of the full map view\' style=\'cursor:help;\'>Width: <span class=\'gme-scale\'>-</span></span><span class=\'gme-distance-container gme-button gme-button-r\' title=\'Measured distance\'>Route: <span class=\'gme-distance\'>"+ formatDistance(0) +"</span></span>";
                     contextmap.addControl(new L.GME_ZoomWarning()).on("layeradd", onPopup).on("layerremove", offPopup).on("viewreset", this.updateScale, this);
                     $(container).on("click", ".gme-button", this, widgetHandler);
-                    $(window).on("resize", this, (function (context) { var t = {timer: null}; return function () { context.updateScale(context._map, t);}; } (this)));
+                    $(window).on("resize", this, (function(context) {var t = {timer: null}; return function() {context.updateScale(context._map, t);};} (this)));
                     return container;
                 },
-                clearDist:function () {
+                clearDist: function() {
                     this._dist_line.off("gme-length");
                     this._map.removeLayer(this._dist_line);
                     delete this._dist_line;
@@ -2003,15 +2006,15 @@ var gmeResources = {
                     $(".gme-distance").html(formatDistance(0));
                     $(".gme-scale-container").addClass("gme-button-r");
                 },
-                clearMarkers:function () {
+                clearMarkers: function() {
                     this._markers.clearLayers();
                 },
-                dropDist:function(ll) {
-                    if (!validCoords(ll)) { return; }
+                dropDist: function(ll) {
+                    if (!validCoords(ll)) {return;}
                     var dist, formatted;
                     if (this._dist_line === undefined) {
                         this._dist_line = new L.GME_DistLine([ll], {clickable:false});
-                        this._dist_line.on("gme-length", function (e) { $(this._map._container).find(".gme-distance").html(formatDistance(e.length)); });
+                        this._dist_line.on("gme-length", function(e) {$(this._map._container).find(".gme-distance").html(formatDistance(e.length));});
                         this._map.addLayer(this._dist_line);
                         $(this._map._container).find(".gme-distance-container").addClass("show");
                         $(this._map._container).find(".gme-scale-container").removeClass("gme-button-r");
@@ -2019,14 +2022,14 @@ var gmeResources = {
                         this._dist_line.addLatLng(ll);
                     }
                 },
-                exportDist:function(e) {
-                    if (!this._dist_line) { return; }
+                exportDist: function(e) {
+                    if (!this._dist_line) {return;}
                     e.download = "ExportedRoute.gpx";
                     e.href = "data:application/xml-gpx," + encodeURIComponent(this._dist_line.getGPX());
                     return false;
                 },
-                dropMarker:function(ll, rad) {
-                    if (!validCoords(ll)) { return; }
+                dropMarker: function(ll, rad) {
+                    if (!validCoords(ll)) {return;}
                     var circle,
                         defaultRadius = 0.161,
                         group,
@@ -2055,7 +2058,7 @@ var gmeResources = {
                     }
                     if (radius) {
                         radius *= m;
-                        if (isNaN(radius)) { radius = 161; }
+                        if (isNaN(radius)) {radius = 161;}
                     } else {
                         radius = 161;
                     }
@@ -2065,9 +2068,9 @@ var gmeResources = {
                     r = (radius / m).toFixed(3) + " " + unit;
                     circle.bindPopup("<p><strong>" + label + "</strong><br/>Radius: " + r + "<br/>Centre: decimal " + ll.toUrl() + "<br/><strong>" + DMM(ll) + "</strong><br/><span style='float:right;'><a class='gme-event' data-gme-action='removeMarker' data-gme-ref='" + group._leaflet_id + "'>Clear</a>, <a class='gme-event' data-gme-action='clearMarkers'>Clear All</a></span></p>");
                 },
-                getPostcode:function(coords) {
+                getPostcode: function(coords) {
                     var that = this, callprefix="GME_postcode_callback",call;
-                    function makeCallback(callname) { callbackCount++; return function (json) {
+                    function makeCallback(callname) {callbackCount++; return function(json) {
                         var m;
                         if (json !== undefined && json.status === 200) {
                             if (json.result && json.result.length > 0) {
@@ -2084,7 +2087,7 @@ var gmeResources = {
                             $.fancybox(m);
                         }
                         $("#"+callname).remove();
-                        if (window[callname] !== undefined) { delete window[callname]; }
+                        if (window[callname] !== undefined) {delete window[callname];}
                     };}
                     if (validCoords(coords)) {
                         call = callprefix + callbackCount;
@@ -2094,30 +2097,30 @@ var gmeResources = {
                         console.error("GME: Bad coordinates to getPostcode");
                     }
                 },
-                panToHome:function () {
+                panToHome: function() {
                     if (gmeConfig.env.home) {
                         this._map.panTo(gmeConfig.env.home);
                         return true;
                     }
                     return false;
                 },
-                removeDistMarker:function(mark){
+                removeDistMarker: function(mark) {
                     if (this._dist_line) {
                         this._dist_line.removePt(mark);
                         $(this._map._container).find(".gme-distance").html(formatDistance(this._dist_line.getLength()));
                     }
                 },
-                removeMarker:function(mark){
+                removeMarker: function(mark) {
                     this._markers.removeLayer(this._markers._layers[mark]);
                 },
-                removeMarkers:function(mark){
+                removeMarkers: function(mark) {
                     this._markers.clearLayer(this._markers._layers[mark]);
                 },
-                showInfo:function (e) {
+                showInfo: function(e) {
                     var control=this, popupContent="<p>", popup = new L.Popup(), i;
 
-                    for(i = 0; i < this.tools.length; i++) {
-                        if( this.tools[i].isValid(e.latlng, control._map.getZoom())) {
+                    for (i = 0; i < this.tools.length; i++) {
+                        if (this.tools[i].isValid(e.latlng, control._map.getZoom())) {
                             popupContent += this.tools[i].getHTML(e.latlng, control._map.getZoom(), control._map) + " ";
                         }
                     }
@@ -2134,14 +2137,14 @@ var gmeResources = {
                             var ll = coords.toUrl();
                             return "<strong>" + DMM(coords) + "</strong><br/>Dec: <a href='geo:" + ll + "?z=" + zoom + "'>" + ll + "</a></br>";
                         },
-                        isValid: function(coords, zoom) { return true; }
+                        isValid: function(coords, zoom) {return true;}
                     },
                     {
                         name: "List caches",
                         getHTML: function(coords, zoom, map) {
                             return "<a title='List " + (that.parameters.filterFinds ? "unfound " : "") + "caches near point' href='https://www.geocaching.com/seek/nearest.aspx?lat=" + coords.lat + "&lng=" + coords.lng + (that.parameters.filterFinds ? "&f=1" : "") + "' target='_blank' rel='noopener noreferrer'>List caches</a>";
                         },
-                        isValid: function(coords, zoom) { return true; }
+                        isValid: function(coords, zoom) {return true;}
                     },
                     {
                         name: "Geograph",
@@ -2221,7 +2224,7 @@ var gmeResources = {
                     {
                         name: "MapApp",
                         getHTML: function(coords, zoom, map) {
-                            /* Open Bing Maps app if available, otherwise use a cross-platform Google Maps URI */
+                            // Open Bing Maps app if available, otherwise use a cross-platform Google Maps URI.
                             return "<a title='Launch Bing Maps' href='bingmaps:?cp=" + coords.lat + "~" + coords.lng + "' target='_blank' rel='noopener noreferrer'><a title='Launch Google Maps' href='https://www.google.com/maps/@?api=1&map_action=map&center=" + coords.toUrl() + "&zoom=" + zoom + "' target='_blank' rel='noopener noreferrer'>Maps</a></a>";
                         },
                         isValid: function(coords, zoom) {
@@ -2229,11 +2232,11 @@ var gmeResources = {
                         }
                     }
                 ],
-                showRoute:function(e) {
+                showRoute: function(e) {
                     L.DomEvent.stopPropagation(e);
                     this.dropDist(e.latlng);
                 },
-                toggleCaches:function() {
+                toggleCaches: function() {
                     if (window.MapSettings && MapSettings.MapLayers && MapSettings.MapLayers.AddGeocacheLayer && MapSettings.MapLayers.RemoveGeocacheLayer) {
                         if (MapSettings.MapLayers.Geocache) {
                             MapSettings.MapLayers.RemoveGeocacheLayer();
@@ -2244,7 +2247,7 @@ var gmeResources = {
                         }
                     }
                 },
-                toggleTool:function(mode) {
+                toggleTool: function(mode) {
                     var that = this, widgets = {
                         info: {
                             on: function() {
@@ -2283,11 +2286,11 @@ var gmeResources = {
                         widgets[mode].on();
                     }
                 },
-                search:function (searchVal) {
+                search: function(searchVal) {
                     var gr, m, call, callbackPrefix = "GME_search_callback", coords=false, marker, that=this;
                     function searchGS(searchVal) {
                         $(".GME_search_results").addClass("hidden");
-                        $.getJSON("/api/geocode",{q:searchVal},function(a){
+                        $.getJSON("/api/geocode",{q:searchVal},function(a) {
                             if (a.status==="success") {
                                 that._map.panTo(new L.LatLng(a.data.lat,a.data.lng));
                             } else {
@@ -2295,7 +2298,7 @@ var gmeResources = {
                             }
                         });
                     }
-                    function makeCallback2(callname) { callbackCount++; return function(json) {
+                    function makeCallback2(callname) {callbackCount++; return function(json) {
                         var i, j;
                         if (json.geonames && json.geonames.length > 0) {
                             $(".GME_search_list").empty();
@@ -2305,15 +2308,15 @@ var gmeResources = {
                             $(".GME_search_results").removeClass("hidden");
                             $(".GME_search_results.ui-collapsible-collapsed a.ui-collapsible-heading-toggle").click();
                             $(".GME_link_GSSearch").off("click");
-                            $(".GME_link_GSSearch").click(function () { searchGS(searchVal); });
+                            $(".GME_link_GSSearch").click(function() {searchGS(searchVal);});
                             that._map.panTo(new L.LatLng(json.geonames[0].lat,json.geonames[0].lng));
                         } else {
                             searchGS(searchVal);
                         }
                         $("#"+callname).remove();
-                        if (window[callname] !== undefined) { delete window[callname]; }
+                        if (window[callname] !== undefined) {delete window[callname];}
                     };}
-                    function makeCallback1(callname) { callbackCount++; return function(json) {
+                    function makeCallback1(callname) {callbackCount++; return function(json) {
                         var newCall=callbackPrefix+callbackCount;
                         if (json.countryCode) {
                             window[newCall] = makeCallback2(newCall);
@@ -2322,7 +2325,7 @@ var gmeResources = {
                             searchGS(searchVal);
                         }
                         $("#"+callname).remove();
-                        if (window[callname] !== undefined) { delete window[callname]; }
+                        if (window[callname] !== undefined) {delete window[callname];}
                     };}
                     if (searchVal.length > 0) {
                         m = searchVal.match(/^\s*(?:z|zoom)\s*(\d\d?)\s*$/i);
@@ -2364,10 +2367,10 @@ var gmeResources = {
                     }
                     return false;
                 },
-                panToGC:function(gc) {
+                panToGC: function(gc) {
           var req = new XMLHttpRequest(),
               map = this._map || e;
-          req.addEventListener("load", function (e) {
+          req.addEventListener("load", function(e) {
             var r = req.responseText,
                 k = r.indexOf("mapLatLng = {"),
                 c;
@@ -2388,7 +2391,7 @@ var gmeResources = {
           req.open("GET", "https://www.geocaching.com/geocache/" + gc);
           req.send();
                 },
-                updateScale:function (e, timer) {
+                updateScale: function(e, timer) {
                     var map = this._map || e;
 
                     if (!map.getBounds) {
@@ -2404,7 +2407,7 @@ var gmeResources = {
 
                     if (timer !== undefined) {
                         window.clearTimeout(timer.timer);
-                        timer.timer = window.setTimeout(function() { map.whenReady(updateMap); return false; }, 200);
+                        timer.timer = window.setTimeout(function() {map.whenReady(updateMap); return false;}, 200);
                     } else {
                         map.whenReady(updateMap);
                     }
@@ -2413,7 +2416,7 @@ var gmeResources = {
             },
             zoomWarningObj = {
                 options:{position:"topleft"},
-                onAdd:function(map){
+                onAdd: function(map) {
                     var c = L.DomUtil.create("div","leaflet-control-zoomwarning gme-left");
                     function checkZoom() {
                         if (map.getZoom() > map.layersMaxZoom) {
@@ -2470,7 +2473,7 @@ var gmeResources = {
                 return control;
             }
         },
-        xhr: function (e) {
+        xhr: function(e) {
             var node = document.getElementById("gme_jsonp_node"),
                 callback = node.getAttribute("data-gme-callback"),
                 url = node.text,
@@ -2492,10 +2495,10 @@ var gmeResources = {
                     }
                 };
             if (gmeResources.env.xhr === 'GM4') {
-                // GreaseMonkey 4+
+                // GreaseMonkey 4+.
                 GM.xmlHttpRequest(details);
             } else {
-                // Other userscript engines
+                // Other userscript engines.
                 setTimeout(function() {
                     GM_xmlhttpRequest(details);
                 }, 0);
@@ -2524,7 +2527,7 @@ function buildScript() {
     }
     insertScript(
         'var GME;\
-        (function () {\
+        (function() {\
             "use strict";\
             function GeocachingMapEnhancements() {\
                 var gmeConfig = ' + JSON.stringify({env: gmeResources.env, parameters: gmeResources.parameters}) +    ";" +
@@ -2538,10 +2541,10 @@ function buildScript() {
 }
 
 function insertCSS(css) {
-    if (typeof css !== "string") { console.warn("GME: insertCSS not called with string: " + typeof css); return;    }
+    if (typeof css !== "string") {console.warn("GME: insertCSS not called with string: " + typeof css); return;}
     var style = document.createElement('style');
     style.type = 'text/css';
-    if (style.styleSheet){
+    if (style.styleSheet) {
         style.styleSheet.cssText = css;
     } else {
         style.appendChild(document.createTextNode(css));
@@ -2564,8 +2567,7 @@ function insertPage(div, src, title, back) {
 
 function insertScript(src, id) {
     console.log("GME: Inserting script: " + id);
-//    console.debug(src);
-    if (typeof src !== "string") { console.warn("GME: insertScript not called with string."); return; }
+    if (typeof src !== "string") {console.warn("GME: insertScript not called with string."); return;}
     var s = document.createElement("script");
     s.type = "text/javascript";
     s.text = src;
@@ -2609,20 +2611,22 @@ function xhr(e) {
     if (gmeResources.env.xhr === 'GM4') {
         GM.xmlHttpRequest(details);
     } else {
-        setTimeout(function() { GM_xmlhttpRequest(details);}, 0);
+        setTimeout(function() {GM_xmlhttpRequest(details);}, 0);
     }
 }
 
-//don't run on frames or iframes
-if (window.top !== window.self) { return; }
+// Don't run on frames or iframes.
+if (window.top !== window.self) {return;}
 
-if(!(typeof JSON === 'object' && typeof JSON.parse === 'function')) {
+if (!(typeof JSON === 'object' && typeof JSON.parse === 'function')) {
     console.error("Geocaching Map Enhancements requires a browser with JSON support.");
     return;
 }
 
-if(document.querySelector("head[data-gme-version]")) {
-    console.error("Aborting: GME already running on page: " + document.location);
+if (document.querySelector("head[data-gme-version]")) {
+    var mess = 'Geocaching Map Enhancements v' + gmeResources.parameters.version + ':\n- Aborting: GME already running with version ' + $('#Head1')[0].getAttribute('data-gme-version');
+    console.error(mess);
+    alert(mess);
     return;
 }
 document.documentElement.firstChild.setAttribute("data-gme-version", gmeResources.parameters.version);
@@ -2635,15 +2639,15 @@ for (i = 0; i < pageTests.length; i++) {
 }
 
 try {
-    if (window.localStorage !== undefined && window.localStorage !== null) { gmeResources.env.storage = true; }
+    if (window.localStorage !== undefined && window.localStorage !== null) {gmeResources.env.storage = true;}
 } catch (e) {
-    /*Potential security exception*/
+    // Potential security exception.
     console.warn("No localStorage capability - GME cannot set configuration");
 }
 
-if(gmeResources.env.storage) {
+if (gmeResources.env.storage) {
     var a, b, customJSON, GME_custom, paramsJSON, storedParams;
-    /* List of defunct tileUrls to remove from settings */
+    // List of defunct tileUrls to remove from settings.
     var blacklist = [
         "https://ecn.t{s}.tiles.virtualearth.net/tiles/r{q}?g=737&productSet=mmOS",
         "https://ecn.t{s}.tiles.virtualearth.net/tiles/r{q}?g=864&productSet=mmCB",
@@ -2656,14 +2660,15 @@ if(gmeResources.env.storage) {
         if (paramsJSON) {
             try {
                 storedParams = JSON.parse(paramsJSON);
-//xxxx
                 if (storedParams.version !== gmeResources.parameters.version) {
+                    // Simulate installation counter.
+                    $('body').append('<div id="GME_simu" style="display: none"> <img src="https://s11.flagcounter.com/count2/s7uX/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt=""></div>');
+                    setTimeout(function() {$("#GME_simu").remove();}, 500);
                     for (a in gmeResources.parameters) {
                         if (gmeResources.parameters.hasOwnProperty(a)) {
-                            if (storedParams[a]===undefined){storedParams[a]=gmeResources.parameters[a];}
+                            if (storedParams[a]===undefined) {storedParams[a]=gmeResources.parameters[a];}
                         }
                     }
-//xxxx2 hier könnte man ein Bild einbauen um die Updates zu zählen.
                     alert("Geocaching Map Enhancements has been updated to v" + gmeResources.parameters.version + ". " + gmeResources.parameters.versionMsg);
                     storedParams.version = gmeResources.parameters.version;
                     localStorage.setItem("GME_parameters",JSON.stringify(storedParams));
@@ -2677,7 +2682,7 @@ if(gmeResources.env.storage) {
                 console.warn("GME: Could not parse stored configuration parameters.");
             }
         }
-        /* Import old-style custom maps */
+        // Import old-style custom maps.
         customJSON = localStorage.getItem("GME_custom");
         if (customJSON) {
             console.info("GME: Found stored custom settings");
@@ -2691,7 +2696,7 @@ if(gmeResources.env.storage) {
                 console.warn("GME: Could not parse stored custom maps.");
             }
         }
-        /* Remove old-style builtin maps */
+        // Remove old-style builtin maps.
         if (gmeResources.parameters.includeMaps) {
             delete gmeResources.parameters.includeMaps;
         }
@@ -2706,9 +2711,9 @@ if(gmeResources.env.storage) {
             delete gmeResources.parameters.excludeMaps;
         }
 
-        /* Remove broken map sources */
+        // Remove broken map sources.
         for (a = gmeResources.parameters.maps.length - 1;  a >= 0; a--) {
-            for(b = 0; b < blacklist.length; b++) {
+            for (b = 0; b < blacklist.length; b++) {
                 if (gmeResources.parameters.maps[a].tileUrl === blacklist[b]) {
                     gmeResources.parameters.maps.splice(a,1);
                 }
@@ -2716,9 +2721,9 @@ if(gmeResources.env.storage) {
         }
 
         localStorage.setItem("GME_parameters",JSON.stringify(gmeResources.parameters));
-    } catch (e){
+    } catch (e) {
         console.error("GME: Bad Exception: " + e);
-        /* Potential security exception. Carry on with default parameters, but block localstorage */
+        // Potential security exception. Carry on with default parameters, but block localstorage.
         gmeResources.env.storage = false;
     }
 }
@@ -2726,37 +2731,35 @@ if(gmeResources.env.storage) {
 document.addEventListener("GME_XHR_event", xhr);
 
 if (!gmeResources.env.geolocation) {
-    gmeResources.script.dist = function () { console.warn("GME: Geolocation not available"); };
+    gmeResources.script.dist = function() {console.warn("GME: Geolocation not available");};
 }
 if (!gmeResources.env.dragdrop) {
-    gmeResources.script.drag = function () { console.warn("GME: Drag and Drop not available"); };
+    gmeResources.script.drag = function() {console.warn("GME: Drag and Drop not available");};
     gmeResources.script.drop = gmeResources.script.drag;
 }
 
 insertCSS(gmeResources.css.main);
-if(gmeResources.env.storage) {
+if (gmeResources.env.storage) {
     insertPage('GME_config', gmeResources.html.config, 'Configure GME v' + gmeResources.parameters.version);
     insertPage('GME_format', gmeResources.html.customInfo, 'Custom Mapsource Format', 'GME_config');
 }
 
-//    <bugfix>
-    // Trixie treats jQuery Mobile dialogs as new page loads, resetting GME's functions
-    if (window.GME !== undefined) { return; }
-//    </bugfix>
+// Trixie treats jQuery Mobile dialogs as new page loads, resetting GME's functions.
+if (window.GME !== undefined) {return;}
 
 switch(gmeResources.env.page) {
     case "listing":
-        // On a geocache listing
+        // On a geocache listing.
         if (!gmeResources.env.loggedin) {
-            // Not logged in, so no maps or coordinates...
+            // Not logged in, so no maps or coordinates.
             console.log("GME: Couldn't detect log-in.  Exiting...");
             return;
         }
-        if (gmeResources.env.dragdrop) { insertCSS(gmeResources.css.drag); }
+        if (gmeResources.env.dragdrop) {insertCSS(gmeResources.css.drag);}
         buildScript("GME_page_listing", "common", gmeResources.env.storage ? "config" : "", "map", "dist", "drag", "drop", "loadListing");
         break;
     case "seek":
-        // On the Hide & Seek page
+        // On the Hide & Seek page.
         target2 = document.querySelector(".SeekCacheWidget h4");
         targets = document.getElementsByTagName("h5");
         for (i = 0; i < targets.length; i++) {
@@ -2777,22 +2780,16 @@ switch(gmeResources.env.page) {
         }
         break;
     case "track":
-        // On a TB tracking map
+        // On a TB tracking map.
         if (!gmeResources.env.loggedin) {
-            // Not logged in, so no maps or coordinates...
+            // Not logged in, so no maps or coordinates.
             return;
         }
         buildScript("GME_page_track", "common", gmeResources.env.storage ? "config" : "", "map", "widget", "loadTrack");
         break;
     case "maps":
-        // On a Geocaching Maps page
-        // TODO: Detect if the Google Maps API is being used instead of Leaflet, and quit gracefully
-/*        if (document.querySelector("script[src*='//maps.googleapis.com/']")){
-            console.warn("Geocaching Map Enhancements requires Leaflet Maps to be enabled.");
-            return;
-    f    }
-*/
-        // Check for click-thru cache data in URI
+        // On a Geocaching Maps page.
+        // Check for click-thru cache data in URI.
         var pop = location.search.match(/pop=([A-Za-z0-9+\/=]+)[\?&]?/);
         if (pop && pop.length === 2) {
             try {
@@ -2820,7 +2817,7 @@ switch(gmeResources.env.page) {
         buildScript("GME_page_hide", "common", gmeResources.env.storage ? "config" : "", "map", "widget", "drop", "loadHide");
         break;
     default:
-        // Somewhere random on the main website
+        // Somewhere random on the main website.
         if (gmeResources.env.storage) {
             buildScript("Generic config", "common", "config", "loadDefault");
         }
