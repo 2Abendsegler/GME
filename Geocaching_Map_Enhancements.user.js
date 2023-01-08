@@ -23,8 +23,8 @@
 //xxxx
 // @updateURL   https://github.com/2Abendsegler/GME/raw/collector/Geocaching_Map_Enhancements.user.js
 // @downloadURL https://github.com/2Abendsegler/GME/raw/collector/Geocaching_Map_Enhancements.user.js
-// @icon        https://github.com/2Abendsegler/GME/raw/collector/images/gme_logo.png
-// @icon64      https://github.com/2Abendsegler/GME/raw/collector/images/gme_logo_64.png
+// @icon        https://github.com/2Abendsegler/GME/raw/collector/images/GeocachingMap48.png
+// @icon64      https://github.com/2Abendsegler/GME/raw/collector/images/GeocachingMap64.png
 // ==/UserScript==
 
 /* jshint multistr: true */
@@ -73,26 +73,26 @@ var gmeResources = {
             .GME_search_results.hidden {display: none;}\
             .groundspeak-control-findmylocation {border: 1px solid #888; border-radius: 5px; box-shadow: 0 0 8px rgba(0, 0, 0, 0.4); padding:0; background:rgba(255,255,255,0.8);}\
             .groundspeak-control-findmylocation a {padding: 3px;}\
-            .gme-button {display: inline-block; box-sizing: content-box; -moz-box-sizing: content-box; padding:3px; vertical-align:middle; background: no-repeat #eee; background-color: rgba(255,255,255,0.8); border: 1px solid #888; border-right:0; height:19px; width:19px; text-decoration: none;}\
+            .gme-button {display: inline-block; box-sizing: content-box; -moz-box-sizing: content-box; padding: 2px; vertical-align: middle; background: no-repeat #eee; background-color: rgba(255,255,255,0.8); border: 1px solid #888; height: 22px; width: 22px; text-decoration: none;}\
             .gme-button-l {border-bottom-left-radius:5px; border-top-left-radius:5px;}\
             .gme-button-r {border-right: 1px solid #888; border-bottom-right-radius: 5px; border-top-right-radius:5px; margin-right:0.5em;}\
             .gme-button:hover {background-color: #fff;}\
-            .gme-button-active {border:solid 3px #02b; padding:1px 0 1px 1px; background-color:#fff;}\
+            .gme-button-active {border: solid 3px #02b; padding: 0px; background-color: #fff;}\
             .gme-button-active:hover {border-color:#63f;filter:alpha(opacity=100);}\
             span.gme-button, .gme-button-wide {padding-left:5px; padding-right:5px; font-size:12px; font-weight:bold; width:auto; background-image:none; color: #424242;}\
-            .GME_home {background-size: 18px 18px; background-position: center;background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4IgogICAgIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIKICAgICB2aWV3Qm94PSIwIDAgMzAgMzAiCiAgICAgc3R5bGU9ImZpbGw6IzAwMDAwMDsiPiAgICA8cGF0aCBkPSJNIDE1IDIgQSAxIDEgMCAwIDAgMTQuMzAwNzgxIDIuMjg1MTU2MiBMIDMuMzkyNTc4MSAxMS4yMDcwMzEgQSAxIDEgMCAwIDAgMy4zNTU0Njg4IDExLjIzNjMyOCBMIDMuMzE4MzU5NCAxMS4yNjc1NzggTCAzLjMxODM1OTQgMTEuMjY5NTMxIEEgMSAxIDAgMCAwIDMgMTIgQSAxIDEgMCAwIDAgNCAxMyBMIDUgMTMgTCA1IDI0IEMgNSAyNS4xMDUgNS44OTUgMjYgNyAyNiBMIDIzIDI2IEMgMjQuMTA1IDI2IDI1IDI1LjEwNSAyNSAyNCBMIDI1IDEzIEwgMjYgMTMgQSAxIDEgMCAwIDAgMjcgMTIgQSAxIDEgMCAwIDAgMjYuNjgxNjQxIDExLjI2NzU3OCBMIDI2LjY2NjAxNiAxMS4yNTU4NTkgQSAxIDEgMCAwIDAgMjYuNTk3NjU2IDExLjE5OTIxOSBMIDI1IDkuODkyNTc4MSBMIDI1IDYgQyAyNSA1LjQ0OCAyNC41NTIgNSAyNCA1IEwgMjMgNSBDIDIyLjQ0OCA1IDIyIDUuNDQ4IDIyIDYgTCAyMiA3LjQzOTQ1MzEgTCAxNS42Nzc3MzQgMi4yNjc1NzgxIEEgMSAxIDAgMCAwIDE1IDIgeiBNIDE4IDE1IEwgMjIgMTUgTCAyMiAyMyBMIDE4IDIzIEwgMTggMTUgeiI+PC9wYXRoPjwvc3ZnPg==")}\
-            .GME_config {background-size: 18px 18px; background-position: center;background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4IgogICAgIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIKICAgICB2aWV3Qm94PSIwIDAgMzIgMzIiCiAgICAgc3R5bGU9ImZpbGw6IzAwMDAwMDsiPjxnIGlkPSJzdXJmYWNlMSI+PHBhdGggc3R5bGU9IiAiIGQ9Ik0gMjEuNSAyLjUgTCAyMS41IDMuOTA2MjUgQyAyMC42NjQwNjMgNC4wNTQ2ODggMTkuODg2NzE5IDQuMzcxMDk0IDE5LjIxODc1IDQuODQzNzUgTCAxOC4xODc1IDMuODc1IEwgMTYuODEyNSA1LjM0Mzc1IEwgMTcuODEyNSA2LjI4MTI1IEMgMTcuMzYzMjgxIDYuOTM3NSAxNy4wNTA3ODEgNy42ODc1IDE2LjkwNjI1IDguNSBMIDE1LjUgOC41IEwgMTUuNSAxMC41IEwgMTYuOTA2MjUgMTAuNSBDIDE3LjA1MDc4MSAxMS4zMjgxMjUgMTcuMzc4OTA2IDEyLjA4NTkzOCAxNy44NDM3NSAxMi43NSBMIDE2Ljc4MTI1IDEzLjc4MTI1IEwgMTguMjE4NzUgMTUuMjE4NzUgTCAxOS4yNSAxNC4xNTYyNSBDIDE5LjkxNDA2MyAxNC42MjEwOTQgMjAuNjcxODc1IDE0Ljk0OTIxOSAyMS41IDE1LjA5Mzc1IEwgMjEuNSAxNi41IEwgMjMuNSAxNi41IEwgMjMuNSAxNS4wOTM3NSBDIDI0LjMxMjUgMTQuOTQ5MjE5IDI1LjA2MjUgMTQuNjM2NzE5IDI1LjcxODc1IDE0LjE4NzUgTCAyNi42NTYyNSAxNS4xODc1IEwgMjguMTI1IDEzLjgxMjUgTCAyNy4xNTYyNSAxMi43ODEyNSBDIDI3LjYyODkwNiAxMi4xMTMyODEgMjcuOTQ1MzEzIDExLjMzNTkzOCAyOC4wOTM3NSAxMC41IEwgMjkuNSAxMC41IEwgMjkuNSA4LjUgTCAyOC4wOTM3NSA4LjUgQyAyNy45NDkyMTkgNy42NzE4NzUgMjcuNjIxMDk0IDYuOTE0MDYzIDI3LjE1NjI1IDYuMjUgTCAyOC4wOTM3NSA1LjMxMjUgTCAyNi42ODc1IDMuOTA2MjUgTCAyNS43NSA0Ljg0Mzc1IEMgMjUuMDg1OTM4IDQuMzc4OTA2IDI0LjMyODEyNSA0LjA1MDc4MSAyMy41IDMuOTA2MjUgTCAyMy41IDIuNSBaIE0gMjIuNSA1LjgxMjUgQyAyNC41NTQ2ODggNS44MTI1IDI2LjE4NzUgNy40NDUzMTMgMjYuMTg3NSA5LjUgQyAyNi4xODc1IDExLjU1NDY4OCAyNC41NTQ2ODggMTMuMTg3NSAyMi41IDEzLjE4NzUgQyAyMC40NDUzMTMgMTMuMTg3NSAxOC44MTI1IDExLjU1NDY4OCAxOC44MTI1IDkuNSBDIDE4LjgxMjUgNy40NDUzMTMgMjAuNDQ1MzEzIDUuODEyNSAyMi41IDUuODEyNSBaIE0gOS41MzEyNSAxMS43MTg3NSBMIDcuNjg3NSAxMi40Njg3NSBMIDguNDA2MjUgMTQuMjgxMjUgQyA3LjQ1MzEyNSAxNC44NTE1NjMgNi42NDA2MjUgMTUuNjQ4NDM4IDYuMDYyNSAxNi41OTM3NSBMIDQuMjgxMjUgMTUuODc1IEwgMy41MzEyNSAxNy43MTg3NSBMIDUuMzEyNSAxOC40Mzc1IEMgNS4xNzk2ODggMTguOTY0ODQ0IDUuMDkzNzUgMTkuNTIzNDM4IDUuMDkzNzUgMjAuMDkzNzUgQyA1LjA5Mzc1IDIwLjY2NDA2MyA1LjE3OTY4OCAyMS4yMTg3NSA1LjMxMjUgMjEuNzUgTCAzLjUzMTI1IDIyLjQ2ODc1IEwgNC4yODEyNSAyNC4zMTI1IEwgNi4wNjI1IDIzLjU5Mzc1IEMgNi42NDA2MjUgMjQuNTU0Njg4IDcuNDQ1MzEzIDI1LjM1OTM3NSA4LjQwNjI1IDI1LjkzNzUgTCA3LjY4NzUgMjcuNzE4NzUgTCA5LjUzMTI1IDI4LjQ2ODc1IEwgMTAuMjUgMjYuNjg3NSBDIDEwLjc4MTI1IDI2LjgyMDMxMyAxMS4zMzIwMzEgMjYuOTA2MjUgMTEuOTA2MjUgMjYuOTA2MjUgQyAxMi40NzY1NjMgMjYuOTA2MjUgMTMuMDM1MTU2IDI2LjgyMDMxMyAxMy41NjI1IDI2LjY4NzUgTCAxNC4yODEyNSAyOC40Njg3NSBMIDE2LjEyNSAyNy43MTg3NSBMIDE1LjQwNjI1IDI1LjkzNzUgQyAxNi4zNTE1NjMgMjUuMzU5Mzc1IDE3LjE0ODQzOCAyNC41NDY4NzUgMTcuNzE4NzUgMjMuNTkzNzUgTCAxOS41MzEyNSAyNC4zMTI1IEwgMjAuMjgxMjUgMjIuNDY4NzUgTCAxOC40Njg3NSAyMS43NSBDIDE4LjYwMTU2MyAyMS4yMTg3NSAxOC42ODc1IDIwLjY2NDA2MyAxOC42ODc1IDIwLjA5Mzc1IEMgMTguNjg3NSAxOS41MjM0MzggMTguNjAxNTYzIDE4Ljk2NDg0NCAxOC40Njg3NSAxOC40Mzc1IEwgMjAuMjgxMjUgMTcuNzE4NzUgTCAxOS41MzEyNSAxNS44NzUgTCAxNy43MTg3NSAxNi41OTM3NSBDIDE3LjE0ODQzOCAxNS42NTIzNDQgMTYuMzUxNTYzIDE0Ljg1MTU2MyAxNS40MDYyNSAxNC4yODEyNSBMIDE2LjEyNSAxMi40Njg3NSBMIDE0LjI4MTI1IDExLjcxODc1IEwgMTMuNTYyNSAxMy41MzEyNSBDIDEzLjAzMTI1IDEzLjM5ODQzOCAxMi40NzY1NjMgMTMuMzEyNSAxMS45MDYyNSAxMy4zMTI1IEMgMTEuMzM1OTM4IDEzLjMxMjUgMTAuNzgxMjUgMTMuMzk4NDM4IDEwLjI1IDEzLjUzMTI1IFogTSAxMS45MDYyNSAxNS4zMTI1IEMgMTQuNTcwMzEzIDE1LjMxMjUgMTYuNjg3NSAxNy40Mjk2ODggMTYuNjg3NSAyMC4wOTM3NSBDIDE2LjY4NzUgMjIuNzU3ODEzIDE0LjU3MDMxMyAyNC45MDYyNSAxMS45MDYyNSAyNC45MDYyNSBDIDkuMjQyMTg4IDI0LjkwNjI1IDcuMDkzNzUgMjIuNzU3ODEzIDcuMDkzNzUgMjAuMDkzNzUgQyA3LjA5Mzc1IDE3LjQyOTY4OCA5LjI0MjE4OCAxNS4zMTI1IDExLjkwNjI1IDE1LjMxMjUgWiAiPjwvcGF0aD48L2c+PC9zdmc+")}\
-            .GME_route, .GME_hide {background: url(https://geo.inge.org.uk/userscripts/gme_icons_0_8_0.png) no-repeat #eee;}\
-            .GME_route {background-position: 7px 3px;}\
-            .GME_route.gme-button-active {background-position: 5px 1px;}\
-            .GME_hide {background-position: -17px 3px;}\
-            .GME_hide.gme-button-active {background-position: -19px 1px;}\
+            span.gme-text {vertical-align: text-top;}\
+            a.gme-text {display: inline; padding: 5px;}\
+            a.gme-text-small {display: inline;}\
+            #GME_brightness {margin: 0px; height: 14px;}\
+            .GME_info {background-size: 26px 26px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/collector/images/GME_info.png)}\
+            .GME_hide {background-size: 24px 24px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/collector/images/GME_hide.png)}\
+            .GME_route {background-size: 21px 20px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/collector/images/GME_route.png)}\
+            .GME_home {background-size: 23px 23px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/collector/images/GME_home.png)}\
+            .GME_config {background-size: 24px 24px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/collector/images/GME_config.png)}\
             .gme-button-refresh-labels {background-position: -320px 4px;}\
             .gme-button-clear-labels {background-position: -69px 4px;}\
             span.gme-distance-container {display: none;}\
             span.gme-distance-container.show {display: inline-block;}\
-            .GME_info {background-size: 16px 16px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/collector/images/GME_info.png)}\
-            .GME_info.gme-button-active {padding:1px 0.5px 1px 1px;}\
             #GME_loc, a.gme-button.leaflet-active {outline: none;}\
             .leaflet-control-zoomwarning {top: 94px;}\
             .leaflet-control-zoomwarning a {filter: progid:DXImageTransform.Microsoft.gradient(startColorStr="#BFC80000",EndColorStr="#BFC80000"); background-color:rgba(200,0,0,0.75); margin-left: -4px; background-position: -502px 2px;height:14px;width:14px; border-color: #b00; box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);}\
@@ -159,7 +159,7 @@ var gmeResources = {
                     <div class="gme-fieldgroup">\
                         <h3>Add map sources</h3>\
                         <label>Mapsource: <input type="text" name="GME_map_custom" id="GME_map_custom">&nbsp;</label>\
-                        <div class="leaflet-control-gme"><button type="button" id="GME_custom_add" class="gme-button gme-button-wide gme-button-l gme-button-r" title="Add custom map source">Add</button> <a href="#GME_format" title="Map source format info" class="gme-button gme-button-wide gme-button-l">Mapsource format info</a><button type="button" id="GME_custom_export" title="Export custom map source JSON" class="gme-button gme-button-wide gme-button-r">Export custom maps</button></div>\
+                        <div class="leaflet-control-gme"><button type="button" id="GME_custom_add" class="gme-button gme-button-wide gme-button-l gme-button-r" title="Add custom map source">Add</button> <a href="#GME_format" title="Map source format info" class="gme-button gme-button-wide gme-button-l gme-text">Mapsource format info</a><button type="button" id="GME_custom_export" title="Export custom map source JSON" class="gme-button gme-button-wide gme-button-r">Export custom maps</button></div>\
                     </div>\
                     <div class="gme-fieldgroup">\
                         <h3>Remove map sources</h3>\
@@ -210,7 +210,7 @@ var gmeResources = {
                 </div>\
             </section>\
             <div class="leaflet-control-gme">\
-                <a href="#" class="gme-button gme-button-wide gme-button-l" rel="back" title="Cancel">Cancel</a><button type="button" class="gme-button gme-button-wide" id="GME_default" title="Reset to defaults">Defaults</button><button type="button" class="gme-button gme-button-wide gme-button-r" id="GME_set" title="Confirm settings">Save</button>\
+                <a href="#" class="gme-button gme-button-wide gme-button-l gme-text" rel="back" title="Cancel">Cancel</a><button type="button" class="gme-button gme-button-wide" id="GME_default" title="Reset to defaults">Defaults</button><button type="button" class="gme-button gme-button-wide gme-button-r" id="GME_set" title="Confirm settings">Save</button>\
             </div>',
         customInfo: '<p>Custom mapsources can be added by supplying entering a <a rel="external" href="http://www.json.org/">JSON</a> configuration string that tells GME what to call the map, where to find it, and how it is set up. e.g.</p>\
             <p><code>{"alt":"OS NPE (GB only)","tileUrl":"https://ooc.openstreetmap.org/npe/{z}/{x}/{y}.png", "minZoom":6, "maxZoom": 15, "attribution": "OpenStreetMap NPE"}</code></p>\
@@ -1217,7 +1217,7 @@ var gmeResources = {
                 document.getElementById("pqlink").innerHTML = "PQs";
                 $(div).append("<div id='gme_caches'>\
                     <div class='leaflet-control-gme'>\
-                        <a title='Refresh cache labels' class='gme-event gme-button-refresh-labels gme-button gme-button-l' data-gme-action='refresh'></a><a title='Empty cache list and remove labels from map' class='gme-event gme-button gme-button-clear-labels' data-gme-action='clear'></a><a class='gme-event gme-button gme-button-wide gme-button-labels-show' data-gme-action='show'>Show labels</a><a class='gme-event gme-button gme-button-r gme-button-wide gme-button-labels-auto' data-gme-action='auto'>Auto update</a>\
+                        <a title='Refresh cache labels' class='gme-event gme-button-wide gme-button-refresh-labels gme-button gme-button-l gme-text-small' data-gme-action='refresh'>Refresh</a><a title='Empty cache list and remove labels from map' class='gme-event gme-button-wide gme-button gme-button-clear-labels gme-text-small' data-gme-action='clear'>Clear</a><a class='gme-event gme-button gme-button-wide gme-button-labels-show gme-text-small' data-gme-action='show'>Show labels</a><a class='gme-event gme-button gme-button-r gme-button-wide gme-button-labels-auto gme-text-small' data-gme-action='auto'>Auto update</a>\
                     </div>\
                     <table><tbody id='gme_cachelist'><tr><td colspan='3'>Hit the refresh button above to populate the list.</td></tr></tbody></table></div>");
                 $("#gme_caches").css("display","none").on("click", ".gme-event", labelHandler);
@@ -1995,7 +1995,9 @@ var gmeResources = {
                     }
                     container.innerHTML = html;
                     $(container.lastChild).addClass("gme-button-r");
-                    container.innerHTML += "<span class=\'gme-button gme-button-l gme-button-r gme-scale-container\' title=\'Approximate width of the full map view\' style=\'cursor:help;\'>Width: <span class=\'gme-scale\'>-</span></span><span class=\'gme-distance-container gme-button gme-button-r\' title=\'Measured distance\'>Route: <span class=\'gme-distance\'>"+ formatDistance(0) +"</span></span>";
+//xxxx
+//                    container.innerHTML += "<span class=\'gme-button gme-button-l gme-button-r gme-scale-container\' title=\'Approximate width of the full map view\' style=\'cursor:help;\'>Width: <span class=\'gme-scale\'>-</span></span><span class=\'gme-distance-container gme-button gme-button-r\' title=\'Measured distance\'>Route: <span class=\'gme-distance\'>"+ formatDistance(0) +"</span></span>";
+                    container.innerHTML += "<span class=\'gme-button gme-button-l gme-button-r gme-scale-container\' title=\'Approximate width of the full map view\' style=\'cursor:help;\'><span class=\'gme-text\'>Width: </span><span class=\'gme-scale gme-text\'>-</span></span><span class=\'gme-distance-container gme-button gme-button-r\' title=\'Measured distance\'>Route: <span class=\'gme-distance\'>"+ formatDistance(0) +"</span></span>";
                     contextmap.addControl(new L.GME_ZoomWarning()).on("layeradd", onPopup).on("layerremove", offPopup).on("viewreset", this.updateScale, this);
                     $(container).on("click", ".gme-button", this, widgetHandler);
                     $(window).on("resize", this, (function(context) {var t = {timer: null}; return function() {context.updateScale(context._map, t);};} (this)));
