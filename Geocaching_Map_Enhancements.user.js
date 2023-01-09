@@ -1996,7 +1996,7 @@ var gmeResources = {
                     }
                     container.innerHTML = html;
                     $(container.lastChild).addClass("gme-button-r");
-                    container.innerHTML += "<span class=\'gme-button gme-button-l gme-button-r gme-scale-container\' title=\'Approximate width of the full map view\' style=\'cursor:help;\'><span class=\'gme-text\'>Width: </span><span class=\'gme-scale gme-text\'>-</span></span><span class=\'gme-distance-container gme-button gme-button-r\' title=\'Measured distance\'>Route: <span class=\'gme-distance\'>"+ formatDistance(0) +"</span></span>";
+                    container.innerHTML += "<span class=\'gme-button gme-button-l gme-button-r gme-scale-container\' title=\'Approximate width of the full map view\' style=\'cursor:help;\'><span class=\'gme-text\'>Width: </span><span class=\'gme-scale gme-text\'>-</span></span><span class=\'gme-distance-container gme-button gme-button-r\' title=\'Measured distance\'><span class=\'gme-text\'>Route: </span><span class=\'gme-distance gme-text\'>"+ formatDistance(0) +"</span></span>";
                     contextmap.addControl(new L.GME_ZoomWarning()).on("layeradd", onPopup).on("layerremove", offPopup).on("viewreset", this.updateScale, this);
                     $(container).on("click", ".gme-button", this, widgetHandler);
                     $(window).on("resize", this, (function(context) {var t = {timer: null}; return function() {context.updateScale(context._map, t);};} (this)));
