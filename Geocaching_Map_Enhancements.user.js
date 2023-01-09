@@ -2639,7 +2639,7 @@ function checkAlreadyRunning(waitCount) {
                 var mess = 'Geocaching Map Enhancements v' + gmeResources.parameters.version + ' aborting.\nMessage: GME already running with version ' + runners[i].getAttribute('data-gme-version');
                 console.error(mess);
                 alert(mess);
-                return false;
+                return;
             }
         }
     }
