@@ -3,12 +3,12 @@
 //--> $$001
 // @version     0.8.2.2As.4
 //<-- $$001
-// @author      JRI
+// @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
 // @include     https://www.geocaching.com/*
 // @license     MIT; http://www.opensource.org/licenses/mit-license.php
 // @namespace   https://github.com/2Abendsegler/GME
-// @copyright   2011-18, James Inge
+// @copyright   2011-2018 James Inge, 2022-2023 2Abendsegler
 // @attribution GeoNames (http://www.geonames.org/)
 // @attribution Postcodes.io (https://postcodes.io/)
 // @attribution Chris Veness (http://www.movable-type.co.uk/scripts/latlong-gridref.html)
@@ -203,7 +203,7 @@ var gmeResources = {
                 <div class="gme-tab-content">\
                     <div class="gme-fieldgroup">\
                         <h3>Geocaching Map Enhancements</h3><br />\
-                        <p>v<span id="GME_version"></span> &copy; 2011-2018 James Inge. Geocaching Map Enhancements is licensed for reuse under the <a target="_blank" rel="noopener noreferrer" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>. For documentation, see <a target="_blank" rel="noopener noreferrer" href="http://geo.inge.org.uk/gme.htm">http://geo.inge.org.uk/gme.htm</a></p>\
+                        <p>v<span id="GME_version"></span> &copy; 2011-2018 James Inge; 2022-2023 2Abendsegler. Geocaching Map Enhancements is licensed for reuse under the <a target="_blank" rel="noopener noreferrer" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>. For documentation, see <a target="_blank" rel="noopener noreferrer" href="http://geo.inge.org.uk/gme.htm">http://geo.inge.org.uk/gme.htm</a></p>\
                         <p>Elevation and reverse geocoding data provided by <a target="_blank" rel="noopener noreferrer" href="http://www.geonames.org/">GeoNames</a> and used under a <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> (CC-BY) License.</p>\
                         <p>Grid reference manipulation is adapted from code &copy; 2005-2014 Chris Veness (<a target="_blank" rel="noopener noreferrer" href="http://www.movable-type.co.uk/scripts/latlong-gridref.html">www.movable-type.co.uk/scripts/latlong-gridref.html</a>, used under a <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> (CC-BY) License.</p>\
                         <p>Photos provided by Geograph are copyright their respective owners - hover mouse over thumbnails or click through for attribution details. They may be re-used under a <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by-sa/2.0/">Creative Commons Attribution-ShareAlike 2.0</a> (CC-BY-SA) License.</p>\
