@@ -23,8 +23,8 @@
 //xxxx
 // @updateURL   https://github.com/2Abendsegler/GME/raw/collector/Geocaching_Map_Enhancements.user.js
 // @downloadURL https://github.com/2Abendsegler/GME/raw/collector/Geocaching_Map_Enhancements.user.js
-// @icon        https://github.com/2Abendsegler/GME/raw/collector/images/GeocachingMap48.png
-// @icon64      https://github.com/2Abendsegler/GME/raw/collector/images/GeocachingMap64.png
+// @icon        https://github.com/2Abendsegler/GME/raw/collector/images/gme_logo_48.png
+// @icon64      https://github.com/2Abendsegler/GME/raw/collector/images/gme_logo_64.png
 // ==/UserScript==
 
 /* jshint multistr: true */
