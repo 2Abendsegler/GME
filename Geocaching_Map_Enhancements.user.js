@@ -85,7 +85,7 @@ var gmeResources = {
             a.gme-text-small {display: inline;}\
             #GME_brightness {margin: 0px; height: 14px;}\
             .GME_info {background-size: 26px 26px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/collector/images/GME_info.png)}\
-            .GME_hide {background-size: 24px 24px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/collector/images/GME_hide.png)}\
+            .GME_hide {background-size: 22px 22px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/collector/images/GME_hide.png)}\
             .GME_route {background-size: 21px 20px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/collector/images/GME_route.png)}\
             .GME_home {background-size: 23px 23px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/collector/images/GME_home.png)}\
             .GME_config {background-size: 24px 24px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/collector/images/GME_config.png)}\
@@ -2632,12 +2632,14 @@ $('head').append('<meta data-gme-version="' + gmeResources.parameters.version + 
 function checkAlreadyRunning(waitCount) {
     if ($('head[data-gme-version], meta[data-gme-version]').length > 1) {
         var runners = $('head[data-gme-version], meta[data-gme-version]');
+        var countActualVersion = 0;
         for (i = 0; i < runners.length; i++) {
-            if (runners[i].getAttribute('data-gme-version') != gmeResources.parameters.version) {
+            if (runners[i].getAttribute('data-gme-version') == gmeResources.parameters.version) countActualVersion++;
+            if (runners[i].getAttribute('data-gme-version') != gmeResources.parameters.version || countActualVersion > 1) {
                 var mess = 'Geocaching Map Enhancements v' + gmeResources.parameters.version + ' aborting.\nMessage: GME already running with version ' + runners[i].getAttribute('data-gme-version');
                 console.error(mess);
                 alert(mess);
-                return;
+                return false;
             }
         }
     }
