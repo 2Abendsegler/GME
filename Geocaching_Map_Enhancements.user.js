@@ -7,6 +7,7 @@
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
 // @include     https://www.geocaching.com/*
 // @license     MIT; http://www.opensource.org/licenses/mit-license.php
+// @namespace   https://github.com/2Abendsegler/GME
 // @copyright   2011-18, James Inge
 // @attribution GeoNames (http://www.geonames.org/)
 // @attribution Postcodes.io (https://postcodes.io/)
