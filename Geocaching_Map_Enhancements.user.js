@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
-// @version     0.8.2.2As.4
+// @version     0.8.2.2As.3
 //<-- $$001
 // @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
@@ -14,7 +14,10 @@
 // @attribution Chris Veness (http://www.movable-type.co.uk/scripts/latlong-gridref.html)
 // @grant       GM_xmlhttpRequest
 // @grant       GM.xmlHttpRequest
+//xxxx
+// @grant       GM_info
 // @connect     github.com
+// @connect     raw.githubusercontent.com
 // @connect     geograph.org.uk
 // @connect     channel-islands.geographs.org
 // @connect     geo-en.hlipp.de
@@ -22,8 +25,9 @@
 // @connect     api.postcodes.io
 // @connect     www.geocaching.com
 //xxxx
-// @updateURL   https://github.com/2Abendsegler/GME/raw/collector/Geocaching_Map_Enhancements.user.js
-// @downloadURL https://github.com/2Abendsegler/GME/raw/collector/Geocaching_Map_Enhancements.user.js
+//xxxx// @updateURL   https://github.com/2Abendsegler/GME/raw/collector/Geocaching_Map_Enhancements.user.js
+//xxxx// @downloadURL https://github.com/2Abendsegler/GME/raw/collector/Geocaching_Map_Enhancements.user.js
+// @downloadURL https://raw.githubusercontent.com/2Abendsegler/GME/collector/Geocaching_Map_Enhancements.user.js
 // @icon        https://github.com/2Abendsegler/GME/raw/collector/images/gme_logo_48.png
 // @icon64      https://github.com/2Abendsegler/GME/raw/collector/images/gme_logo_64.png
 // ==/UserScript==
@@ -2651,19 +2655,73 @@ function checkAlreadyRunning(waitCount) {
     waitCount++;
     if (waitCount <= 200) setTimeout(function(){checkAlreadyRunning(waitCount);}, 50);
 }
-for (i = 0; i < pageTests.length; i++) {
-    if (pageTests[i][1].test(document.location.pathname)) {
-        // Publish running version.
-        $('head').append('<meta data-gme-version="' + gmeResources.parameters.version + '">');
-        // Check GME already running.
-        checkAlreadyRunning(0);
-        break;
+
+//xxxx2
+// - bei flagcounter auch auf "var scriptVersion = GM_info.script.version;" umstellen.
+// Check for upgrade.
+function checkForUpgrade() {
+    function handle_upgrade(result) {
     }
+    try {
+        // Determine time of next check for upgrade.
+        var next_check_stored = localStorage.getItem("GME_upgrade_next_check");
+        if (next_check_stored) var next_check = parseInt(next_check_stored);
+        else var next_check = 0;
+        // Save time for next check for upgrade.
+        var time = new Date().getTime();
+        if (next_check < time) {
+            time += 24 * 60 * 60 * 1000;  // 24 Stunden warten, bis zum nächsten Check.
+            localStorage.setItem("GME_upgrade_next_check", time.toString());
+            // Determine script version, update url and source.
+            var scriptVersion = GM_info.script.version;
+            var urlScript = GM_info.script.downloadURL;
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: urlScript,
+                onload: function(result) {
+                    try {
+                        // Handle upgrade.
+                        var version = result.responseText.match(/\/\/\s\@version(.*)/);
+                        if (version) {
+                            var new_version = version[1].replace(/\s/g, "");
+                            if (new_version != scriptVersion) {
+                                var currVersion = "version " + scriptVersion;
+                                var text = "Version " + new_version + " of script Geocaching Map Enhancements is available. " +
+                                    "You are currently using " + currVersion + ".\n\n" +
+                                    "Click OK to upgrade.\n\n" +
+                                    "(After upgrade, please refresh your page.)";
+                                if (window.confirm(text)) {
+                                    document.location.href = urlScript;
+                                }
+                            }
+                        }
+                    } catch(e) {console.error("Check for upgrade run into error (GM_xmlhttpRequest onload).");}
+                }
+            });
+        }
+    } catch(e) {console.error("Check for upgrade run into error (function checkForUpgrade).");}
 }
 
 for (i = 0; i < pageTests.length; i++) {
     if (pageTests[i][1].test(document.location.pathname)) {
         gmeResources.env.page = pageTests[i][0];
+        // Not possible for new Greasemonkey.
+        if (gmeResources.env.xhr === 'GM4') {
+            console.log("GME: Greasemonkey detected -> No fully running check, no upgrade check.");
+            // Small check GME already running.
+            if (document.querySelector("head[data-gme-version]")) {
+                console.error("GME: Aborting because of already running on page.");
+            }
+            // Publish running version.
+            document.documentElement.firstChild.setAttribute("data-gme-version", gmeResources.parameters.version);
+        } else {
+            // Publish running version.
+            $('head').append('<meta data-gme-version="' + gmeResources.parameters.version + '">');
+            // Full check GME already running.
+            checkAlreadyRunning(0);
+            // Check for upgrade.
+            checkForUpgrade();
+        }
         break;
     }
 }
