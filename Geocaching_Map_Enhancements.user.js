@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
-// @version     0.8.2.2As.3
+// @version     0.8.2.2As.4
 //<-- $$001
 // @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
@@ -14,7 +14,6 @@
 // @attribution Chris Veness (http://www.movable-type.co.uk/scripts/latlong-gridref.html)
 // @grant       GM_xmlhttpRequest
 // @grant       GM.xmlHttpRequest
-//xxxx
 // @grant       GM_info
 // @connect     github.com
 // @connect     raw.githubusercontent.com
@@ -25,9 +24,9 @@
 // @connect     api.postcodes.io
 // @connect     www.geocaching.com
 //xxxx
-//xxxx// @updateURL   https://github.com/2Abendsegler/GME/raw/collector/Geocaching_Map_Enhancements.user.js
-//xxxx// @downloadURL https://github.com/2Abendsegler/GME/raw/collector/Geocaching_Map_Enhancements.user.js
+// @uploadURL https://raw.githubusercontent.com/2Abendsegler/GME/collector/Geocaching_Map_Enhancements.user.js
 // @downloadURL https://raw.githubusercontent.com/2Abendsegler/GME/collector/Geocaching_Map_Enhancements.user.js
+//xxxx
 // @icon        https://github.com/2Abendsegler/GME/raw/collector/images/gme_logo_48.png
 // @icon64      https://github.com/2Abendsegler/GME/raw/collector/images/gme_logo_64.png
 // ==/UserScript==
@@ -2656,12 +2655,8 @@ function checkAlreadyRunning(waitCount) {
     if (waitCount <= 200) setTimeout(function(){checkAlreadyRunning(waitCount);}, 50);
 }
 
-//xxxx2
-// - bei flagcounter auch auf "var scriptVersion = GM_info.script.version;" umstellen.
 // Check for upgrade.
 function checkForUpgrade() {
-    function handle_upgrade(result) {
-    }
     try {
         // Determine time of next check for upgrade.
         var next_check_stored = localStorage.getItem("GME_upgrade_next_check");
@@ -2670,7 +2665,8 @@ function checkForUpgrade() {
         // Save time for next check for upgrade.
         var time = new Date().getTime();
         if (next_check < time) {
-            time += 24 * 60 * 60 * 1000;  // 24 Stunden warten, bis zum nächsten Check.
+            // Wait 24 hours for a new check for upgrade.
+            time += 24 * 60 * 60 * 1000;
             localStorage.setItem("GME_upgrade_next_check", time.toString());
             // Determine script version, update url and source.
             var scriptVersion = GM_info.script.version;
@@ -2705,9 +2701,9 @@ function checkForUpgrade() {
 for (i = 0; i < pageTests.length; i++) {
     if (pageTests[i][1].test(document.location.pathname)) {
         gmeResources.env.page = pageTests[i][0];
-        // Not possible for new Greasemonkey.
+        // Greasemonkey detected.
         if (gmeResources.env.xhr === 'GM4') {
-            console.log("GME: Greasemonkey detected -> No fully running check, no upgrade check.");
+            console.log("GME: Greasemonkey detected -> No full running check, no upgrade check.");
             // Small check GME already running.
             if (document.querySelector("head[data-gme-version]")) {
                 console.error("GME: Aborting because of already running on page.");
