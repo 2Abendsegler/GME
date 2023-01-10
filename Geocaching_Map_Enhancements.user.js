@@ -128,7 +128,9 @@ var gmeResources = {
             .gme-fieldgroup li {display: inline-block; margin: 0 -1px -1px 0; background: #ddd; border: 1px solid #ccc; border-radius: 6px; padding: 0 0.5em;}\
             .gme-xhair {cursor: crosshair;}\
             .map-button-container {margin-right: 5em;}\
-            #map_canvas2 .leaflet-control-layers-toggle {background-image: url(/js/leaflet/0.5.1/images/layers.png)}',
+            #map_canvas .leaflet-control-layers-toggle, #map_canvas2 .leaflet-control-layers-toggle {background-image: url(/js/leaflet/0.5.1/images/layers.png)}\
+            #map_canvas label, #map_canvas2 label {text-transform: unset; display: block;}\
+            #map_canvas .leaflet-popup-content, #map_canvas2 .leaflet-popup-content {text-align: unset;}',
         drag: '#cacheDetails .cacheImage {border: solid 1px #ccc; border-radius: 7px; padding-left: 5px;}\
             .moveable {cursor: move; box-shadow: 0 1px 4px rgba(102, 51, 255, 0.3);}'
     },
@@ -1983,7 +1985,9 @@ var gmeResources = {
                     this._map.routeMode = false;
                     this._markers = L.layerGroup().addTo(contextmap);
                     html = "<button type='button' class=\'GME_info gme-button gme-button-l\' title=\'Enable location info tool\' data-gme-action=\'toggleInfo\'></button>";
-                    html += "<button type='button' class=\'GME_hide gme-button\' title=\'Hide caches\' data-gme-action=\'toggleCaches\'></button>";
+                    if (!document.location.pathname.match(/(\/hide\/|\/track\/map_gm\.aspx)/)) {
+                        html += "<button type='button' class=\'GME_hide gme-button\' title=\'Hide caches\' data-gme-action=\'toggleCaches\'></button>";
+                    }
                     html += "<button type='button' class=\'GME_route gme-button\' title=\'Enable route tool\' data-gme-action=\'toggleRoute\'></button>";
                     if (gmeConfig.env.home) {
                         html += "<button type='button' title=\'Go to home location\' class=\'GME_home gme-button\' data-gme-action=\'panToHome\'></button>";
@@ -1992,7 +1996,9 @@ var gmeResources = {
                         $(".GME_search_results").on("click", ".gme-event", contextmap, mapHandler);
                     }
                     if (gmeConfig.env.storage) {
-                        html += "<a class=\'GME_config gme-button\' title=\'Configure Geocaching Map Enhancements\' href=\'#GME_config\'></a>";
+                        if (!document.location.pathname.match(/\/hide\//)) {
+                            html += "<a class=\'GME_config gme-button\' title=\'Configure Geocaching Map Enhancements\' href=\'#GME_config\'></a>";
+                        }
                     }
                     container.innerHTML = html;
                     $(container.lastChild).addClass("gme-button-r");
