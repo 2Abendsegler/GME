@@ -297,7 +297,22 @@ var gmeResources = {
                             $("#GME_default").bind("click", setDefault);
                             $("#GME_custom_add").bind("click", addCustom);
                             $("#GME_custom_export").bind("click", exportCustom);
+                            // Build config link in settings menu for old design or if GClh is running.
                             $("li.li-user ul").append("<li class='li-settings'><a class='icon-settings' id='gme-config-link' href='#GME_config' title='Configure Geocaching Map Enhancements extension'>Geocaching Map Enhancements</a></li>");
+                            // Build config link in settings menu for new design.
+                            function checkForUserNew(waitCount) {
+                                if ($('.toggle-user-menu')[0] && !$('.gme_toggle-user-menu')[0]) {
+                                    $('.toggle-user-menu')[0].addEventListener("click", function() {
+                                        function checkForSettingsNew(waitCount) {
+                                            if ($('ul.menu-user')[0] && !$('#gme-config-link-new')[0]) {
+                                                $('ul.menu-user').append("<li class='li-settings'><a class='icon-settings' id='gme-config-link-new' href='#GME_config' title='Configure Geocaching Map Enhancements extension'>Geocaching Map Enhancements</a></li>");
+                                            } else {waitCount++; if (waitCount <= 50) setTimeout(function(){checkForSettingsNew(waitCount);}, 100);}
+                                        }
+                                        checkForSettingsNew(0);
+                                    });
+                                } else {waitCount++; if (waitCount <= 100) setTimeout(function(){checkForUserNew(waitCount);}, 100);}
+                            }
+                            checkForUserNew(0);
                         }
                     },
                     "drop": function() {
