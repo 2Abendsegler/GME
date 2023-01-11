@@ -23,12 +23,10 @@
 // @connect     api.geonames.org
 // @connect     api.postcodes.io
 // @connect     www.geocaching.com
-//xxxx
-// @uploadURL https://raw.githubusercontent.com/2Abendsegler/GME/collector/Geocaching_Map_Enhancements.user.js
-// @downloadURL https://raw.githubusercontent.com/2Abendsegler/GME/collector/Geocaching_Map_Enhancements.user.js
-//xxxx
-// @icon        https://github.com/2Abendsegler/GME/raw/collector/images/gme_logo_48.png
-// @icon64      https://github.com/2Abendsegler/GME/raw/collector/images/gme_logo_64.png
+// @uploadURL https://raw.githubusercontent.com/2Abendsegler/GME/main/Geocaching_Map_Enhancements.user.js
+// @downloadURL https://raw.githubusercontent.com/2Abendsegler/GME/main/Geocaching_Map_Enhancements.user.js
+// @icon        https://github.com/2Abendsegler/GME/raw/main/images/gme_logo_48.png
+// @icon64      https://github.com/2Abendsegler/GME/raw/main/images/gme_logo_64.png
 // ==/UserScript==
 
 /* jshint multistr: true */
@@ -582,7 +580,6 @@ var gmeResources = {
                         host="https://api.geograph.org.uk/";
                         call = callprefix + callbackCount;
                         window[call] = makeCallback(call);
-//xxxx todo?
                         JSONP(host + "syndicator.php?key=geo.inge.org.uk&location=" + coords.toUrl() + "&format=JSON&callback=" + call, call);
                     } else {
                         window.open(searchLink(coords), "_blank");
@@ -873,7 +870,7 @@ var gmeResources = {
                 dt.setData("text/uri-list",dataURI);
                 dt.setData("Text",locfmt);
                 dt.effectAllowed="copy";
-                dt.setDragImage($('a[title="About Cache Types"] img')[0],0,0);
+                dt.setDragImage($('a[aria-label="About Cache Types"] img')[0],0,0);
             };
         },
         drop: function() {
@@ -1264,11 +1261,12 @@ var gmeResources = {
             window.setTimeout(setEnv, 3000);
         },
         loadListing: function() {
+            var cache_coords = {};
+            var mapLink = '';
             function load() {
                 function checkMinimap(waitCount) {
                     if ($('#ctl00_ContentBody_uxViewLargerMap')[0] && $('#map_canvas')[0]) {
-                        var cache_coords = {};
-                        var mapLink = document.getElementById("ctl00_ContentBody_uxViewLargerMap");
+                        mapLink = document.getElementById("ctl00_ContentBody_uxViewLargerMap");
                         var parkUrl="", label="", i, parking, uri="#&pop=";
                         if (L.LatLng.prototype.toUrl === undefined) {
                             L.LatLng.prototype.toUrl = function() {var obj=this; if (!(obj instanceof L.LatLng)) {return false;} return [L.Util.formatNum(obj.lat,5),L.Util.formatNum(obj.lng,5)].join(",");};
