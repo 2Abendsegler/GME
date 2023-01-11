@@ -870,7 +870,7 @@ var gmeResources = {
                 dt.setData("text/uri-list",dataURI);
                 dt.setData("Text",locfmt);
                 dt.effectAllowed="copy";
-                dt.setDragImage($('a[aria-label="About Cache Types"] img')[0],0,0);
+                dt.setDragImage($('a[aria-label="About geocache types"]')[0],0,0);
             };
         },
         drop: function() {
