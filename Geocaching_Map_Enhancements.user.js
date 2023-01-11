@@ -83,7 +83,7 @@ var gmeResources = {
             .gme-button:hover {background-color: #fff;}\
             .gme-button-active {border: solid 3px #02b; padding: 0px; background-color: #fff;}\
             .gme-button-active:hover {border-color:#63f;filter:alpha(opacity=100);}\
-            span.gme-button, .gme-button-wide {padding-left:5px; padding-right:5px; font-size:12px; font-weight:bold; width:auto; background-image:none; color: #424242;}\
+            span.gme-button, .gme-button-wide {padding-left:5px; padding-right:5px; font-size:12px; font-weight:bold; width:auto; background-image:none; color: #424242; font-family: inherit;}\
             span.gme-text {vertical-align: text-top;}\
             a.gme-text {display: inline; padding: 5px;}\
             a.gme-text-small {display: inline;}\
@@ -106,6 +106,8 @@ var gmeResources = {
             .gme-modalDialog:target, .gme-modalDialog.gme-targetted {opacity:1; display:block; pointer-events: auto;}\
             .gme-modalDialog > div {position: relative; margin: 4% 12.5%; height: 30em; max-height: 75%; padding: 0 0 13px 0; border: 1px solid #000; border-radius: 10px; background: #fff; background: -moz-linear-gradient(#fff, #999); background: -webkit-linear-gradient(#fff, #999); background: -o-linear-gradient(#fff, #999);}\
             .gme-modalDialog header {color: #eee; background: none #454545; font-size: 15px; text-align: center; border-top-left-radius: 10px; padding: 0.5em 0; font-weight: bold; text-shadow: none; height: auto; min-height: auto; min-width: auto !important;}\
+            .gme-modalDialog select {appearance: auto; background-color: inherit; background-image: none; background-repeat: no-repeat; color: inherit; border: 1px solid #9b9b9b; border-radius: 4px; width: auto; display: inline; font-size: 14px; line-height: normal; pointer-events: auto; padding: 0px 7px; height: 26px; margin-right: 7px;}\
+            .gme-modalDialog label {text-transform: none; font-size: inherit; margin-top: 0px;}\
             .gme-modal-content {position: absolute; top: 3.5em; left: 0.75em; right: 0.75em; bottom: 0.5em; overflow: auto;}\
             .gme-modal-content > .leaflet-control-gme {position: absolute; left: 0.5em; bottom: 0.5em; top: auto;}\
             .gme-close-dialog {background: #606061; color: #fff; line-height: 25px; position: absolute; right: -12px; text-align: center; top: -10px; width: 24px; text-decoration: none; font-weight: bold; -webkit-border-radius: 12px; -moz-border-radius: 12px; border-radius: 12px; -moz-box-shadow: 1px 1px 3px #000; -webkit-box-shadow: 1px 1px 3px #000; box-shadow: 1px 1px 3px #000;}\
@@ -128,7 +130,10 @@ var gmeResources = {
             .gme-fieldgroup {position: relative; border: 1px solid #ccc; border-radius: 6px; background: #eee; margin: 0.5em 0 1.5em; padding: 0.5em;}\
             .gme-fieldgroup h3 {position:absolute; top: -0.7em; left: 0.5em; padding: 0 0.5em; background: #eee; border-top: 1px solid #ccc; border-radius: 6px; z-index:1; display:inline-block; font-weight: bold; font-size: 12px;}\
             .gme-fieldgroup ul {margin: 0.5em 0; padding: 0;}\
-            .gme-fieldgroup li {display: inline-block; margin: 0 -1px -1px 0; background: #ddd; border: 1px solid #ccc; border-radius: 6px; padding: 0 0.5em;}\
+            .gme-fieldgroup li {display: inline-block; margin: 0 -1px -1px 0; background: #ddd; border: 1px solid #ccc; border-radius: 6px; padding: 0 0.5em; height: 28px;}\
+            .gme-fieldgroup label {display: inline;}\
+            .gme-fieldgroup input {margin: 7px 0; padding-bottom: 6px; padding-top: 3px; height: 16px;}\
+            #GME_map_custom {width: 200px; box-sizing: inherit; border: 1px solid #9b9b9b; border-radius: 4px;}\
             .gme-xhair {cursor: crosshair;}\
             .map-button-container {margin-right: 5em;}\
             #map_canvas .leaflet-control-layers-toggle, #map_canvas2 .leaflet-control-layers-toggle {background-image: url(/js/leaflet/0.5.1/images/layers.png)}\
@@ -2014,9 +2019,7 @@ var gmeResources = {
                         $(".GME_search_results").on("click", ".gme-event", contextmap, mapHandler);
                     }
                     if (gmeConfig.env.storage) {
-                        if (!document.location.pathname.match(/\/hide\//)) {
-                            html += "<a class=\'GME_config gme-button\' title=\'Configure Geocaching Map Enhancements\' href=\'#GME_config\'></a>";
-                        }
+                        html += "<a class=\'GME_config gme-button\' title=\'Configure Geocaching Map Enhancements\' href=\'#GME_config\'></a>";
                     }
                     container.innerHTML = html;
                     $(container.lastChild).addClass("gme-button-r");
