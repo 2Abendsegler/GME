@@ -136,6 +136,8 @@ var gmeResources = {
             #GME_map_custom {width: 200px; box-sizing: inherit; border: 1px solid #9b9b9b; border-radius: 4px;}\
             .gme-xhair {cursor: crosshair;}\
             .map-button-container {margin-right: 5em;}\
+            .leaflet-top.leaflet-right {z-index: 7;}\
+            #centerMap {margin-right: 100px;}\
             #map_canvas .leaflet-control-layers-toggle, #map_canvas2 .leaflet-control-layers-toggle {background-image: url(/js/leaflet/0.5.1/images/layers.png)}\
             #map_canvas label, #map_canvas2 label {text-transform: unset; display: block;}\
             #map_canvas .leaflet-popup-content, #map_canvas2 .leaflet-popup-content {text-align: unset;}',
