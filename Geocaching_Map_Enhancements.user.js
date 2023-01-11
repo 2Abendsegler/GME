@@ -1269,7 +1269,7 @@ var gmeResources = {
                     if ($('#ctl00_ContentBody_uxViewLargerMap')[0] && $('#map_canvas')[0]) {
                         var cache_coords = {};
                         var mapLink = document.getElementById("ctl00_ContentBody_uxViewLargerMap");
-                        var parkUrl="", label="", i, parking, uri="&pop=";
+                        var parkUrl="", label="", i, parking, uri="#&pop=";
                         if (L.LatLng.prototype.toUrl === undefined) {
                             L.LatLng.prototype.toUrl = function() {var obj=this; if (!(obj instanceof L.LatLng)) {return false;} return [L.Util.formatNum(obj.lat,5),L.Util.formatNum(obj.lng,5)].join(",");};
                         }
@@ -1305,10 +1305,13 @@ var gmeResources = {
                         }
                         if (cache_coords.primary[0].oldLatLng || cache_coords.primary.length + cache_coords.additional.length > 1) {
                             uri += b64encode(JSON.stringify(cache_coords));
-//xxxx
-                            uri = '';
-                            mapLink.href = mapLink.href.replace("http:", "https:") + uri;
-                            $('#ctl00_ContentBody_MapLinks_MapLinks a[href*="geocaching.com"]').attr("href", function(i, val) {return val + uri;});
+                            if (mapLink.href.match(/www.geocaching.com\/map\//)) {
+                                mapLink.href = mapLink.href + uri;
+                            }
+                            $('#ctl00_ContentBody_MapLinks_MapLinks a[href*="www.geocaching.com/play/map"]').each(function() {
+                                this.href = this.href.replace('www.geocaching.com/play/map', 'www.geocaching.com/map/');
+                            });
+                            $('#ctl00_ContentBody_MapLinks_MapLinks a[href*="www.geocaching.com/map/"]').attr("href", function(i, val) {return val + uri;});
                         }
                         GME_displayPoints(cache_coords, GME_Map, "listing");
                     } else {waitCount++; if (waitCount <= 50) setTimeout(function(){checkMinimap(waitCount);}, 100);}
@@ -2894,11 +2897,11 @@ switch(gmeResources.env.page) {
     case "maps":
         // On a Geocaching Maps page.
         // Check for click-thru cache data in URI.
-        var pop = location.search.match(/pop=([A-Za-z0-9+\/=]+)[\?&]?/);
+        var pop = document.location.href.match(/pop=([A-Za-z0-9+\/=]+)[\?&]?/);
         if (pop && pop.length === 2) {
             try {
                 localStorage.setItem("GME_cache", pop[1]);
-                location.search = location.search.replace(/&pop=[A-Za-z0-9+\/=]+[\?&]?/, "");
+                document.location.href = document.location.href.replace(/#&pop=([A-Za-z0-9+\/=]+)[\?&]?/, '');
             } catch (e) {
                 console.error(e + "GME couldn't decode click-through data: " + pop[1]);
             }
