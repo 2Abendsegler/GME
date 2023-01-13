@@ -35,7 +35,7 @@
 (function() {
 "use strict";
 
-var gmeResources = { 
+var gmeResources = {
     parameters: {
         // Defaults.
 //--> $$002
