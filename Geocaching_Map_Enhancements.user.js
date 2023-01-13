@@ -40,7 +40,7 @@ var gmeResources = {
         // Defaults.
 //--> $$002
         version: "0.8.2.2As.5",
-        versionMsg: "\nChanges: Fix all known issues. Set installation message.",
+        versionMsg: "\nChanges: Fix all known issues. Fix parameter update Greasemonkey.",
 //<-- $$002
         brightness: 1, // Default brightness for maps (0-1), can be overridden by custom map parameters.
         filterFinds: false, // True filters finds out of list searches.
@@ -2763,8 +2763,10 @@ if (gmeResources.env.storage) {
                 storedParams = JSON.parse(paramsJSON);
                 if (storedParams.version !== gmeResources.parameters.version) {
                     // Simulate update counter.
-                    $('body').append('<div id="GME_simu" style="display: none"> <img src="https://s11.flagcounter.com/count2/stEy/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt=""></div>');
-                    setTimeout(function() {$("#GME_simu").remove();}, 500);
+                    var counter = document.createElement('div');
+                    counter.innerHTML = ' <img src="https://s11.flagcounter.com/count2/stEy/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
+                    counter.setAttribute('style', 'display: none');
+                    document.getElementsByTagName('body')[0].appendChild(counter);
                     for (a in gmeResources.parameters) {
                         if (gmeResources.parameters.hasOwnProperty(a)) {
                             if (storedParams[a] === undefined) {storedParams[a] = gmeResources.parameters[a];}
@@ -2785,8 +2787,10 @@ if (gmeResources.env.storage) {
             }
         } else {
             // Simulate installation counter and set installation message.
-            $('body').append('<div id="GME_simu" style="display: none"> <img src="https://s11.flagcounter.com/count2/SW3O/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt=""></div>');
-            setTimeout(function() {$("#GME_simu").remove();}, 500);
+            var counter = document.createElement('div');
+            counter.innerHTML = ' <img src="https://s11.flagcounter.com/count2/SW3O/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
+            counter.setAttribute('style', 'display: none');
+            document.getElementsByTagName('body')[0].appendChild(counter);
             alert("Geocaching Map Enhancements has been installed with version " + gmeResources.parameters.version);
         }
         // Import old-style custom maps.
