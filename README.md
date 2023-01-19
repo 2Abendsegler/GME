@@ -3,7 +3,8 @@
 
 ---
 # Geocaching Map Enhancements (GME) <a id="user-content-en"></a>
-*Leistungsstarkes Tool zum Verbessern und Erweitern von Karten auf den Geocaching Seiten.*
+*Powerful tool to improve and expand maps on the geocaching pages.*
+
 
 GME is a script that integrates alternative map types into the maps of various geocaching pages, offers a tool for location information and a tool for rough route planning, integrates waypoints and changed coordinates into the map display and enables the display of tracks/routes.
 
