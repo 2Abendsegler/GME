@@ -6,7 +6,7 @@
 *Powerful tool to improve and expand maps on the geocaching pages.*<br><br>
 GME is a script that integrates alternative map types into the maps of various geocaching pages, offers a tool for location information and a tool for rough route planning, integrates waypoints and changed coordinates into the map display and enables the display of tracks/routes.<br><br>
 It was developed in Javascript and runs with all common script managers in all common browsers. It is free of charge and without any advertising.<br><br>
-For help with the installation, see the [installation tips](https://github.com/2Abendsegler/GME/blob/main/docu/installation_tips.md#en).<br><br>
+For help with the installation see the [installation tips](https://github.com/2Abendsegler/GME/blob/main/docu/installation_tips.md#en).<br><br>
 
 ---
 # Geocaching Map Enhancements (GME) <a id="user-content-de"></a>
