@@ -28,7 +28,7 @@
 * Install the script [GME](https://github.com/2Abendsegler/GME/raw/main/Geocaching_Map_Enhancements.user.js) under the script manager.<br><br>
 
 ---
-# Tipps für die Installation des *GC little helper II* <a id="de"></a>
+# Tipps für die Installation von *Geocaching Map Enhancements (GME)* <a id="de"></a>
 
 ### <a id="firefox_de"></a><img src="/images/mozilla_firefox_logo_small.png" title="Mozilla Firefox" alt="Mozilla Firefox"> Mozilla Firefox:
 * Installiere den Scriptmanager [Tampermonkey](https://addons.mozilla.org/de/firefox/addon/tampermonkey/) oder [Violentmonkey](https://addons.mozilla.org/firefox/addon/violentmonkey/) als Add-On in Firefox.<br>
