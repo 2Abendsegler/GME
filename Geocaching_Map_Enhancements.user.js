@@ -1,4 +1,4 @@
-// ==UserScript==
+​// ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
 // @version     0.8.2.2As.5
@@ -6,7 +6,7 @@
 // @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
 // @include     /^https:\/\/www.geocaching.com\/(geocache\/GC|seek\/cache_details\.aspx|seek\/cache_details2\.aspx|map\/|hide\/planning\.aspx|hide\/typelocation\.aspx|hide\/waypoints\.aspx|seek\/$|\/seek\/default\.aspx|track\/map_gm\.aspx)/
-// @license     MIT; http://www.opensource.org/licenses/mit-license.php
+// @license     GNU General Public License v3.0
 // @namespace   https://github.com/2Abendsegler/GME
 // @copyright   2011-2018 James Inge, 2022-2023 2Abendsegler
 // @attribution GeoNames (http://www.geonames.org/)
