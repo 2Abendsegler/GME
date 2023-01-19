@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
-// @version     0.8.2.2As.5
+// @version     0.8.2.2As.6
 //<-- $$001
 // @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
@@ -39,8 +39,8 @@ var gmeResources = {
     parameters: {
         // Defaults.
 //--> $$002
-        version: "0.8.2.2As.5",
-        versionMsg: "\nChanges: Fix all known issues. Fix parameter update Greasemonkey.",
+        version: "0.8.2.2As.6",
+        versionMsg: "\nChanges: Fix reference error $ in checking functions.",
 //<-- $$002
         brightness: 1, // Default brightness for maps (0-1), can be overridden by custom map parameters.
         filterFinds: false, // True filters finds out of list searches.
@@ -2656,21 +2656,27 @@ if (!(typeof JSON === 'object' && typeof JSON.parse === 'function')) {
 
 // Check GME already running.
 function checkAlreadyRunning(waitCount) {
-    if ($('head[data-gme-version], meta[data-gme-version]').length > 1) {
-        var runners = $('head[data-gme-version], meta[data-gme-version]');
-        var countActualVersion = 0;
+    var alreadyRunning = false;
+    if (document.querySelector("head[data-gme-version]")) {
+        alreadyRunning = ' (old script)';
+    } else {
+        var runners = document.getElementsByTagName('meta');
+        var count = 0;
         for (i = 0; i < runners.length; i++) {
-            if (runners[i].getAttribute('data-gme-version') == gmeResources.parameters.version) countActualVersion++;
-            if (runners[i].getAttribute('data-gme-version') != gmeResources.parameters.version || countActualVersion > 1) {
-                var mess = 'Geocaching Map Enhancements v' + gmeResources.parameters.version + ' aborting.\nMessage: GME already running with version ' + runners[i].getAttribute('data-gme-version');
-                console.error(mess);
-                alert(mess);
-                return;
+            if (runners[i].getAttribute('data-gme-version')) {
+                count++;
             }
         }
+        if (count > 1) {
+            alreadyRunning = ' (new script)';
+        }
     }
-    waitCount++;
-    if (waitCount <= 200) setTimeout(function(){checkAlreadyRunning(waitCount);}, 50);
+    if (alreadyRunning) {
+        var mess = 'Geocaching Map Enhancements v' + gmeResources.parameters.version + ' aborting.\nMessage: GME already running' + alreadyRunning + '.';
+        console.error(mess);
+        alert(mess);
+        return;
+    } else {waitCount++; if (waitCount <= 100) setTimeout(function(){checkAlreadyRunning(waitCount);}, 100);}
 }
 
 // Check for upgrade.
@@ -2686,13 +2692,22 @@ function checkForUpgrade() {
             // Wait 24 hours for a new check for upgrade.
             time += 24 * 60 * 60 * 1000;
             localStorage.setItem("GME_upgrade_next_check", time.toString());
-            // Determine script version, update url and source.
-            var scriptVersion = GM_info.script.version;
-            var urlScript = GM_info.script.downloadURL;
-            GM_xmlhttpRequest({
-                method: "GET",
-                url: urlScript,
-                onload: function(result) {
+            // Determine script version and update url.
+            if (gmeResources.env.xhr === 'GM4') {
+                var scriptVersion = GM.info.script.version;
+                var match = GM.info.scriptMetaStr.match(/@downloadURL\s+(http(.*)user.js)/);
+                if (match && match[1]) {
+                    var urlScript = match[1];
+                }
+            } else {
+                var scriptVersion = GM_info.script.version;
+                var urlScript = GM_info.script.downloadURL;
+            }
+            // Determine source.
+            var details = {
+                "method": "GET",
+                "url": urlScript,
+                "onload": function(result) {
                     try {
                         // Handle upgrade.
                         var version = result.responseText.match(/\/\/\s\@version(.*)/);
@@ -2711,7 +2726,16 @@ function checkForUpgrade() {
                         }
                     } catch(e) {console.error("Check for upgrade run into error (GM_xmlhttpRequest onload).");}
                 }
-            });
+            };
+            if (scriptVersion && urlScript) {
+                if (gmeResources.env.xhr === 'GM4') {
+                    GM.xmlHttpRequest(details);
+                } else {
+                    setTimeout(function() {
+                        GM_xmlhttpRequest(details);
+                    }, 0);
+                }
+            }
         }
     } catch(e) {console.error("Check for upgrade run into error (function checkForUpgrade).");}
 }
@@ -2719,23 +2743,14 @@ function checkForUpgrade() {
 for (i = 0; i < pageTests.length; i++) {
     if (pageTests[i][1].test(document.location.pathname)) {
         gmeResources.env.page = pageTests[i][0];
-        // Greasemonkey detected.
-        if (gmeResources.env.xhr === 'GM4') {
-            console.log("GME: Greasemonkey detected -> No full running check, no upgrade check.");
-            // Small check GME already running.
-            if (document.querySelector("head[data-gme-version]")) {
-                console.error("GME: Aborting because of already running on page.");
-            }
-            // Publish running version.
-            document.documentElement.firstChild.setAttribute("data-gme-version", gmeResources.parameters.version);
-        } else {
-            // Publish running version.
-            $('head').append('<meta data-gme-version="' + gmeResources.parameters.version + '">');
-            // Full check GME already running.
-            checkAlreadyRunning(0);
-            // Check for upgrade.
-            checkForUpgrade();
-        }
+        // Publish running version.
+        var runningVersion = document.createElement('meta');
+        runningVersion.setAttribute('data-gme-version', gmeResources.parameters.version);
+        document.getElementsByTagName('head')[0].appendChild(runningVersion);
+        // Full check GME already running.
+        checkAlreadyRunning(0);
+        // Check for upgrade.
+        checkForUpgrade();
         break;
     }
 }
