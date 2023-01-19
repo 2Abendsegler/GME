@@ -25,7 +25,7 @@
 
 ### <a id="vivaldi_de"></a><img src="/images/vivaldi_logo_small.png" title="Vivaldi" alt="Vivaldi"> Vivaldi:
 * Install the script manager [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) (from Chrome Web Store) as Add-on in Vivaldi.<br>
-* Install the script [GME](https://github.com/2Abendsegler/GME/raw/main/Geocaching_Map_Enhancements.user.js) under the script manager.<br>
+* Install the script [GME](https://github.com/2Abendsegler/GME/raw/main/Geocaching_Map_Enhancements.user.js) under the script manager.<br><br>
 
 ---
 # Tipps für die Installation des *GC little helper II* <a id="de"></a>
