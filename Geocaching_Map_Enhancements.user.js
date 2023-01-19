@@ -1,4 +1,4 @@
-// ==UserScript== 
+// ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
 // @version     0.8.2.2As.5
