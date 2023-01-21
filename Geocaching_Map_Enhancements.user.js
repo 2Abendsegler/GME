@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
-// @version     0.8.2.2As.5.1
+// @version     0.8.2.2As.5.2
 //<-- $$001
 // @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
@@ -519,19 +519,47 @@ console.log('Test: after if (window.MapSettings && MapSettings.User && validCoor
 console.log('Test: after if (validCoords(window.homeLat, window.homeLon)) {');
                     return new L.LatLng(window.homeLat, window.homeLon);
                 }
+//xxxx2
                 if (h && h.href) {
+//                if (h && h.href && !gmeConfig.env.page === "listing") {
 //xxxx
 console.log('Test: after if (h && h.href) {');
                     c = h.href.match(/(?:saddr=)(-?\d{1,2}\.\d*),(-?\d{1,3}\.\d*)/);
                     if (c !== null && c.length === 3 && validCoords(c[1], c[2])) {
-//xxxx
 console.log('Test: after if (c !== null && c.length === 3 && validCoords(c[1], c[2])) {');
-                        return new L.LatLng(c[1], c[2]);
+//xxxx1 Hier passiert der Fehler.
+//                        return new L.LatLng(c[1], c[2]);
+console.log(c);
+                        function checkL(waitCount) {
+console.log('Test: checkL(waitCount) '+waitCount);
+                            if (typeof L === "object") {
+console.log('Test: Ja: if (typeof L === "object") {');
+                                var x = new L.LatLng(c[1], c[2]);
+console.log(x);
+                                return x;
+                            } else {
+console.log('Test: Nein, nochmal: if (typeof L === "object") {');
+                                waitCount++;
+                                if (waitCount <= 50) {
+                                    setTimeout(function(){checkL(waitCount);}, 100);
+                                } else {
+console.log('Test: 1: return false;');
+                                    return false;
+                                }
+                            }
+                        }
+                        checkL(0);
+                    } else {
+console.log('Test: 2: return false;');
+                        return false;
                     }
-                }
+                } else {
 //xxxx
-console.log('Test: return false;');
-                return false;
+console.log('Test: 3: return false;');
+//xxxx
+                    return false;
+                }
+//                return false;
             }
             function validURL(url) {
                 return (/^(http|https|ftp)\:\/\/([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|localhost|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(\/($|[a-zA-Z0-9\.\,\?'\\\+&amp;%\$#\=~_\-]+))*$/).test(url);
