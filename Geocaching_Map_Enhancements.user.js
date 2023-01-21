@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
-// @version     0.8.2.2As.6
+// @version     0.8.2.2As.5.1
 //<-- $$001
 // @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
@@ -39,8 +39,8 @@ var gmeResources = {
     parameters: {
         // Defaults.
 //--> $$002
-        version: "0.8.2.2As.6",
-        versionMsg: "\nChanges: Fix reference error $ in checking functions.",
+        version: "0.8.2.2As.5.1",
+        versionMsg: "\nChanges: Test",
 //<-- $$002
         brightness: 1, // Default brightness for maps (0-1), can be overridden by custom map parameters.
         filterFinds: false, // True filters finds out of list searches.
@@ -240,6 +240,8 @@ var gmeResources = {
         common: function() {
             var that = this, callbackCount = 0, load_count = 0, JSONP;
             function setEnv() {
+//xxxx
+console.log('Test: after function setEnv() {');
                 // The script waits for the Leaflet API to load, and will abort if it does not find it after a minute.
                 var maxTries = 60,
                     wait = 1000;
@@ -278,16 +280,28 @@ var gmeResources = {
                     }
                     break;
                 default:
+//xxxx
+console.log('Test: after default:');
                     if (typeof L === "object" && typeof $ === "function") {
+//xxxx
+console.log('Test: gmeInit(gmeConfig.env.init);');
                         gmeInit(gmeConfig.env.init);
+//xxxx
+console.log('Test: window.setTimeout(load,500);');
                         window.setTimeout(load,500);
+//xxxx
+console.log('Test: after window.setTimeout(load,500);');
                         return;
                     }
                     break;
                 }
 
                 if (load_count < maxTries) {
+//xxxx
+console.log('Test: after if (load_count < maxTries) {');
                     window.setTimeout(setEnv, wait);
+//xxxx
+console.log('Test: after window.setTimeout(setEnv, wait);');
                     load_count++;
                     console.log("GME: Waiting for map API to load: " + load_count + "...");
                 }
@@ -329,17 +343,39 @@ var gmeResources = {
                         L.GME_dropHandler = L.Control.extend(dropHandlerObj);
                     },
                     "map": function() {
+//xxxx
+console.log('Test: Start: "map": function() {');
                         bounds_GB = new L.LatLngBounds(new L.LatLng(49,-9.5),new L.LatLng(62,2.3));
+//xxxx
+console.log('Test: after bounds_GB: "map": function() {');
                         bounds_IE = new L.LatLngBounds(new L.LatLng(51.2,-12.2),new L.LatLng(55.73,-5.366));
+//xxxx
+console.log('Test: after bounds_IE: "map": function() {');
                         bounds_NI = new L.LatLngBounds(new L.LatLng(54,-8.25),new L.LatLng(55.73,-5.25));
+//xxxx
+console.log('Test: after bounds_NI: "map": function() {');
                         bounds_CI = new L.LatLngBounds(new L.LatLng(49.1,-2.8),new L.LatLng(49.8,-1.8));
+//xxxx
+console.log('Test: after bounds_CI: "map": function() {');
                         bounds_DE = new L.LatLngBounds(new L.LatLng(47.24941,5.95459),new L.LatLng(55.14121,14.89746));
+//xxxx
+console.log('Test: after bounds_DE: "map": function() {');
                         L.GME_DistLine = L.Polyline.extend(polylineObj);
+//xxxx
+console.log('Test: after L.GME_DistLine: "map": function() {');
                         L.GME_QuadkeyLayer = L.TileLayer.extend(quadkeyLayerObj);
+//xxxx
+console.log('Test: after L.GME_QuadkeyLayer: "map": function() {');
                         L.GME_complexLayer = L.TileLayer.extend(complexLayerObj);
+//xxxx
+console.log('Test: after L.GME_complexLayer: "map": function() {');
                         L.GME_genericLayer = genericLayerFn;
+//xxxx
+console.log('Test: Ende: "map": function() {');
                     },
                     "widget": function() {
+//xxxx
+console.log('Test: Start: "widget": function() {');
                         L.GME_Widget = L.Control.extend(widgetControlObj);
                         if (window.Groundspeak && Groundspeak.Map && Groundspeak.Map.Control && Groundspeak.Map.Control.FindMyLocation) {
                             L.GME_FollowMyLocationControl = Groundspeak.Map.Control.FindMyLocation.extend(locationControlObj);
@@ -352,6 +388,8 @@ var gmeResources = {
                             console.info("GME: Fetching Fancybox");
                             $("head").append("<link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css'><script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js'></script>");
                         }
+//xxxx
+console.log('Test: Ende: "widget": function() {');
                     }
                 },
                 j;
@@ -468,19 +506,31 @@ var gmeResources = {
                 return false;
             }
             function getHomeCoords() {
+//xxxx
+console.log('Test: after function getHomeCoords');
                 var c, h = document.getElementById("ctl00_ContentBody_lnkPrintDirectionsSimple");
                 if (window.MapSettings && MapSettings.User && validCoords(MapSettings.User.Home)) {
+//xxxx
+console.log('Test: after if (window.MapSettings && MapSettings.User && validCoords(MapSettings.User.Home))');
                     return new L.LatLng(MapSettings.User.Home.lat, MapSettings.User.Home.lng);
                 }
                 if (validCoords(window.homeLat, window.homeLon)) {
+//xxxx
+console.log('Test: after if (validCoords(window.homeLat, window.homeLon)) {');
                     return new L.LatLng(window.homeLat, window.homeLon);
                 }
                 if (h && h.href) {
+//xxxx
+console.log('Test: after if (h && h.href) {');
                     c = h.href.match(/(?:saddr=)(-?\d{1,2}\.\d*),(-?\d{1,3}\.\d*)/);
                     if (c !== null && c.length === 3 && validCoords(c[1], c[2])) {
+//xxxx
+console.log('Test: after if (c !== null && c.length === 3 && validCoords(c[1], c[2])) {');
                         return new L.LatLng(c[1], c[2]);
                     }
                 }
+//xxxx
+console.log('Test: return false;');
                 return false;
             }
             function validURL(url) {
@@ -1265,11 +1315,17 @@ var gmeResources = {
             var mapLink = '';
             function load() {
                 function checkMinimap(waitCount) {
+//xxxx
+console.log('Test: checkMinimap(waitCount) '+waitCount);
                     if ($('#ctl00_ContentBody_uxViewLargerMap')[0] && $('#map_canvas')[0]) {
                         mapLink = document.getElementById("ctl00_ContentBody_uxViewLargerMap");
                         var parkUrl = "", label = "", i, parking, uri = "#&pop=";
                         if (L.LatLng.prototype.toUrl === undefined) {
+//xxxx
+console.log('Test: 1. $(".leaflet-control-layers").length '+$(".leaflet-control-layers").length);
                             L.LatLng.prototype.toUrl = function() {var obj = this; if (!(obj instanceof L.LatLng)) {return false;} return [L.Util.formatNum(obj.lat,5),L.Util.formatNum(obj.lng,5)].join(",");};
+//xxxx
+console.log('Test: 2. $(".leaflet-control-layers").length '+$(".leaflet-control-layers").length);
                         }
                         $("#map_canvas").replaceWith("<div style=\'width: 325px; height: 325px; position: relative;\' id=\'map_canvas2\'></div>");
                         if (gmeConfig.env.dragdrop) {
@@ -1277,9 +1333,17 @@ var gmeResources = {
                             $("#cacheDetails .cacheImage").attr("draggable","true").on("dragstart", that.dragStart);
                             $("#cacheDetails .cacheImage a").removeAttr("href");
                         }
+//xxxx
+console.log('Test: 3. $(".leaflet-control-layers").length '+$(".leaflet-control-layers").length);
                         window.GME_Map = new L.Map("map_canvas2",{center: new L.LatLng(mapLatLng.lat, mapLatLng.lng), zoom:14});
+//xxxx
+console.log('Test: 4. $(".leaflet-control-layers").length '+$(".leaflet-control-layers").length);
                         GME_Map.addControl(new L.control.scale());
+//xxxx
+console.log('Test: 5. $(".leaflet-control-layers").length '+$(".leaflet-control-layers").length);
                         GME_load_map(GME_Map);
+//xxxx
+console.log('Test: 6. $(".leaflet-control-layers").length '+$(".leaflet-control-layers").length);
                         cache_coords = {primary:[mapLatLng], additional:[]};
                         if (cmapAdditionalWaypoints && cmapAdditionalWaypoints.length > 0) {
                             cache_coords.additional = cmapAdditionalWaypoints;
@@ -1737,6 +1801,8 @@ var gmeResources = {
                 return control;
             }
             function GME_load_map(map) {
+//xxxx
+console.log('Test: after function GME_load_map(map) {');
                 var control = GME_get_layerControl(),
                     layer;
 
