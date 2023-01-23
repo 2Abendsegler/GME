@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
-// @version     0.8.2.2As.5.2
+// @version     0.8.2.2As.5.3
 //<-- $$001
 // @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
@@ -15,6 +15,7 @@
 // @grant       GM_xmlhttpRequest
 // @grant       GM.xmlHttpRequest
 // @grant       GM_info
+// @grant       GM.info
 // @connect     github.com
 // @connect     raw.githubusercontent.com
 // @connect     geograph.org.uk
@@ -39,7 +40,7 @@ var gmeResources = {
     parameters: {
         // Defaults.
 //--> $$002
-        version: "0.8.2.2As.5.1",
+        version: "0.8.2.2As.5.3",
         versionMsg: "\nChanges: Test",
 //<-- $$002
         brightness: 1, // Default brightness for maps (0-1), can be overridden by custom map parameters.
@@ -506,60 +507,24 @@ console.log('Test: Ende: "widget": function() {');
                 return false;
             }
             function getHomeCoords() {
-//xxxx
-console.log('Test: after function getHomeCoords');
                 var c, h = document.getElementById("ctl00_ContentBody_lnkPrintDirectionsSimple");
                 if (window.MapSettings && MapSettings.User && validCoords(MapSettings.User.Home)) {
-//xxxx
-console.log('Test: after if (window.MapSettings && MapSettings.User && validCoords(MapSettings.User.Home))');
                     return new L.LatLng(MapSettings.User.Home.lat, MapSettings.User.Home.lng);
                 }
                 if (validCoords(window.homeLat, window.homeLon)) {
-//xxxx
-console.log('Test: after if (validCoords(window.homeLat, window.homeLon)) {');
                     return new L.LatLng(window.homeLat, window.homeLon);
                 }
 //xxxx2
-                if (h && h.href) {
-//                if (h && h.href && !gmeConfig.env.page === "listing") {
-//xxxx
-console.log('Test: after if (h && h.href) {');
+//                if (h && h.href) {
+                // Nur notwendig im Listing für Drag & Drop ausgehend vom Cache Typ und im Zusammenhang mit Directions Links zu Parking Area und Trailhead.
+                // Die Karte im Listing ist nicht immer schon komplett aufgebaut. Falls sie noch nicht komplett ist, wird getHomeCoords erneut aufgerufen.
+                if (h && h.href && typeof L === "object") {
                     c = h.href.match(/(?:saddr=)(-?\d{1,2}\.\d*),(-?\d{1,3}\.\d*)/);
                     if (c !== null && c.length === 3 && validCoords(c[1], c[2])) {
-console.log('Test: after if (c !== null && c.length === 3 && validCoords(c[1], c[2])) {');
-//xxxx1 Hier passiert der Fehler.
-//                        return new L.LatLng(c[1], c[2]);
-console.log(c);
-                        function checkL(waitCount) {
-console.log('Test: checkL(waitCount) '+waitCount);
-                            if (typeof L === "object") {
-console.log('Test: Ja: if (typeof L === "object") {');
-                                var x = new L.LatLng(c[1], c[2]);
-console.log(x);
-                                return x;
-                            } else {
-console.log('Test: Nein, nochmal: if (typeof L === "object") {');
-                                waitCount++;
-                                if (waitCount <= 50) {
-                                    setTimeout(function(){checkL(waitCount);}, 100);
-                                } else {
-console.log('Test: 1: return false;');
-                                    return false;
-                                }
-                            }
-                        }
-                        checkL(0);
-                    } else {
-console.log('Test: 2: return false;');
-                        return false;
+                        return new L.LatLng(c[1], c[2]);
                     }
-                } else {
-//xxxx
-console.log('Test: 3: return false;');
-//xxxx
-                    return false;
                 }
-//                return false;
+                return false;
             }
             function validURL(url) {
                 return (/^(http|https|ftp)\:\/\/([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|localhost|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(\/($|[a-zA-Z0-9\.\,\?'\\\+&amp;%\$#\=~_\-]+))*$/).test(url);
@@ -617,6 +582,18 @@ console.log('Test: 3: return false;');
             }
 
             gmeConfig.env.home = getHomeCoords();
+//xxxx2
+            // Die Karte im Listing ist nicht immer schon komplett aufgebaut. Falls sie noch nicht komplett ist, wird getHomeCoords erneut aufgerufen.
+            if (!gmeConfig.env.home && gmeConfig.env.page === "listing") {
+                function checkL(waitCount) {
+console.log('Test: function checkL(waitCount) { '+waitCount);
+                    if (typeof L === "object") {
+console.log('Test: if (typeof L === "object") {');
+                        gmeConfig.env.home = getHomeCoords();
+                    } else {waitCount++; if (waitCount <= 50) setTimeout(function(){checkL(waitCount);}, 200);}
+                }
+                checkL(0);
+            }
 
             this.parameters = gmeConfig.parameters;
             this.getVersion = function() {return gmeConfig.parameters.version;};
@@ -1342,71 +1319,79 @@ console.log('Test: 3: return false;');
             var cache_coords = {};
             var mapLink = '';
             function load() {
-                function checkMinimap(waitCount) {
+//xxxx4 hier kommt man hin mit "window.setTimeout(load,500);", deshalb ist die Karte hier bereits vorhanden.
+//xxxx4 ist aus meiner Sicht getestet, muss nun aber noch vom letzten Test durch Sechsfüssler bestätogt werden.
+//xxxx4                function checkMinimap(waitCount) {
 //xxxx
-console.log('Test: checkMinimap(waitCount) '+waitCount);
-                    if ($('#ctl00_ContentBody_uxViewLargerMap')[0] && $('#map_canvas')[0]) {
-                        mapLink = document.getElementById("ctl00_ContentBody_uxViewLargerMap");
-                        var parkUrl = "", label = "", i, parking, uri = "#&pop=";
-                        if (L.LatLng.prototype.toUrl === undefined) {
+//xxxx4console.log('Test: checkMinimap(waitCount) '+waitCount);
+//xxxx4                    if ($('#ctl00_ContentBody_uxViewLargerMap')[0] && $('#map_canvas')[0]) {
+                mapLink = document.getElementById("ctl00_ContentBody_uxViewLargerMap");
+                var parkUrl = "", label = "", i, parking, uri = "#&pop=";
+                if (L.LatLng.prototype.toUrl === undefined) {
 //xxxx
-console.log('Test: 1. $(".leaflet-control-layers").length '+$(".leaflet-control-layers").length);
-                            L.LatLng.prototype.toUrl = function() {var obj = this; if (!(obj instanceof L.LatLng)) {return false;} return [L.Util.formatNum(obj.lat,5),L.Util.formatNum(obj.lng,5)].join(",");};
+console.log('Test: checkMinimap 1');
+                    L.LatLng.prototype.toUrl = function() {var obj = this; if (!(obj instanceof L.LatLng)) {return false;} return [L.Util.formatNum(obj.lat,5),L.Util.formatNum(obj.lng,5)].join(",");};
 //xxxx
-console.log('Test: 2. $(".leaflet-control-layers").length '+$(".leaflet-control-layers").length);
-                        }
-                        $("#map_canvas").replaceWith("<div style=\'width: 325px; height: 325px; position: relative;\' id=\'map_canvas2\'></div>");
-                        if (gmeConfig.env.dragdrop) {
-                            $("#cacheDetails .cacheImage").hover(function(e) {$("#cacheDetails .cacheImage").addClass("moveable");},function(e) {$("#cacheDetails .cacheImage").removeClass("moveable");});
-                            $("#cacheDetails .cacheImage").attr("draggable","true").on("dragstart", that.dragStart);
-                            $("#cacheDetails .cacheImage a").removeAttr("href");
-                        }
-//xxxx
-console.log('Test: 3. $(".leaflet-control-layers").length '+$(".leaflet-control-layers").length);
-                        window.GME_Map = new L.Map("map_canvas2",{center: new L.LatLng(mapLatLng.lat, mapLatLng.lng), zoom:14});
-//xxxx
-console.log('Test: 4. $(".leaflet-control-layers").length '+$(".leaflet-control-layers").length);
-                        GME_Map.addControl(new L.control.scale());
-//xxxx
-console.log('Test: 5. $(".leaflet-control-layers").length '+$(".leaflet-control-layers").length);
-                        GME_load_map(GME_Map);
-//xxxx
-console.log('Test: 6. $(".leaflet-control-layers").length '+$(".leaflet-control-layers").length);
-                        cache_coords = {primary:[mapLatLng], additional:[]};
-                        if (cmapAdditionalWaypoints && cmapAdditionalWaypoints.length > 0) {
-                            cache_coords.additional = cmapAdditionalWaypoints;
-                            if (gmeConfig.env.home) {
-                                for (i = cmapAdditionalWaypoints.length-1; i >= 0; i--) {
-                                    if (cmapAdditionalWaypoints[i].hasOwnProperty("editurl")) {
-                                        delete cache_coords.additional[i].editurl;
-                                    }
-                                    parking = cmapAdditionalWaypoints[i];
-                                    if (parking.type === 217 || parking.type === 221) {
-                                        label = parking.type === 217 ? "Parking Area" : "Trailhead";
-                                        parkUrl = `https://www.google.com/maps/dir/${gmeConfig.env.home.toUrl()}/${parking.lat},${parking.lng}/`;
-                                        $("#awpt_" + parking.pf)[0].parentNode.parentNode.children[1].innerHTML +=
-                                            `<a target="_blank" rel="noopener noreferrer" href="${parkUrl}"><img width="16" height="16" title="[GME] Directions to ${label}" alt="${label}" src="https://www.geocaching.com/images/icons/16/directions.png" /></a>`;
-                                    }
-                                }
-                            }
-                        }
-                        if (gmeConfig.env.dragdrop) {
-                            GME_Map.addControl(new L.GME_dropHandler());
-                        }
-                        if (cache_coords.primary[0].oldLatLng || cache_coords.primary.length + cache_coords.additional.length > 1) {
-                            uri += b64encode(JSON.stringify(cache_coords));
-                            if (mapLink.href.match(/www.geocaching.com\/map\//)) {
-                                mapLink.href = mapLink.href + uri;
-                            }
-                            $('#ctl00_ContentBody_MapLinks_MapLinks a[href*="www.geocaching.com/play/map"]').each(function() {
-                                this.href = this.href.replace('www.geocaching.com/play/map', 'www.geocaching.com/map/');
-                            });
-                            $('#ctl00_ContentBody_MapLinks_MapLinks a[href*="www.geocaching.com/map/"]').attr("href", function(i, val) {return val + uri;});
-                        }
-                        GME_displayPoints(cache_coords, GME_Map, "listing");
-                    } else {waitCount++; if (waitCount <= 50) setTimeout(function(){checkMinimap(waitCount);}, 100);}
+console.log('Test: checkMinimap 2');
                 }
-                checkMinimap(0);
+                $("#map_canvas").replaceWith("<div style=\'width: 325px; height: 325px; position: relative;\' id=\'map_canvas2\'></div>");
+                if (gmeConfig.env.dragdrop) {
+                    $("#cacheDetails .cacheImage").hover(function(e) {$("#cacheDetails .cacheImage").addClass("moveable");},function(e) {$("#cacheDetails .cacheImage").removeClass("moveable");});
+                    $("#cacheDetails .cacheImage").attr("draggable","true").on("dragstart", that.dragStart);
+                    $("#cacheDetails .cacheImage a").removeAttr("href");
+                }
+//xxxx
+console.log('Test: checkMinimap 3');
+                window.GME_Map = new L.Map("map_canvas2",{center: new L.LatLng(mapLatLng.lat, mapLatLng.lng), zoom:14});
+//xxxx
+console.log('Test: checkMinimap 4');
+                GME_Map.addControl(new L.control.scale());
+//xxxx
+console.log('Test: checkMinimap 5');
+                GME_load_map(GME_Map);
+//xxxx
+console.log('Test: checkMinimap 6');
+                cache_coords = {primary:[mapLatLng], additional:[]};
+                if (cmapAdditionalWaypoints && cmapAdditionalWaypoints.length > 0) {
+                    cache_coords.additional = cmapAdditionalWaypoints;
+//xxxx
+console.log('Test: checkMinimap 7');
+                    if (gmeConfig.env.home) {
+//xxxx
+console.log('Test: checkMinimap 8');
+                        for (i = cmapAdditionalWaypoints.length-1; i >= 0; i--) {
+                            if (cmapAdditionalWaypoints[i].hasOwnProperty("editurl")) {
+                                delete cache_coords.additional[i].editurl;
+                            }
+                            parking = cmapAdditionalWaypoints[i];
+                            if (parking.type === 217 || parking.type === 221) {
+//xxxx
+console.log('Test: checkMinimap 9');
+                                label = parking.type === 217 ? "Parking Area" : "Trailhead";
+                                parkUrl = `https://www.google.com/maps/dir/${gmeConfig.env.home.toUrl()}/${parking.lat},${parking.lng}/`;
+                                $("#awpt_" + parking.pf)[0].parentNode.parentNode.children[1].innerHTML +=
+                                    `<a target="_blank" rel="noopener noreferrer" href="${parkUrl}"><img width="16" height="16" title="[GME] Directions to ${label}" alt="${label}" src="https://www.geocaching.com/images/icons/16/directions.png" /></a>`;
+                            }
+                        }
+                    }
+                }
+                if (gmeConfig.env.dragdrop) {
+                    GME_Map.addControl(new L.GME_dropHandler());
+                }
+                if (cache_coords.primary[0].oldLatLng || cache_coords.primary.length + cache_coords.additional.length > 1) {
+                    uri += b64encode(JSON.stringify(cache_coords));
+                    if (mapLink.href.match(/www.geocaching.com\/map\//)) {
+                        mapLink.href = mapLink.href + uri;
+                    }
+                    $('#ctl00_ContentBody_MapLinks_MapLinks a[href*="www.geocaching.com/play/map"]').each(function() {
+                        this.href = this.href.replace('www.geocaching.com/play/map', 'www.geocaching.com/map/');
+                    });
+                    $('#ctl00_ContentBody_MapLinks_MapLinks a[href*="www.geocaching.com/map/"]').attr("href", function(i, val) {return val + uri;});
+                }
+                GME_displayPoints(cache_coords, GME_Map, "listing");
+//xxxx4                    } else {waitCount++; if (waitCount <= 50) setTimeout(function(){checkMinimap(waitCount);}, 100);}
+//xxxx4                }
+//xxxx4                checkMinimap(0);
             }
             setEnv();
         },
