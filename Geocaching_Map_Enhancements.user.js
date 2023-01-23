@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
-// @version     0.8.2.2As.5.4
+// @version     0.8.2.2As.5.5
 //<-- $$001
 // @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
@@ -12,6 +12,11 @@
 // @attribution GeoNames (http://www.geonames.org/)
 // @attribution Postcodes.io (https://postcodes.io/)
 // @attribution Chris Veness (http://www.movable-type.co.uk/scripts/latlong-gridref.html)
+//xxxx6 -->
+//xxxx6// @run-at document-start
+//xxxx6// @require      https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js
+//xxxx6// @require      https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js
+//xxxx6 <--
 // @grant       GM_xmlhttpRequest
 // @grant       GM.xmlHttpRequest
 // @grant       GM_info
@@ -36,11 +41,18 @@
 (function() {
 "use strict";
 
+//xxxx6
+if (typeof $ === "function") {
+    console.log('Test: $ ist vorhanden');
+} else {
+    console.log('Test: $ ist NICHT vorhanden');
+}
+
 var gmeResources = {
     parameters: {
         // Defaults.
 //--> $$002
-        version: "0.8.2.2As.5.4",
+        version: "0.8.2.2As.5.5",
         versionMsg: "\nChanges: Test",
 //<-- $$002
         brightness: 1, // Default brightness for maps (0-1), can be overridden by custom map parameters.
@@ -513,7 +525,7 @@ console.log('Test: Ende: "widget": function() {');
             }
 
 //xxxx5 --> ab hier sollte fürs Listing erst aufgerufen werden, wenn alles geladen ist.
-          function others() {
+//xxxx5          function others() {
             if (window.console === undefined) {
                 var logFn = function(text) {};
                 window.console = {
@@ -705,8 +717,9 @@ console.log('Test: if (typeof L === "object") {');
                     console.error("GME: Invalid coordinates for search");
                 }
             };
-          }
+//xxxx5          }
 //xxxx5
+/*
           function checksForListing(waitCount) {
 console.log('Test: checksForListing: waitCount '+waitCount);
               if (typeof L === "object" && typeof $ === "function") {
@@ -720,6 +733,7 @@ console.log('Test: others()');
 console.log('Test: others(): direkt');
               others();
           }
+*/
 //xxxx5 <-- bis hier sollte fürs Listing erst aufgerufen werden, wenn alles geladen ist.
         },
         config: function() {
@@ -2977,7 +2991,17 @@ switch(gmeResources.env.page) {
             return;
         }
         if (gmeResources.env.dragdrop) {insertCSS(gmeResources.css.drag);}
-        buildScript("GME_page_listing", "common", gmeResources.env.storage ? "config" : "", "map", "dist", "drag", "drop", "loadListing");
+//xxxx7 -->
+//      buildScript("GME_page_listing", "common", gmeResources.env.storage ? "config" : "", "map", "dist", "drag", "drop", "loadListing");
+        function fup2(waitCount) {
+console.log('Test: fup2: waitCount '+waitCount);
+            if (typeof L === "object" && typeof $ === "function") {
+console.log('Test: buildScript');
+                buildScript("GME_page_listing", "common", gmeResources.env.storage ? "config" : "", "map", "dist", "drag", "drop", "loadListing");
+            } else {waitCount++; if (waitCount <= 50) setTimeout(function(){fup2(waitCount);}, 100);}
+        }
+        fup2(0);
+//xxxx7 <--
         break;
     case "seek":
         // On the Hide & Seek page.
