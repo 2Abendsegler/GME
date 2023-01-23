@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
-// @version     0.8.2.2As.5.3
+// @version     0.8.2.2As.5.4
 //<-- $$001
 // @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
@@ -40,7 +40,7 @@ var gmeResources = {
     parameters: {
         // Defaults.
 //--> $$002
-        version: "0.8.2.2As.5.3",
+        version: "0.8.2.2As.5.4",
         versionMsg: "\nChanges: Test",
 //<-- $$002
         brightness: 1, // Default brightness for maps (0-1), can be overridden by custom map parameters.
@@ -347,29 +347,13 @@ console.log('Test: after window.setTimeout(setEnv, wait);');
 //xxxx
 console.log('Test: Start: "map": function() {');
                         bounds_GB = new L.LatLngBounds(new L.LatLng(49,-9.5),new L.LatLng(62,2.3));
-//xxxx
-console.log('Test: after bounds_GB: "map": function() {');
                         bounds_IE = new L.LatLngBounds(new L.LatLng(51.2,-12.2),new L.LatLng(55.73,-5.366));
-//xxxx
-console.log('Test: after bounds_IE: "map": function() {');
                         bounds_NI = new L.LatLngBounds(new L.LatLng(54,-8.25),new L.LatLng(55.73,-5.25));
-//xxxx
-console.log('Test: after bounds_NI: "map": function() {');
                         bounds_CI = new L.LatLngBounds(new L.LatLng(49.1,-2.8),new L.LatLng(49.8,-1.8));
-//xxxx
-console.log('Test: after bounds_CI: "map": function() {');
                         bounds_DE = new L.LatLngBounds(new L.LatLng(47.24941,5.95459),new L.LatLng(55.14121,14.89746));
-//xxxx
-console.log('Test: after bounds_DE: "map": function() {');
                         L.GME_DistLine = L.Polyline.extend(polylineObj);
-//xxxx
-console.log('Test: after L.GME_DistLine: "map": function() {');
                         L.GME_QuadkeyLayer = L.TileLayer.extend(quadkeyLayerObj);
-//xxxx
-console.log('Test: after L.GME_QuadkeyLayer: "map": function() {');
                         L.GME_complexLayer = L.TileLayer.extend(complexLayerObj);
-//xxxx
-console.log('Test: after L.GME_complexLayer: "map": function() {');
                         L.GME_genericLayer = genericLayerFn;
 //xxxx
 console.log('Test: Ende: "map": function() {');
@@ -515,10 +499,8 @@ console.log('Test: Ende: "widget": function() {');
                     return new L.LatLng(window.homeLat, window.homeLon);
                 }
 //xxxx2
-//                if (h && h.href) {
                 // Nur notwendig im Listing für Drag & Drop ausgehend vom Cache Typ und im Zusammenhang mit Directions Links zu Parking Area und Trailhead.
-                // Die Karte im Listing ist nicht immer schon komplett aufgebaut. Falls sie noch nicht komplett ist, wird getHomeCoords erneut aufgerufen.
-                if (h && h.href && typeof L === "object") {
+                if (h && h.href) {
                     c = h.href.match(/(?:saddr=)(-?\d{1,2}\.\d*),(-?\d{1,3}\.\d*)/);
                     if (c !== null && c.length === 3 && validCoords(c[1], c[2])) {
                         return new L.LatLng(c[1], c[2]);
@@ -530,6 +512,8 @@ console.log('Test: Ende: "widget": function() {');
                 return (/^(http|https|ftp)\:\/\/([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|localhost|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(\/($|[a-zA-Z0-9\.\,\?'\\\+&amp;%\$#\=~_\-]+))*$/).test(url);
             }
 
+//xxxx5 --> ab hier sollte fürs Listing erst aufgerufen werden, wenn alles geladen ist.
+          function others() {
             if (window.console === undefined) {
                 var logFn = function(text) {};
                 window.console = {
@@ -583,6 +567,7 @@ console.log('Test: Ende: "widget": function() {');
 
             gmeConfig.env.home = getHomeCoords();
 //xxxx2
+/*
             // Die Karte im Listing ist nicht immer schon komplett aufgebaut. Falls sie noch nicht komplett ist, wird getHomeCoords erneut aufgerufen.
             if (!gmeConfig.env.home && gmeConfig.env.page === "listing") {
                 function checkL(waitCount) {
@@ -594,10 +579,14 @@ console.log('Test: if (typeof L === "object") {');
                 }
                 checkL(0);
             }
+*/
 
-            this.parameters = gmeConfig.parameters;
-            this.getVersion = function() {return gmeConfig.parameters.version;};
-            this.getGeograph = function(coords) {
+//xxxx            this.parameters = gmeConfig.parameters;
+            that.parameters = gmeConfig.parameters;
+//xxxx            this.getVersion = function() {return gmeConfig.parameters.version;};
+            that.getVersion = function() {return gmeConfig.parameters.version;};
+//xxxx            this.getGeograph = function(coords) {
+            that.getGeograph = function(coords) {
                 var callprefix = "GME_geograph_callback", call, host = "";
                 function searchLink(coords) {
                     // URIs for website search pages.
@@ -630,7 +619,8 @@ console.log('Test: if (typeof L === "object") {');
                     $("#"+callname).remove();
                     if (window[callname] !== undefined) {delete window[callname];}
                 };}
-                if (validCoords(coords) && this.isGeographAvailable(coords)) {
+//xxxx                if (validCoords(coords) && this.isGeographAvailable(coords)) {
+                if (validCoords(coords) && that.isGeographAvailable(coords)) {
                     if (!bounds_CI.contains(coords) && (bounds_GB.contains(coords) || bounds_IE.contains(coords))) {
                         host = "https://api.geograph.org.uk/";
                         call = callprefix + callbackCount;
@@ -643,7 +633,8 @@ console.log('Test: if (typeof L === "object") {');
                     console.error("GME: Bad coordinates to getGeograph");
                 }
             };
-            this.getHeight = function(coords) {
+//xxxx            this.getHeight = function(coords) {
+            that.getHeight = function(coords) {
                 var callprefix = "GME_height_callback",call;
                 function makeCallback(callname) {callbackCount++; return function(json) {
                     if (typeof json.astergdem === "number" && typeof json.lat === "number" && typeof json.lng === "number") {
@@ -667,10 +658,12 @@ console.log('Test: if (typeof L === "object") {');
                     console.error("GME: Bad coordinates to getHeight");
                 }
             };
-            this.isGeographAvailable = function(coords) {
+//xxxx            this.isGeographAvailable = function(coords) {
+            that.isGeographAvailable = function(coords) {
                 return bounds_GB.contains(coords) || bounds_DE.contains(coords) || bounds_IE.contains(coords) || bounds_CI.contains(coords);
             };
-            this.isInUK = function(coords) {
+//xxxx            this.isInUK = function(coords) {
+            that.isInUK = function(coords) {
                 if (bounds_GB.contains(coords)) {
                     if (bounds_IE.contains(coords)) {
                         if (bounds_NI.contains(coords)) {
@@ -683,7 +676,8 @@ console.log('Test: if (typeof L === "object") {');
                 return false;
             };
             if (gmeConfig.env.geolocation) {
-                this.seekHere = function() {
+//xxxx                this.seekHere = function() {
+                that.seekHere = function() {
                     function hereCallback(pos) {
                         that.seekByLatLng({lat:pos.coords.latitude, lng:pos.coords.longitude});
                         $("#GME_hereSub").val("Go");
@@ -702,7 +696,8 @@ console.log('Test: if (typeof L === "object") {');
                     return false;
                 };
             }
-            this.seekByLatLng = function(latlng) {
+//xxxx            this.seekByLatLng = function(latlng) {
+            that.seekByLatLng = function(latlng) {
                 if (validCoords(latlng)) {
                     var url = ["https://www.geocaching.com/seek/nearest.aspx?origin_lat=",latlng.lat,"&origin_long=",latlng.lng, that.parameters.filterFinds?"&f=1":""].join("");
                     window.open(url, "_blank");
@@ -710,6 +705,22 @@ console.log('Test: if (typeof L === "object") {');
                     console.error("GME: Invalid coordinates for search");
                 }
             };
+          }
+//xxxx5
+          function checksForListing(waitCount) {
+console.log('Test: checksForListing: waitCount '+waitCount);
+              if (typeof L === "object" && typeof $ === "function") {
+console.log('Test: others()');
+                  others();
+              } else {waitCount++; if (waitCount <= 50) setTimeout(function(){checksForListing(waitCount);}, 100);}
+          }
+          if (gmeConfig.env.page === "listing") {
+              checksForListing(0);
+          } else {
+console.log('Test: others(): direkt');
+              others();
+          }
+//xxxx5 <-- bis hier sollte fürs Listing erst aufgerufen werden, wenn alles geladen ist.
         },
         config: function() {
             function addSources(json) {
@@ -1324,15 +1335,16 @@ console.log('Test: if (typeof L === "object") {');
 //xxxx4                function checkMinimap(waitCount) {
 //xxxx
 //xxxx4console.log('Test: checkMinimap(waitCount) '+waitCount);
+console.log('Test: function load() { von loadListing');
 //xxxx4                    if ($('#ctl00_ContentBody_uxViewLargerMap')[0] && $('#map_canvas')[0]) {
                 mapLink = document.getElementById("ctl00_ContentBody_uxViewLargerMap");
                 var parkUrl = "", label = "", i, parking, uri = "#&pop=";
                 if (L.LatLng.prototype.toUrl === undefined) {
-//xxxx
-console.log('Test: checkMinimap 1');
+////xxxx
+//console.log('Test: checkMinimap 1');
                     L.LatLng.prototype.toUrl = function() {var obj = this; if (!(obj instanceof L.LatLng)) {return false;} return [L.Util.formatNum(obj.lat,5),L.Util.formatNum(obj.lng,5)].join(",");};
-//xxxx
-console.log('Test: checkMinimap 2');
+////xxxx
+//console.log('Test: checkMinimap 2');
                 }
                 $("#map_canvas").replaceWith("<div style=\'width: 325px; height: 325px; position: relative;\' id=\'map_canvas2\'></div>");
                 if (gmeConfig.env.dragdrop) {
@@ -1340,33 +1352,36 @@ console.log('Test: checkMinimap 2');
                     $("#cacheDetails .cacheImage").attr("draggable","true").on("dragstart", that.dragStart);
                     $("#cacheDetails .cacheImage a").removeAttr("href");
                 }
-//xxxx
-console.log('Test: checkMinimap 3');
+////xxxx
+//console.log('Test: checkMinimap 3');
                 window.GME_Map = new L.Map("map_canvas2",{center: new L.LatLng(mapLatLng.lat, mapLatLng.lng), zoom:14});
-//xxxx
-console.log('Test: checkMinimap 4');
+////xxxx
+//console.log('Test: checkMinimap 4');
                 GME_Map.addControl(new L.control.scale());
-//xxxx
-console.log('Test: checkMinimap 5');
+////xxxx
+//console.log('Test: checkMinimap 5');
                 GME_load_map(GME_Map);
-//xxxx
-console.log('Test: checkMinimap 6');
+////xxxx
+//console.log('Test: checkMinimap 6');
                 cache_coords = {primary:[mapLatLng], additional:[]};
                 if (cmapAdditionalWaypoints && cmapAdditionalWaypoints.length > 0) {
+////xxxx
+console.log('Test: after: if (cmapAdditionalWaypoints && cmapAdditionalWaypoints.length > 0) {');
                     cache_coords.additional = cmapAdditionalWaypoints;
-//xxxx
-console.log('Test: checkMinimap 7');
+////xxxx
+//console.log('Test: checkMinimap 7');
                     if (gmeConfig.env.home) {
-//xxxx
-console.log('Test: checkMinimap 8');
+////xxxx
+console.log('Test: after: if (gmeConfig.env.home) {');
                         for (i = cmapAdditionalWaypoints.length-1; i >= 0; i--) {
+console.log('Test: after: for (i = cmapAdditionalWaypoints.length-1; i >= 0; i--) {');
                             if (cmapAdditionalWaypoints[i].hasOwnProperty("editurl")) {
                                 delete cache_coords.additional[i].editurl;
                             }
                             parking = cmapAdditionalWaypoints[i];
                             if (parking.type === 217 || parking.type === 221) {
-//xxxx
-console.log('Test: checkMinimap 9');
+////xxxx
+console.log('Test: after: if (parking.type === 217 || parking.type === 221) {');
                                 label = parking.type === 217 ? "Parking Area" : "Trailhead";
                                 parkUrl = `https://www.google.com/maps/dir/${gmeConfig.env.home.toUrl()}/${parking.lat},${parking.lng}/`;
                                 $("#awpt_" + parking.pf)[0].parentNode.parentNode.children[1].innerHTML +=
@@ -1681,6 +1696,8 @@ console.log('Test: checkMinimap 9');
                     if (context === "listing" || context === "dragdrop" || p.isUserDefined) {
                         layers.addLayer(L.marker(ll, {icon: new PinIcon({iconUrl:"/images/wpttypes/pins/" + checkType(p.type) + ".png",iconAnchor: L.point(10,23)}),clickable: false, zIndexOffset:98, title: p.name + (p.isUserDefined?" (Corrected coordinates)":"")}));
                         if (p.isUserDefined) {
+////xxxx
+console.log('Test: function GME_displayPoints: Korrigierte Koordinaten vorhanden');
                             layers.addLayer(L.marker(ll, {icon: new PinIcon({iconSize: new L.Point(28,23), iconAnchor: L.point(10,23), iconUrl:icons.tick}),clickable: false, zIndexOffset:99, title: p.name + " (Corrected coordinates)"}));
                         }
                     } else {
@@ -2828,8 +2845,9 @@ for (i = 0; i < pageTests.length; i++) {
         document.getElementsByTagName('head')[0].appendChild(runningVersion);
         // Full check GME already running.
         checkAlreadyRunning(0);
-        // Check for upgrade.
-        checkForUpgrade();
+//xxxx temporär deaktiviert
+//        // Check for upgrade.
+//        checkForUpgrade();
         break;
     }
 }
