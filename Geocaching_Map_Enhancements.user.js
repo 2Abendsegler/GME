@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
-// @version     0.8.2.2As.5.5
+// @version     0.8.2.2As.5.6
 //<-- $$001
 // @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
@@ -52,7 +52,7 @@ var gmeResources = {
     parameters: {
         // Defaults.
 //--> $$002
-        version: "0.8.2.2As.5.5",
+        version: "0.8.2.2As.5.6",
         versionMsg: "\nChanges: Test",
 //<-- $$002
         brightness: 1, // Default brightness for maps (0-1), can be overridden by custom map parameters.
@@ -2996,9 +2996,11 @@ switch(gmeResources.env.page) {
         function fup2(waitCount) {
 console.log('Test: fup2: waitCount '+waitCount);
             if (typeof L === "object" && typeof $ === "function") {
+                setTimeout(function(){
 console.log('Test: buildScript');
-                buildScript("GME_page_listing", "common", gmeResources.env.storage ? "config" : "", "map", "dist", "drag", "drop", "loadListing");
-            } else {waitCount++; if (waitCount <= 50) setTimeout(function(){fup2(waitCount);}, 100);}
+                    buildScript("GME_page_listing", "common", gmeResources.env.storage ? "config" : "", "map", "dist", "drag", "drop", "loadListing");
+                }, 1000);
+            } else {waitCount++; if (waitCount <= 100) setTimeout(function(){fup2(waitCount);}, 100);}
         }
         fup2(0);
 //xxxx7 <--
