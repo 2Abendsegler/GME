@@ -65,8 +65,7 @@ GME funktioniert nur korrekt, wenn es nur einmal im Browser ausgeführt wird. De
 <a id="3-de"></a>
 ## 3. Was kann ich tun, wenn einzelne GME Features nicht oder nicht immer funktionieren?
 Einzelne GME Features, wie beispielsweise die blaue Linie zwischen den original und den korrigierten Koordinaten auf der Minikarte im Listing oder auf der Browse Map, funktionieren nur unter bestimmten Bedingungen.<br>
-1. Es müssen alle Cookies von geocaching.com akzeptiert werden und nicht nur die notwendigen. Andernfalls können die Fehler in der Cookie Verarbeitung der Webseite zu Abbrüchen im Script führen.<br>
-<img src="../images/cookie_accepting_de.jpg">
+1. Es müssen alle Cookies von geocaching.com akzeptiert werden und nicht nur die notwendigen. Andernfalls können die Fehler in der Cookie Verarbeitung der Webseite zu Abbrüchen im Script führen. <img src="../images/cookie_accepting_de.jpg">
 2. Alternativ können auch nur die notwendigen Cookies von geocaching.com akzeptiert werden, wenn gleichzeitig die Cookie Verarbeitung blockiert wird. Dazu kann beispielsweise im Add on "uBlock Origin" in "Meine Filter" der Eintrag "cookiebot.com" aufgenommen werden.
 3. Ist das Add on "Ghostery" installiert, muss "Never Consent" für "geocaching.com" ausgeschaltet werden.
 <br>
