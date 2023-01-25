@@ -5,7 +5,7 @@
 <a href="#1-en">1. How can I install GME?</a> | <a href="#1-de">1. Wie kann ich GME installieren?</a>
 <a href="#2-en">2. What can I do if I get a warning that GME is already running?</a> | <a href="#2-de">2. Was kann ich tun, wenn die Warnung angezeigt wird, dass GME bereits läuft?</a>
 <a href="#3-en">3. What can I do if individual GME features don't work or don't always work?</a> | <a href="#3-de">3. Was kann ich tun, wenn einzelne GME Features nicht oder nicht immer funktionieren?</a>
-<a href="#4-en">4. Where can I get help with the GME?</a> | <a href="#4-de">4. Wo bekomme ich Hilfe zu GME?</a>
+<a href="#4-en">4. Where can I get help with GME?</a> | <a href="#4-de">4. Wo bekomme ich Hilfe zu GME?</a>
 <a href="#5-en">5. How can I report a bug?</a> | <a href="#5-de">5. Wie kann ich einen Fehler melden?</a>
 
 ---
@@ -33,7 +33,7 @@ Individual GME features, such as the blue line between the original and the corr
 <br>
 
 <a id="4-en"></a>
-## 4. Where can I get help with the GME?
+## 4. Where can I get help with GME?
 If you need help with the GME, or if you have questions about the GME, you can check out here:<br>
 - [Geocaching Forum](https://forums.geocaching.com/GC/index.php?/topic/291102-geocaching-map-enhancements/&do=findComment&comment=6057362) (in English)
 - [Geoclub Geocaching Forum](https://www.geoclub.de/forum/t/geocaching-map-enhancements.82339/) (in German and English)
