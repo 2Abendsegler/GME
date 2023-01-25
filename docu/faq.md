@@ -34,7 +34,7 @@ Individual GME features, such as the blue line between the original and the corr
 
 <a id="4-en"></a>
 ## 4. Where can I get help with GME?
-If you need help with the GME, or if you have questions about the GME, you can check out here:<br>
+If you need help with GME, or if you have questions about GME, you can check out here:<br>
 - [Geocaching Forum](https://forums.geocaching.com/GC/index.php?/topic/291102-geocaching-map-enhancements/&do=findComment&comment=6057362) (in English)
 - [Geoclub Geocaching Forum](https://www.geoclub.de/forum/t/geocaching-map-enhancements.82339/) (in German and English)
 - [Ticket System](https://github.com/2Abendsegler/GME/issues) on our development platform at GitHub (in German and English)
