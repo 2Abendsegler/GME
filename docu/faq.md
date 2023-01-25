@@ -42,7 +42,7 @@ If you need help with the GME, or if you have questions about the GME, you can c
 
 <a id="5-en"></a>
 ## 5. How can I report a bug?
-To report a bug you can create a "New issue" on our development platform at GitHub. Or you can create a note in one of the forums. See [FAQ 4](../faq.md#4-en).<br>
+To report a bug you can create a "New issue" on our development platform at GitHub. Or you can create a note in one of the forums. See [FAQ 4](../docu/faq.md#4-en).<br>
 <br>
 
 ---
