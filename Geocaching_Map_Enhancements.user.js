@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
-// @version     0.8.2.2As.5.6
+// @version     0.8.2.2As.6
 //<-- $$001
 // @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
@@ -12,11 +12,6 @@
 // @attribution GeoNames (http://www.geonames.org/)
 // @attribution Postcodes.io (https://postcodes.io/)
 // @attribution Chris Veness (http://www.movable-type.co.uk/scripts/latlong-gridref.html)
-//xxxx6 -->
-//xxxx6// @run-at document-start
-//xxxx6// @require      https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js
-//xxxx6// @require      https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js
-//xxxx6 <--
 // @grant       GM_xmlhttpRequest
 // @grant       GM.xmlHttpRequest
 // @grant       GM_info
@@ -41,19 +36,13 @@
 (function() {
 "use strict";
 
-//xxxx6
-if (typeof $ === "function") {
-    console.log('Test: $ ist vorhanden');
-} else {
-    console.log('Test: $ ist NICHT vorhanden');
-}
-
 var gmeResources = {
     parameters: {
         // Defaults.
 //--> $$002
-        version: "0.8.2.2As.5.6",
-        versionMsg: "\nChanges: Test",
+        // Hier nur anpassen wenn die Version als nächstes Life geht.
+        version: "0.8.2.2As.6",
+        versionMsg: "\nFix further issues with the asynchronous or delayed loading of the minimap.",
 //<-- $$002
         brightness: 1, // Default brightness for maps (0-1), can be overridden by custom map parameters.
         filterFinds: false, // True filters finds out of list searches.
@@ -226,7 +215,7 @@ var gmeResources = {
                 <div class="gme-tab-content">\
                     <div class="gme-fieldgroup">\
                         <h3>Geocaching Map Enhancements</h3><br />\
-                        <p>v<span id="GME_version"></span> &copy; 2011-2018 James Inge; 2022-2023 2Abendsegler. Geocaching Map Enhancements is licensed for reuse under the <a target="_blank" rel="noopener noreferrer" href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>. For documentation, see <a target="_blank" rel="noopener noreferrer" href="http://geo.inge.org.uk/gme.htm">http://geo.inge.org.uk/gme.htm</a></p>\
+                        <p>v<span id="GME_version"></span> &copy; 2011-2018 James Inge; 2022-2023 2Abendsegler. Geocaching Map Enhancements is licensed under the <a target="_blank" rel="noopener noreferrer" href="https://raw.githubusercontent.com/2Abendsegler/GME/main/License">MIT License</a>.<br>A short description of the tool and FAQ can be found <a target="_blank" rel="noopener noreferrer" href="https://github.com/2Abendsegler/GME/tree/main#readme">here</a>. A documentation can be found <a target="_blank" rel="noopener noreferrer" href="http://geo.inge.org.uk/gme.htm">here</a>.</p>\
                         <p>Elevation and reverse geocoding data provided by <a target="_blank" rel="noopener noreferrer" href="http://www.geonames.org/">GeoNames</a> and used under a <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> (CC-BY) License.</p>\
                         <p>Grid reference manipulation is adapted from code &copy; 2005-2014 Chris Veness (<a target="_blank" rel="noopener noreferrer" href="http://www.movable-type.co.uk/scripts/latlong-gridref.html">www.movable-type.co.uk/scripts/latlong-gridref.html</a>, used under a <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> (CC-BY) License.</p>\
                         <p>Photos provided by Geograph are copyright their respective owners - hover mouse over thumbnails or click through for attribution details. They may be re-used under a <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by-sa/2.0/">Creative Commons Attribution-ShareAlike 2.0</a> (CC-BY-SA) License.</p>\
@@ -253,8 +242,6 @@ var gmeResources = {
         common: function() {
             var that = this, callbackCount = 0, load_count = 0, JSONP;
             function setEnv() {
-//xxxx
-console.log('Test: after function setEnv() {');
                 // The script waits for the Leaflet API to load, and will abort if it does not find it after a minute.
                 var maxTries = 60,
                     wait = 1000;
@@ -293,28 +280,15 @@ console.log('Test: after function setEnv() {');
                     }
                     break;
                 default:
-//xxxx
-console.log('Test: after default:');
                     if (typeof L === "object" && typeof $ === "function") {
-//xxxx
-console.log('Test: gmeInit(gmeConfig.env.init);');
                         gmeInit(gmeConfig.env.init);
-//xxxx
-console.log('Test: window.setTimeout(load,500);');
                         window.setTimeout(load,500);
-//xxxx
-console.log('Test: after window.setTimeout(load,500);');
                         return;
                     }
                     break;
                 }
-
                 if (load_count < maxTries) {
-//xxxx
-console.log('Test: after if (load_count < maxTries) {');
                     window.setTimeout(setEnv, wait);
-//xxxx
-console.log('Test: after window.setTimeout(setEnv, wait);');
                     load_count++;
                     console.log("GME: Waiting for map API to load: " + load_count + "...");
                 }
@@ -356,8 +330,6 @@ console.log('Test: after window.setTimeout(setEnv, wait);');
                         L.GME_dropHandler = L.Control.extend(dropHandlerObj);
                     },
                     "map": function() {
-//xxxx
-console.log('Test: Start: "map": function() {');
                         bounds_GB = new L.LatLngBounds(new L.LatLng(49,-9.5),new L.LatLng(62,2.3));
                         bounds_IE = new L.LatLngBounds(new L.LatLng(51.2,-12.2),new L.LatLng(55.73,-5.366));
                         bounds_NI = new L.LatLngBounds(new L.LatLng(54,-8.25),new L.LatLng(55.73,-5.25));
@@ -367,12 +339,8 @@ console.log('Test: Start: "map": function() {');
                         L.GME_QuadkeyLayer = L.TileLayer.extend(quadkeyLayerObj);
                         L.GME_complexLayer = L.TileLayer.extend(complexLayerObj);
                         L.GME_genericLayer = genericLayerFn;
-//xxxx
-console.log('Test: Ende: "map": function() {');
                     },
                     "widget": function() {
-//xxxx
-console.log('Test: Start: "widget": function() {');
                         L.GME_Widget = L.Control.extend(widgetControlObj);
                         if (window.Groundspeak && Groundspeak.Map && Groundspeak.Map.Control && Groundspeak.Map.Control.FindMyLocation) {
                             L.GME_FollowMyLocationControl = Groundspeak.Map.Control.FindMyLocation.extend(locationControlObj);
@@ -382,11 +350,9 @@ console.log('Test: Start: "widget": function() {');
                             L.LatLng.prototype.toUrl = function() {return this.lat.toFixed(6) + "," + this.lng.toFixed(6); };
                         }
                         if ($.fancybox === undefined) {
-                            console.info("GME: Fetching Fancybox");
+                            console.info("GME: Fetching Fancybox.");
                             $("head").append("<link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css'><script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js'></script>");
                         }
-//xxxx
-console.log('Test: Ende: "widget": function() {');
                     }
                 },
                 j;
@@ -396,7 +362,7 @@ console.log('Test: Ende: "widget": function() {');
                         initScripts[scriptArray[j]]();
                     }
                 }
-                console.log("GME init: " + scriptArray.join());
+                console.log("GME: Init: " + scriptArray.join());
             }
             function b64encode(str) {
                 if (typeof window.btoa === "function") {
@@ -510,7 +476,6 @@ console.log('Test: Ende: "widget": function() {');
                 if (validCoords(window.homeLat, window.homeLon)) {
                     return new L.LatLng(window.homeLat, window.homeLon);
                 }
-//xxxx2
                 // Nur notwendig im Listing für Drag & Drop ausgehend vom Cache Typ und im Zusammenhang mit Directions Links zu Parking Area und Trailhead.
                 if (h && h.href) {
                     c = h.href.match(/(?:saddr=)(-?\d{1,2}\.\d*),(-?\d{1,3}\.\d*)/);
@@ -524,8 +489,6 @@ console.log('Test: Ende: "widget": function() {');
                 return (/^(http|https|ftp)\:\/\/([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|localhost|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(\/($|[a-zA-Z0-9\.\,\?'\\\+&amp;%\$#\=~_\-]+))*$/).test(url);
             }
 
-//xxxx5 --> ab hier sollte fürs Listing erst aufgerufen werden, wenn alles geladen ist.
-//xxxx5          function others() {
             if (window.console === undefined) {
                 var logFn = function(text) {};
                 window.console = {
@@ -557,10 +520,10 @@ console.log('Test: Ende: "widget": function() {');
                         try {
                             window[callback](JSON.parse(s.text));
                         } catch (e) {
-                            console.error("Error processing JSON callback " + callback + ": " + e);
+                            console.error("GME: Error processing JSON callback " + callback + ": " + e);
                         }
                     } else {
-                        console.warn("Unexpected request to JSON callback handler: Couldn't find callback function " + callback);
+                        console.warn("GME: Unexpected request to JSON callback handler: Couldn't find callback function " + callback);
                     }
                     return false;
                 });
@@ -578,26 +541,9 @@ console.log('Test: Ende: "widget": function() {');
             }
 
             gmeConfig.env.home = getHomeCoords();
-//xxxx2
-/*
-            // Die Karte im Listing ist nicht immer schon komplett aufgebaut. Falls sie noch nicht komplett ist, wird getHomeCoords erneut aufgerufen.
-            if (!gmeConfig.env.home && gmeConfig.env.page === "listing") {
-                function checkL(waitCount) {
-console.log('Test: function checkL(waitCount) { '+waitCount);
-                    if (typeof L === "object") {
-console.log('Test: if (typeof L === "object") {');
-                        gmeConfig.env.home = getHomeCoords();
-                    } else {waitCount++; if (waitCount <= 50) setTimeout(function(){checkL(waitCount);}, 200);}
-                }
-                checkL(0);
-            }
-*/
 
-//xxxx            this.parameters = gmeConfig.parameters;
             that.parameters = gmeConfig.parameters;
-//xxxx            this.getVersion = function() {return gmeConfig.parameters.version;};
             that.getVersion = function() {return gmeConfig.parameters.version;};
-//xxxx            this.getGeograph = function(coords) {
             that.getGeograph = function(coords) {
                 var callprefix = "GME_geograph_callback", call, host = "";
                 function searchLink(coords) {
@@ -631,7 +577,6 @@ console.log('Test: if (typeof L === "object") {');
                     $("#"+callname).remove();
                     if (window[callname] !== undefined) {delete window[callname];}
                 };}
-//xxxx                if (validCoords(coords) && this.isGeographAvailable(coords)) {
                 if (validCoords(coords) && that.isGeographAvailable(coords)) {
                     if (!bounds_CI.contains(coords) && (bounds_GB.contains(coords) || bounds_IE.contains(coords))) {
                         host = "https://api.geograph.org.uk/";
@@ -642,10 +587,9 @@ console.log('Test: if (typeof L === "object") {');
                         window.open(searchLink(coords), "_blank");
                     }
                 } else {
-                    console.error("GME: Bad coordinates to getGeograph");
+                    console.error("GME: Bad coordinates to getGeograph.");
                 }
             };
-//xxxx            this.getHeight = function(coords) {
             that.getHeight = function(coords) {
                 var callprefix = "GME_height_callback",call;
                 function makeCallback(callname) {callbackCount++; return function(json) {
@@ -667,14 +611,12 @@ console.log('Test: if (typeof L === "object") {');
                     window[call] = makeCallback(call);
                     JSONP(["http://api.geonames.org/astergdemJSON?lat=",coords.lat,"&lng=",coords.lng,"&username=gme&callback=",call].join(""), call);
                 } else {
-                    console.error("GME: Bad coordinates to getHeight");
+                    console.error("GME: Bad coordinates to getHeight.");
                 }
             };
-//xxxx            this.isGeographAvailable = function(coords) {
             that.isGeographAvailable = function(coords) {
                 return bounds_GB.contains(coords) || bounds_DE.contains(coords) || bounds_IE.contains(coords) || bounds_CI.contains(coords);
             };
-//xxxx            this.isInUK = function(coords) {
             that.isInUK = function(coords) {
                 if (bounds_GB.contains(coords)) {
                     if (bounds_IE.contains(coords)) {
@@ -688,7 +630,6 @@ console.log('Test: if (typeof L === "object") {');
                 return false;
             };
             if (gmeConfig.env.geolocation) {
-//xxxx                this.seekHere = function() {
                 that.seekHere = function() {
                     function hereCallback(pos) {
                         that.seekByLatLng({lat:pos.coords.latitude, lng:pos.coords.longitude});
@@ -708,33 +649,14 @@ console.log('Test: if (typeof L === "object") {');
                     return false;
                 };
             }
-//xxxx            this.seekByLatLng = function(latlng) {
             that.seekByLatLng = function(latlng) {
                 if (validCoords(latlng)) {
                     var url = ["https://www.geocaching.com/seek/nearest.aspx?origin_lat=",latlng.lat,"&origin_long=",latlng.lng, that.parameters.filterFinds?"&f=1":""].join("");
                     window.open(url, "_blank");
                 } else {
-                    console.error("GME: Invalid coordinates for search");
+                    console.error("GME: Invalid coordinates for search.");
                 }
             };
-//xxxx5          }
-//xxxx5
-/*
-          function checksForListing(waitCount) {
-console.log('Test: checksForListing: waitCount '+waitCount);
-              if (typeof L === "object" && typeof $ === "function") {
-console.log('Test: others()');
-                  others();
-              } else {waitCount++; if (waitCount <= 50) setTimeout(function(){checksForListing(waitCount);}, 100);}
-          }
-          if (gmeConfig.env.page === "listing") {
-              checksForListing(0);
-          } else {
-console.log('Test: others(): direkt');
-              others();
-          }
-*/
-//xxxx5 <-- bis hier sollte fürs Listing erst aufgerufen werden, wenn alles geladen ist.
         },
         config: function() {
             function addSources(json) {
@@ -895,7 +817,7 @@ console.log('Test: others(): direkt');
                     if (watcher) {
                         navigator.geolocation.clearWatch(watcher);
                     }
-                    alert("GME couldn't detect your location.\nDisable FollowMe mode in Geocaching Map Enhancements if this error pops up repeatedly.");
+                    alert("GME: Couldn't detect your location.\nDisable FollowMe mode in Geocaching Map Enhancements if this error pops up repeatedly.");
                 }
                 if (that.parameters.follow) {
                     watcher = navigator.geolocation.watchPosition(found, lost, {timeout: 60000, maximumAge: 30000});
@@ -1001,7 +923,7 @@ console.log('Test: others(): direkt');
                     function readLOC(e) {
                         var data = e.target.result, pts = parseLOC(data);
                         if (pts) {
-                            console.info("GME: Received LOC file");
+                            console.info("GME: Received LOC file.");
                             GME_displayPoints(pts, map, "dragdrop");
                         }
                     }
@@ -1062,7 +984,7 @@ console.log('Test: others(): direkt');
                     function readGPX(e) {
                         var data = e.target.result, pts = parseGPX(data);
                         if (pts) {
-                            console.info("GME: Received GPX file");
+                            console.info("GME: Received GPX file.");
                             GME_displayPoints(pts, map, "dragdrop");
                         }
                     }
@@ -1072,7 +994,7 @@ console.log('Test: others(): direkt');
                     try {
                         data = dt.getData("application/gme-cache-coords");
                         if (data) {
-                            console.info("GME: Received GME data");
+                            console.info("GME: Received GME data.");
                             GME_displayPoints(JSON.parse(data), map, "dragdrop");
                             return;
                         }
@@ -1080,13 +1002,13 @@ console.log('Test: others(): direkt');
                         if (data) {
                             pts = parseLOC(data);
                             if (pts) {
-                                console.info("GME: Received LOC text");
+                                console.info("GME: Received LOC text.");
                                 GME_displayPoints(pts, map, "dragdrop");
                                 return;
                             }
                             pts = parseGPX(data);
                             if (pts) {
-                                console.info("GME: Received GPX text");
+                                console.info("GME: Received GPX text.");
                                 GME_displayPoints(pts, map, "dragdrop");
                                 return;
                             }
@@ -1344,21 +1266,10 @@ console.log('Test: others(): direkt');
             var cache_coords = {};
             var mapLink = '';
             function load() {
-//xxxx4 hier kommt man hin mit "window.setTimeout(load,500);", deshalb ist die Karte hier bereits vorhanden.
-//xxxx4 ist aus meiner Sicht getestet, muss nun aber noch vom letzten Test durch Sechsfüssler bestätogt werden.
-//xxxx4                function checkMinimap(waitCount) {
-//xxxx
-//xxxx4console.log('Test: checkMinimap(waitCount) '+waitCount);
-console.log('Test: function load() { von loadListing');
-//xxxx4                    if ($('#ctl00_ContentBody_uxViewLargerMap')[0] && $('#map_canvas')[0]) {
                 mapLink = document.getElementById("ctl00_ContentBody_uxViewLargerMap");
                 var parkUrl = "", label = "", i, parking, uri = "#&pop=";
                 if (L.LatLng.prototype.toUrl === undefined) {
-////xxxx
-//console.log('Test: checkMinimap 1');
                     L.LatLng.prototype.toUrl = function() {var obj = this; if (!(obj instanceof L.LatLng)) {return false;} return [L.Util.formatNum(obj.lat,5),L.Util.formatNum(obj.lng,5)].join(",");};
-////xxxx
-//console.log('Test: checkMinimap 2');
                 }
                 $("#map_canvas").replaceWith("<div style=\'width: 325px; height: 325px; position: relative;\' id=\'map_canvas2\'></div>");
                 if (gmeConfig.env.dragdrop) {
@@ -1366,36 +1277,19 @@ console.log('Test: function load() { von loadListing');
                     $("#cacheDetails .cacheImage").attr("draggable","true").on("dragstart", that.dragStart);
                     $("#cacheDetails .cacheImage a").removeAttr("href");
                 }
-////xxxx
-//console.log('Test: checkMinimap 3');
                 window.GME_Map = new L.Map("map_canvas2",{center: new L.LatLng(mapLatLng.lat, mapLatLng.lng), zoom:14});
-////xxxx
-//console.log('Test: checkMinimap 4');
                 GME_Map.addControl(new L.control.scale());
-////xxxx
-//console.log('Test: checkMinimap 5');
                 GME_load_map(GME_Map);
-////xxxx
-//console.log('Test: checkMinimap 6');
                 cache_coords = {primary:[mapLatLng], additional:[]};
                 if (cmapAdditionalWaypoints && cmapAdditionalWaypoints.length > 0) {
-////xxxx
-console.log('Test: after: if (cmapAdditionalWaypoints && cmapAdditionalWaypoints.length > 0) {');
                     cache_coords.additional = cmapAdditionalWaypoints;
-////xxxx
-//console.log('Test: checkMinimap 7');
                     if (gmeConfig.env.home) {
-////xxxx
-console.log('Test: after: if (gmeConfig.env.home) {');
                         for (i = cmapAdditionalWaypoints.length-1; i >= 0; i--) {
-console.log('Test: after: for (i = cmapAdditionalWaypoints.length-1; i >= 0; i--) {');
                             if (cmapAdditionalWaypoints[i].hasOwnProperty("editurl")) {
                                 delete cache_coords.additional[i].editurl;
                             }
                             parking = cmapAdditionalWaypoints[i];
                             if (parking.type === 217 || parking.type === 221) {
-////xxxx
-console.log('Test: after: if (parking.type === 217 || parking.type === 221) {');
                                 label = parking.type === 217 ? "Parking Area" : "Trailhead";
                                 parkUrl = `https://www.google.com/maps/dir/${gmeConfig.env.home.toUrl()}/${parking.lat},${parking.lng}/`;
                                 $("#awpt_" + parking.pf)[0].parentNode.parentNode.children[1].innerHTML +=
@@ -1418,9 +1312,6 @@ console.log('Test: after: if (parking.type === 217 || parking.type === 221) {');
                     $('#ctl00_ContentBody_MapLinks_MapLinks a[href*="www.geocaching.com/map/"]').attr("href", function(i, val) {return val + uri;});
                 }
                 GME_displayPoints(cache_coords, GME_Map, "listing");
-//xxxx4                    } else {waitCount++; if (waitCount <= 50) setTimeout(function(){checkMinimap(waitCount);}, 100);}
-//xxxx4                }
-//xxxx4                checkMinimap(0);
             }
             setEnv();
         },
@@ -1454,7 +1345,7 @@ console.log('Test: after: if (parking.type === 217 || parking.type === 221) {');
                             GME_displayPoints(JSON.parse(b64decode(localStorage.GME_cache)), GME_control._map, "clickthru");
                             delete localStorage.GME_cache;
                         } catch (e) {
-                            console.error("GME Can't pop cache: " + e);
+                            console.error("GME: Can't pop cache: " + e);
                         }
                     }
                 }
@@ -1710,8 +1601,6 @@ console.log('Test: after: if (parking.type === 217 || parking.type === 221) {');
                     if (context === "listing" || context === "dragdrop" || p.isUserDefined) {
                         layers.addLayer(L.marker(ll, {icon: new PinIcon({iconUrl:"/images/wpttypes/pins/" + checkType(p.type) + ".png",iconAnchor: L.point(10,23)}),clickable: false, zIndexOffset:98, title: p.name + (p.isUserDefined?" (Corrected coordinates)":"")}));
                         if (p.isUserDefined) {
-////xxxx
-console.log('Test: function GME_displayPoints: Korrigierte Koordinaten vorhanden');
                             layers.addLayer(L.marker(ll, {icon: new PinIcon({iconSize: new L.Point(28,23), iconAnchor: L.point(10,23), iconUrl:icons.tick}),clickable: false, zIndexOffset:99, title: p.name + " (Corrected coordinates)"}));
                         }
                     } else {
@@ -1845,8 +1734,6 @@ console.log('Test: function GME_displayPoints: Korrigierte Koordinaten vorhanden
                 return control;
             }
             function GME_load_map(map) {
-//xxxx
-console.log('Test: after function GME_load_map(map) {');
                 var control = GME_get_layerControl(),
                     layer;
 
@@ -2238,7 +2125,7 @@ console.log('Test: after function GME_load_map(map) {');
                         window[call] = makeCallback(call);
                         JSONP("https://api.postcodes.io/postcodes/lon/" + coords.lng + "/lat/" + coords.lat + "?radius=500&limit=1&callback=" + call, call);
                     } else {
-                        console.error("GME: Bad coordinates to getPostcode");
+                        console.error("GME: Bad coordinates to getPostcode.");
                     }
                 },
                 panToHome: function() {
@@ -2537,7 +2424,7 @@ console.log('Test: after function GME_load_map(map) {');
                 updateScale: function(e, timer) {
                     var map = this._map || e;
                     if (!map.getBounds) {
-                        console.warn("updateScale didn't have working map");
+                        console.warn("GME: updateScale didn't have working map.");
                         return;
                     }
                     function updateMap() {
@@ -2630,7 +2517,7 @@ console.log('Test: after function GME_load_map(map) {');
                             s.text = x.substring(x.indexOf("(")+1, x.lastIndexOf(")"));
                             document.dispatchEvent(new Event("GME_XHR_callback"));
                         } else {
-                            console.warn("Received: " + x);
+                            console.warn("GME: Received: " + x);
                         }
                     }
                 };
@@ -2745,7 +2632,7 @@ function xhr(e) {
                     s.text = x.substring(x.indexOf("(")+1, x.lastIndexOf(")"));
                     document.dispatchEvent(new Event("GME_XHR_callback"));
                 } else {
-                    console.warn("Received: " + x);
+                    console.warn("GME: Received: " + x);
                 }
             }
         };
@@ -2834,7 +2721,7 @@ function checkForUpgrade() {
                                 }
                             }
                         }
-                    } catch(e) {console.error("Check for upgrade run into error (GM_xmlhttpRequest onload).");}
+                    } catch(e) {console.error("GME: Check for upgrade run into error (GM_xmlhttpRequest onload).");}
                 }
             };
             if (scriptVersion && urlScript) {
@@ -2847,7 +2734,7 @@ function checkForUpgrade() {
                 }
             }
         }
-    } catch(e) {console.error("Check for upgrade run into error (function checkForUpgrade).");}
+    } catch(e) {console.error("GME: Check for upgrade run into error (function checkForUpgrade).");}
 }
 
 for (i = 0; i < pageTests.length; i++) {
@@ -2859,9 +2746,8 @@ for (i = 0; i < pageTests.length; i++) {
         document.getElementsByTagName('head')[0].appendChild(runningVersion);
         // Full check GME already running.
         checkAlreadyRunning(0);
-//xxxx temporär deaktiviert
-//        // Check for upgrade.
-//        checkForUpgrade();
+        // Check for upgrade.
+        checkForUpgrade();
         break;
     }
 }
@@ -2870,7 +2756,7 @@ try {
     if (window.localStorage !== undefined && window.localStorage !== null) {gmeResources.env.storage = true;}
 } catch (e) {
     // Potential security exception.
-    console.warn("No localStorage capability - GME cannot set configuration");
+    console.warn("GME: No localStorage capability - GME cannot set configuration.");
 }
 
 if (gmeResources.env.storage) {
@@ -2922,7 +2808,7 @@ if (gmeResources.env.storage) {
         // Import old-style custom maps.
         customJSON = localStorage.getItem("GME_custom");
         if (customJSON) {
-            console.info("GME: Found stored custom settings");
+            console.info("GME: Found stored custom settings.");
             try {
                 GME_custom = JSON.parse(customJSON);
                 if (GME_custom.maps && GME_custom.maps.length > 0) {
@@ -2966,10 +2852,10 @@ if (gmeResources.env.storage) {
 document.addEventListener("GME_XHR_event", xhr);
 
 if (!gmeResources.env.geolocation) {
-    gmeResources.script.dist = function() {console.warn("GME: Geolocation not available");};
+    gmeResources.script.dist = function() {console.warn("GME: Geolocation not available.");};
 }
 if (!gmeResources.env.dragdrop) {
-    gmeResources.script.drag = function() {console.warn("GME: Drag and Drop not available");};
+    gmeResources.script.drag = function() {console.warn("GME: Drag and Drop not available.");};
     gmeResources.script.drop = gmeResources.script.drag;
 }
 
@@ -2987,23 +2873,18 @@ switch(gmeResources.env.page) {
         // On a geocache listing.
         if (!gmeResources.env.loggedin) {
             // Not logged in, so no maps or coordinates.
-            console.log("GME: Couldn't detect log-in. Exiting...");
+            console.log("GME: Couldn't detect log-in. Exiting ...");
             return;
         }
         if (gmeResources.env.dragdrop) {insertCSS(gmeResources.css.drag);}
-//xxxx7 -->
-//      buildScript("GME_page_listing", "common", gmeResources.env.storage ? "config" : "", "map", "dist", "drag", "drop", "loadListing");
-        function fup2(waitCount) {
-console.log('Test: fup2: waitCount '+waitCount);
+        function checksBeforeInsertScript(waitCount) {
             if (typeof L === "object" && typeof $ === "function") {
                 setTimeout(function(){
-console.log('Test: buildScript');
                     buildScript("GME_page_listing", "common", gmeResources.env.storage ? "config" : "", "map", "dist", "drag", "drop", "loadListing");
-                }, 1000);
-            } else {waitCount++; if (waitCount <= 100) setTimeout(function(){fup2(waitCount);}, 100);}
+                }, 500);
+            } else {waitCount++; if (waitCount <= 100) setTimeout(function(){checksBeforeInsertScript(waitCount);}, 100);}
         }
-        fup2(0);
-//xxxx7 <--
+        checksBeforeInsertScript(0);
         break;
     case "seek":
         // On the Hide & Seek page.
@@ -3042,7 +2923,7 @@ console.log('Test: buildScript');
                 localStorage.setItem("GME_cache", pop[1]);
                 document.location.href = document.location.href.replace(/#&pop=([A-Za-z0-9+\/=]+)[\?&]?/, '');
             } catch (e) {
-                console.error(e + "GME couldn't decode click-through data: " + pop[1]);
+                console.error(e + "GME: Couldn't decode click-through data: " + pop[1]);
             }
             return;
         }
