@@ -27,7 +27,7 @@ GME only works correctly, if it is only run once in the browser. The script ther
 <a id="3-en"></a>
 ## 3. What can I do if individual GME features don't work or don't always work?
 Individual GME features, such as the blue line between the original and the corrected coordinates on the minimap in the listing or on the Browse Map, only work under certain conditions.<br>
-1. You must accept all cookies from geocaching.com and not just the necessary ones. Otherwise, errors in the website's cookie processing can lead to aborts in the script.<br><a href="//"><img src="../images/cookie_accepting_de.jpg"></a><br>
+1. You must accept all cookies from geocaching.com and not just the necessary ones. Otherwise, errors in the website's cookie processing can lead to aborts in the script.<br><a href="//"><img src="../images/cookie_accepting_en.jpg"></a><br>
 2. Alternatively, only the necessary cookies can be accepted by geocaching.com if cookie processing is blocked at the same time. For example, the entry "cookiebot.com" can be included in "My Filters" in the "uBlock Origin" add-on.<br>
 3. If the "Ghostery" add-on is installed, "Never Consent" must be switched off for "geocaching.com".<br>
 <br>
