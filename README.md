@@ -14,7 +14,7 @@ The original GME script comes from [jri](https://www.geocaching.com/p/?u=jri), b
 # Geocaching Map Enhancements (GME) <a id="user-content-de"></a>
 *Leistungsstarkes Tool zum Verbessern und Erweitern von Karten auf den Geocaching Seiten.*<br><br>
 GME ist ein mächtiges Script zur Verbesserung und Erweiterung von Karten auf den Geocaching Seiten Browse Map, Cache Listing, Trackable Karte und auf den Seiten zum Verstecken eines Geocaches. Das Script bietet alternative Kartentypen, ein umfangreiches Standort Informations Tool, ein Tool zur Routenplanung und -speicherung, es integriert Wegpunkte und korrigierte Koordinaten in die Kartenanzeige und ermöglicht die Anzeige von Tracks/Routen.<br><br>
-Es ist in Javascript entwickelt und läuft mit allen gängigen Script-Managern unter allen gängigen Browsern. Es ist kostenlos und ohne Werbung.<br><br>
+Es ist in Javascript entwickelt und läuft mit allen gängigen Script Managern unter allen gängigen Browsern. Es ist kostenlos und ohne Werbung.<br><br>
 Hilfe bei der Installation gibt es in den [Tipps zur Installation](/docu/installation_tips.md#de).<br><br>
 Weitere Informationen gibt es in den [FAQ](/docu/faq.md#de).<br><br>
 Das original GME Script stammt von [jri](https://www.geocaching.com/p/?u=jri), wird aber seit 2018 nicht mehr gewartet. Die letzte offizielle Version ist die 0.8.2. Der [original Forums Thread](https://forums.geocaching.com/GC/index.php?/topic/291102-geocaching-map-enhancements/&do=findComment&comment=6057362) zum GME Script steht im Geocaching Länderforum "United Kingdom and Ireland". Auf der [original GME Seite](https://geo.inge.org.uk/gme.htm) des Erfinders gibt es einige Informationen zum Script.<br><br>
