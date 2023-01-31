@@ -4,7 +4,7 @@
 ---
 # Geocaching Map Enhancements (GME) <a id="user-content-en"></a>
 *Powerful tool to improve and expand maps on the geocaching pages.*<br><br>
-GME is a script that integrates alternative map types into the maps of various geocaching pages, offers a tool for location information and a tool for rough route planning, integrates waypoints and changed coordinates into the map display and enables the display of tracks/routes.<br><br>
+GME is a powerful script for improving and enhancing maps on the geocaching pages Browse Map, Cache Listing, Trackable Map and Hide a Geocache. The script offers alternative map types, a comprehensive location information tool, a tool for route planning and saving, it integrates waypoints and corrected coordinates into the map display and enables the display of tracks/routes.<br><br>
 It was developed in Javascript and runs with all common script managers in all common browsers. It is free of charge and without any advertising.<br><br>
 For help with the installation see the [installation tips](/docu/installation_tips.md#en).<br><br>
 For more information check the [FAQ](/docu/faq.md#en).<br><br>
@@ -13,7 +13,7 @@ The original GME script comes from [jri](https://www.geocaching.com/p/?u=jri), b
 ---
 # Geocaching Map Enhancements (GME) <a id="user-content-de"></a>
 *Leistungsstarkes Tool zum Verbessern und Erweitern von Karten auf den Geocaching Seiten.*<br><br>
-GME is a powerful script for improving and enhancing maps on the geocaching pages Browse Map, Cache Listing, Trackable Map and Hide a Geocache. The script offers alternative map types, a comprehensive location information tool, a tool for route planning and saving, it integrates waypoints and corrected coordinates into the map display and enables the display of tracks/routes.<br><br>
+GME ist ein mächtiges Script zur Verbesserung und Erweiterung von Karten auf den Geocaching Seiten Browse Map, Cache Listing, Trackable Karte und auf den Seiten zum Verstecken eines Geocaches. Das Script bietet alternative Kartentypen, ein umfangreiches Standort Informations Tool, ein Tool zur Routenplanung und -speicherung, es integriert Wegpunkte und korrigierte Koordinaten in die Kartenanzeige und ermöglicht die Anzeige von Tracks/Routen.<br><br>
 Es ist in Javascript entwickelt und läuft mit allen gängigen Script-Managern unter allen gängigen Browsern. Es ist kostenlos und ohne Werbung.<br><br>
 Hilfe bei der Installation gibt es in den [Tipps zur Installation](/docu/installation_tips.md#de).<br><br>
 Weitere Informationen gibt es in den [FAQ](/docu/faq.md#de).<br><br>
