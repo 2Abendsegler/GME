@@ -1,4 +1,4 @@
-<a href="#en" title=""><img src="../images/flag_en.png"></a> &nbsp;<a href="#de" title=""><img src="../images/flag_de.png"></a>
+<a href="#en" title=""><img src="../images/flag_en.png"></a> &nbsp;<a href="#de" title=""><img src="../images/flag_de.png"></a></a> &nbsp;  &nbsp;  &nbsp; <a href="//"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/2Abendsegler/GME/docu/installation_tips.md&count_bg=%2349c91b&title_bg=%23555555&icon=&title=hits&edge_flat=false" title="hits day / total"></a>
 
 ---
 # Tips for the installation of *Geocaching Map Enhancements (GME)* <a id="en"></a>
