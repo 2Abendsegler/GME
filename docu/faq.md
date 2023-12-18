@@ -28,7 +28,7 @@ GME only works correctly, if it is only run once in the browser. The script ther
 ## 3. What can I do if individual GME features don't work or don't always work?
 Individual GME features, such as the blue line between the original and the corrected coordinates on the minimap in the listing or on the Browse Map, only work under certain conditions.<br>
 1. You must accept all cookies from geocaching.com and not just the necessary ones. Otherwise, errors in the website's cookie processing can lead to aborts in the script.<br><a href="//"><img src="../images/cookie_accepting_en.jpg"></a><br>
-2. Alternatively, only the necessary cookies can be accepted by geocaching.com if cookie processing is blocked at the same time. For example, the entry "cookiebot.com" can be included in "My Filters" in the "uBlock Origin" add-on.<br>
+2. Alternatively to 1. only the necessary cookies can be accepted by geocaching.com if cookie processing is blocked at the same time. For example, the entry "cookiebot.com" can be included in "My Filters" in the "uBlock Origin" add-on.<br>
 3. If the "Ghostery" add-on is installed, "Never Consent" must be switched off for "geocaching.com".<br>
 <br>
 
@@ -66,7 +66,7 @@ GME funktioniert nur korrekt, wenn es nur einmal im Browser ausgeführt wird. De
 ## 3. Was kann ich tun, wenn einzelne GME Features nicht oder nicht immer funktionieren?
 Einzelne GME Features, wie beispielsweise die blaue Linie zwischen den original und den korrigierten Koordinaten auf der Minikarte im Listing oder auf der Browse Map, funktionieren nur unter bestimmten Bedingungen.<br>
 1. Es müssen alle Cookies von geocaching.com akzeptiert werden und nicht nur die notwendigen. Andernfalls können die Fehler in der Cookie Verarbeitung der Webseite zu Abbrüchen im Script führen.<br><a href="//"><img src="../images/cookie_accepting_de.jpg"></a><br>
-2. Alternativ können auch nur die notwendigen Cookies von geocaching.com akzeptiert werden, wenn gleichzeitig die Cookie Verarbeitung blockiert wird. Dazu kann beispielsweise im Add on "uBlock Origin" in "Meine Filter" der Eintrag "cookiebot.com" aufgenommen werden.<br>
+2. Alternativ zu 1. können auch nur die notwendigen Cookies von geocaching.com akzeptiert werden, wenn gleichzeitig die Cookie Verarbeitung blockiert wird. Dazu kann beispielsweise im Add on "uBlock Origin" in "Meine Filter" der Eintrag "cookiebot.com" aufgenommen werden.<br>
 3. Ist das Add on "Ghostery" installiert, muss "Never Consent" für "geocaching.com" ausgeschaltet werden.<br>
 <br>
 
