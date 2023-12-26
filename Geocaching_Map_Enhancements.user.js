@@ -1460,6 +1460,7 @@ var gmeResources = {
                 wptTypes = [[/Geocache/i,"2"], [/Traditional Cache/i,"2"], [/Multi-cache/i,"3"], [/Virtual Cache/i,"4"], [/Letterbox Hybrid/i,"5"], [/Event Cache/i,"6"], [/Unknown cache/i,"8"], [/Webcam Cache/i,"11"], [/Cache In Trash Out Event/i,"13"], [/Wherigo Cache/i,"1858"], [/Locationless \(Reverse\) Cache/i,"12"], [/Mega-Event Cache/i,"453"], [/GPS Adventures Exhibit/i,"1304"], [/Groundspeak Block Party/i,"4738"], [/Groundspeak HQ/i,"3773"], [/Groundspeak Lost and Found Celebration/i,"3774"], [/Lost and Found Event Cache/i,"3653"], [/Project APE Cache/i,"9"], [/Earthcache/i,"137"], [/Question to Answer/i,"218"], [/Parking Area/i,"217"], [/Stages of a Multicache/i,"219"], [/Final Location/i,"220"], [/Trailhead/i,"221"], [/Reference Point/i,"452"]],
                 polylineObj = {
                     initialize: function(pts, ops) {
+
                         L.Polyline.prototype.initialize.call(this, pts, ops);
                         this._length = 0;
                         this._markers = L.layerGroup();
@@ -2151,6 +2152,10 @@ var gmeResources = {
                     this._markers.clearLayer(this._markers._layers[mark]);
                 },
                 showInfo: function(e) {
+                    if ($(this).hasClass('leaflet-popup-pane')) {
+                        L.DomEvent.stopPropagation(e);
+                        return;
+                    }
                     var control = this, popupContent = "<p>", popup = new L.Popup(), i;
                     for (i = 0; i < this.tools.length; i++) {
                         if (this.tools[i].isValid(e.latlng, control._map.getZoom())) {
@@ -2158,7 +2163,6 @@ var gmeResources = {
                         }
                     }
                     popupContent += "</p>";
-
                     popup.setLatLng(e.latlng);
                     popup.setContent(popupContent);
                     control._map.addLayer(popup);
@@ -2266,6 +2270,10 @@ var gmeResources = {
                     }
                 ],
                 showRoute: function(e) {
+                    if ($(this).hasClass('leaflet-popup-pane')) {
+                        L.DomEvent.stopPropagation(e);
+                        return;
+                    }
                     L.DomEvent.stopPropagation(e);
                     this.dropDist(e.latlng);
                 },
@@ -2284,11 +2292,13 @@ var gmeResources = {
                     var that = this, widgets = {
                         info: {
                             on: function() {
+                                $('.leaflet-popup-pane')[0].addEventListener("contextmenu", that.showInfo);
                                 that._map.on("click contextmenu", that.showInfo, that);
                                 $("#map_canvas").addClass("gme-xhair");
                                 $(".GME_info").addClass("gme-button-active").attr("title", "Disable location info tool");
                             },
                             off: function() {
+                                $('.leaflet-popup-pane')[0].removeEventListener("contextmenu", that.showInfo);
                                 that._map.off("click contextmenu", that.showInfo, that);
                                 $("#map_canvas").removeClass("gme-xhair");
                                 $(".GME_info").removeClass("gme-button-active").attr("title", "Enable location info tool");
@@ -2297,11 +2307,13 @@ var gmeResources = {
                         none: {on: function() {}, off: function() {}},
                         route: {
                             on: function() {
+                                $('.leaflet-popup-pane')[0].addEventListener("contextmenu", that.showRoute);
                                 that._map.on("click contextmenu", that.showRoute, that);
                                 $("#map_canvas").addClass("gme-xhair");
                                 $(".GME_route").addClass("gme-button-active").attr("title", "Disable route tool");
                             },
                             off: function() {
+                                $('.leaflet-popup-pane')[0].removeEventListener("contextmenu", that.showRoute);
                                 that._map.off("click contextmenu", that.showRoute, that);
                                 $("#map_canvas").removeClass("gme-xhair");
                                 $(".GME_route").removeClass("gme-button-active").attr("title", "Enable route tool");
