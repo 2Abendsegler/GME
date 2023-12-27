@@ -42,8 +42,7 @@ If you need help with GME, or if you have questions about GME, you can check out
 
 <a id="5-en"></a>
 ## 5. How can I report a bug?
-To report a bug you can create a "New issue" on our development platform at GitHub. Or you can create a note in one of the forums.<br>
-See [FAQ 4](../docu/faq.md#4-en).<br>
+To report a bug you can create a <a href="https://github.com/2Abendsegler/GME/issues/new/choose">new issue</a> on our development platform at GitHub. Or you can create a note in one of the forums. See [FAQ 4](../docu/faq.md#4-en).<br>
 <br>
 
 ---
@@ -80,6 +79,5 @@ Wenn du Hilfe zu GME benötigst, oder wenn du Fragen zu GME hast, dann kannst du
 
 <a id="5-de"></a>
 ## 5. Wie kann ich einen Fehler melden?
-Um einen Fehler zu melden, kannst du ein "New issue" auf unserer Entwicklungsplattform bei GitHub erstellen. Oder du kannst einen Beitrag in einem der Foren erstellen.
-Siehe [FAQ 4](../docu/faq.md#4-de).<br>
+Um einen Fehler zu melden, kannst du ein <a href="https://github.com/2Abendsegler/GME/issues/new/choose">neues Issue</a> auf unserer Entwicklungsplattform bei GitHub erstellen. Oder du kannst einen Beitrag in einem der Foren erstellen. Siehe [FAQ 4](../docu/faq.md#4-de).<br>
 <br>
