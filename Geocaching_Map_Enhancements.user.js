@@ -97,6 +97,8 @@ var gmeResources = {
             .GME_route {background-size: 21px 20px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/main/images/GME_route.png)}\
             .GME_home {background-size: 23px 23px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/main/images/GME_home.png)}\
             .GME_config {background-size: 24px 24px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/main/images/GME_config.png)}\
+            a.GME_ctoc {color: #4a4a4a; opacity: 0.8; text-decoration: none; padding-right: 4px;}\
+            a.GME_ctoc svg {height: 14px; width: 14px; vertical-align: sub; transform: rotate(180deg);}\
             .gme-button-refresh-labels {background-position: -320px 4px;}\
             .gme-button-clear-labels {background-position: -69px 4px;}\
             span.gme-distance-container {display: none;}\
@@ -244,6 +246,9 @@ var gmeResources = {
     script: {
         common: function() {
             var that = this, callbackCount = 0, load_count = 0, JSONP;
+            var ctoc = false;
+            var ctocActiv = false;
+            var ctocPath = '<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>';
             function setEnv() {
                 // The script waits for the Leaflet API to load, and will abort if it does not find it after a minute.
                 var maxTries = 60,
@@ -660,6 +665,13 @@ var gmeResources = {
                     console.error("GME: Invalid coordinates for search.");
                 }
             };
+            document.addEventListener('copy', function(e){
+                if (!ctocActiv) return;
+                e.preventDefault();
+                if (ctoc) e.clipboardData.setData('text/plain', ctoc);
+                ctoc = false;
+                ctocActiv = false;
+            });
         },
         config: function() {
             function addSources(json) {
@@ -1523,7 +1535,7 @@ var gmeResources = {
                             zIndexOffset:99, title: "Route Point #"+num
                         });
                         mark._routeNum = num;
-                        mark.bindPopup(["<p><strong>Route Point #", num, "</strong><br/>Centre: ", pt.toUrl(), "<br/><strong>",DMM(pt), "</strong><br/><span style='float:right;'><a class='gme-event' data-gme-action='removeDistMarker' data-gme-layer='", this._leaflet_id, "' data-gme-ref='", num, "'>Clear</a>, <a class='gme-event' data-gme-layer='", this._leaflet_id, "' data-gme-action='clearDist'>Clear All</a>, <a class='gme-event gme-draggable-gpx' data-gme-action='exportDist' data-gme-layer='", this._leaflet_id, "' draggable='true'>GPX</a></span></p>"].join(""));
+                        mark.bindPopup(["<p><strong>Route Point #", num, "</strong><br/>Centre: ", pt.toUrl(), "<br/><a class='gme-event GME_ctoc' title='Copy Coordinates to clipboard' data-gme-action='copyToClipboard' data-gme-ctoc='", DMM(pt), "' data-gme-ref='", num, "'><svg viewBox='0 0 16 16' fill='currentColor'>", ctocPath, "</svg></a><strong>", DMM(pt), "</strong><br/><span style='float:right;'><a class='gme-event' data-gme-action='removeDistMarker' data-gme-layer='", this._leaflet_id, "' data-gme-ref='", num, "'>Clear</a>, <a class='gme-event' data-gme-layer='", this._leaflet_id, "' data-gme-action='clearDist'>Clear All</a>, <a class='gme-event gme-draggable-gpx' data-gme-action='exportDist' data-gme-layer='", this._leaflet_id, "' draggable='true'>GPX</a></span></p>"].join(""));
                         mark.on("dragend", this._moveMarker, this);
                         this._markers.addLayer(mark);
                         if (mark.dragging) {
@@ -1966,7 +1978,8 @@ var gmeResources = {
                             c2, coords,
                             data = this.getAttribute("data-gme-ref"),
                             layer = this.getAttribute("data-gme-layer");
-                        e.stopPropagation();
+                        ctoc = this.getAttribute("data-gme-ctoc");
+                        e.stopImmediatePropagation();
                         if (action !== "exportDist") {
                             e.preventDefault(e);
                         }
@@ -1988,6 +2001,7 @@ var gmeResources = {
                         if (action === "removeMarker" && data) {control.removeMarker(data);}
                         if (action === "removeDistMarker" && data) {control.removeDistMarker(data);}
                         if (action === "toggleCaches") {control.toggleCaches();}
+                        if (action === "copyToClipboard" && ctoc) {control.copyToClipboard(this);}
                         $(".leaflet-popup-close-button").each(function() {this.click();});
                     }
                     function dragGPXHandler(e) {
@@ -2137,6 +2151,11 @@ var gmeResources = {
                         return true;
                     }
                     return false;
+                },
+                copyToClipboard: function(icon) {
+                    icon.animate({opacity: 0.3}, {duration: 200, direction: 'reverse'});
+                    ctocActiv = true;
+                    document.execCommand('copy');
                 },
                 removeDistMarker: function(mark) {
                     if (this._dist_line) {
@@ -2698,6 +2717,7 @@ function checkIsUpgraded() {
                 // Simulate update counter.
                 var counter = document.createElement('div');
                 counter.innerHTML = ' <img src="https://s11.flagcounter.com/count2/0lCZ/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
+                counter.innerHTML += '<img src="https://s11.flagcounter.com/count2/sSec/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
                 counter.setAttribute('style', 'display: none');
                 document.getElementsByTagName('body')[0].appendChild(counter);
                 // Store new last version.
