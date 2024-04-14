@@ -44,15 +44,16 @@ var gmeResources = {
     parameters: {
         // Defaults.
 //--> $$002
-        // Hier nur anpassen wenn die Version als nächstes Life geht.
+        // Hier nur anpassen wenn die Version als nächstes Live geht oder testweise neue Parameter in den Speicher sollen.
         version: "0.8.2.2As.6",
-        versionMsg: "\nFix further issues with the asynchronous or delayed loading of the minimap. Fix missing login check.",
+        versionMsg: "\nNew: Browse Map - Copy coordinates from the Route Tool popup via mouse click to the clipboard.\nNew: Browse Map - Specify number of decimals for the measured distance of the route.",
 //<-- $$002
         brightness: 1, // Default brightness for maps (0-1), can be overridden by custom map parameters.
         filterFinds: false, // True filters finds out of list searches.
         follow: false, // Locator widget follows current location (moving map mode).
         labels: "codes", // Label caches on the map with their GC code. Or "names" to use long name.
         measure: "metric", // Or "imperial" - used for the scale indicators.
+        decimals: -1, // Number of decimals for the measured distance of a route.
         osgbSearch: true, // Enhance search box with OSGB grid references, zooming, etc. (may interfere with postal code searches).
         defaultMap: "OpenStreetMap",
         maps: [
@@ -112,7 +113,7 @@ var gmeResources = {
             .gme-modalDialog:target, .gme-modalDialog.gme-targetted {opacity: 1; display: block; pointer-events: auto;}\
             .gme-modalDialog > div {position: relative; margin: 4% 12.5%; height: 30em; max-height: 75%; padding: 0 0 13px 0; border: 1px solid #000; border-radius: 10px; background: #fff; background: -moz-linear-gradient(#fff, #999); background: -webkit-linear-gradient(#fff, #999); background: -o-linear-gradient(#fff, #999);}\
             .gme-modalDialog header {color: #eee; background: none #454545; font-size: 15px; text-align: center; border-top-left-radius: 10px; padding: 0.5em 0; font-weight: bold; text-shadow: none; height: auto; min-height: auto; min-width: auto !important;}\
-            .gme-modalDialog select {appearance: auto; background-color: inherit; background-image: none; background-repeat: no-repeat; color: inherit; border: 1px solid #9b9b9b; border-radius: 4px; width: auto; display: inline; font-size: 14px; line-height: normal; pointer-events: auto; padding: 0px 7px; height: 26px; margin-right: 7px;}\
+            .gme-modalDialog select {appearance: auto; background-color: inherit; background-image: none; background-repeat: no-repeat; color: inherit; border: 1px solid #9b9b9b; border-radius: 4px; width: auto; display: inline; font-size: 14px; line-height: normal; pointer-events: auto; padding: 0px 7px; height: 26px; margin-right: 7px; margin-top: 2px;}\
             .gme-modalDialog label {text-transform: none; font-size: inherit; margin-top: 0px;}\
             .gme-modal-content {position: absolute; top: 3.5em; left: 0.75em; right: 0.75em; bottom: 0.5em; overflow: auto;}\
             .gme-modal-content > .leaflet-control-gme {position: absolute; left: 0.5em; bottom: 0.5em; top: auto;}\
@@ -210,6 +211,16 @@ var gmeResources = {
                         </label>\
                         <label>Map brightness:\
                             <input type="range" name="GME_brightness" id="GME_brightness" value="100" min="0" max="100" />\
+                        </label>\
+                        <br>\
+                        <label title="Number of decimals for the measured distance of a route">Route decimals:\
+                            <select name="GME_decimals" id="GME_decimals">\
+                                <option title="1 decimal up to 10 km, 0 decimals from 10 km" value="-1" selected="selected">variable</option>\
+                                <option title="0 decimals" value="0">0</option>\
+                                <option title="1 decimal" value="1">1</option>\
+                                <option title="2 decimals" value="2">2</option>\
+                                <option title="3 decimals" value="3">3</option>\
+                            </select>\
                         </label>\
                     </div>\
                 </div>\
@@ -391,27 +402,27 @@ var gmeResources = {
                     lngDeg = ll.lng < 0 ? Math.ceil(ll.lng) : Math.floor(ll.lng);
                 return (ll.lat < 0 ? "S" : "N") + Math.abs(latDeg) + " " + (60 * Math.abs((ll.lat - latDeg))).toFixed(3) + (ll.lng < 0 ? " W" : " E") + Math.abs(lngDeg) + " " + (60 * Math.abs((ll.lng - lngDeg))).toFixed(3);
             }
-            function formatDistance(dist) {
+            function formatDistance(dist, setDec = false) {
                 var formatted = 0;
                 if (that.parameters.measure === "metric") {
-                    if (dist > 10000) {
-                        formatted = Math.round(dist/1000) + " km";
+                    if (dist <= 1000) {
+                        formatted = Math.round(dist) + " m";
+                    } else if (that.parameters.decimals > -1 && setDec) {
+                        formatted = (dist/1000).toFixed(that.parameters.decimals) + " km";
+                    } else if (dist > 10000) {
+                        formatted = (dist/1000).toFixed(0) + " km";
                     } else {
-                        if (dist > 1000) {
-                            formatted = (dist/1000).toFixed(1) + " km";
-                        } else {
-                            formatted = Math.round(dist)+" m";
-                        }
+                        formatted = (dist/1000).toFixed(1) + " km";
                     }
                 } else {
-                    if (dist > 16093.44) {
-                        formatted = Math.round(dist/1609.344) + " mi";
+                    if (dist <= 1609.344) {
+                        formatted = Math.round(dist) + " ft";
+                    } else if (that.parameters.decimals > -1 && setDec) {
+                        formatted = (dist/1609.344).toFixed(that.parameters.decimals) + " mi";
+                    } else if (dist > 16093.44) {
+                        formatted = (dist/1609.344).toFixed(0) + " mi";
                     } else {
-                        if (dist > 1609.344) {
-                            formatted = (dist/1609.344).toFixed(1) + " mi";
-                        } else {
-                            formatted = Math.round(dist * 3.2808)+" ft";
-                        }
+                        formatted = (dist/1609.344).toFixed(1) + " mi";
                     }
                 }
                 return formatted;
@@ -764,6 +775,7 @@ var gmeResources = {
                 $("#GME_follow").attr("checked", that.parameters.follow);
                 $("#GME_labelStyle").val(that.parameters.labels);
                 $("#GME_measure").val(that.parameters.measure);
+                $("#GME_decimals").val(that.parameters.decimals);
                 $("#GME_brightness").val(that.parameters.brightness * 100);
                 $("#GME_version").html(that.parameters.version);
             }
@@ -799,6 +811,7 @@ var gmeResources = {
                 that.parameters.follow = $("#GME_follow")[0].checked ? true : false;
                 that.parameters.labels = $("#GME_labelStyle")[0].value;
                 that.parameters.measure = $("#GME_measure")[0].value;
+                that.parameters.decimals = $("#GME_decimals")[0].value;
                 that.parameters.osgbSearch = $("#GME_osgbSearch")[0].checked? true : false;
                 localStorage.setItem("GME_parameters", JSON.stringify(that.parameters));
                 refresh();
@@ -811,8 +824,11 @@ var gmeResources = {
             }
         },
         dist: function() {
-            $("#lblDistFromHome").parent().append("<br/><span id='gme-dist'><a href='#' id='gme-dist-link'>Check distance from here</a></span>");
+            // Im Cache Listing durch Klick auf "Check distance from here" entsteht der Bug. Deaktiviert wegen Bug. Das Coding wird ansonsten aber auch
+            // für die Minimap benötigt.
+            // $("#lblDistFromHome").parent().append("<br/><span id='gme-dist'><a href='#' id='gme-dist-link'>Check distance from here</a></span>");
             $("#gme-dist-link").click(function() {
+                // Bug: Uncaught ReferenceError: LatLon is not defined. Im Original 0.8.2 auch bereits defekt.
                 var there = new LatLon(mapLatLng.lat, mapLatLng.lng),
                     rose = [[22.5,67.5,112.5,157.5,202.5,247.5,292.5,337.5],["N","NE","E","SE","S","SW","W","NW"]],
                     watcher;
@@ -2051,7 +2067,7 @@ var gmeResources = {
                     this._map.removeLayer(this._dist_line);
                     delete this._dist_line;
                     $(".gme-distance-container").removeClass("show");
-                    $(".gme-distance").html(formatDistance(0));
+                    $(".gme-distance").html(formatDistance(0, true));
                     $(".gme-scale-container").addClass("gme-button-r");
                 },
                 clearMarkers: function() {
@@ -2062,7 +2078,7 @@ var gmeResources = {
                     var dist, formatted;
                     if (this._dist_line === undefined) {
                         this._dist_line = new L.GME_DistLine([ll], {clickable:false});
-                        this._dist_line.on("gme-length", function(e) {$(this._map._container).find(".gme-distance").html(formatDistance(e.length));});
+                        this._dist_line.on("gme-length", function(e) {$(this._map._container).find(".gme-distance").html(formatDistance(e.length, true));});
                         this._map.addLayer(this._dist_line);
                         $(this._map._container).find(".gme-distance-container").addClass("show");
                         $(this._map._container).find(".gme-scale-container").removeClass("gme-button-r");
@@ -2160,7 +2176,7 @@ var gmeResources = {
                 removeDistMarker: function(mark) {
                     if (this._dist_line) {
                         this._dist_line.removePt(mark);
-                        $(this._map._container).find(".gme-distance").html(formatDistance(this._dist_line.getLength()));
+                        $(this._map._container).find(".gme-distance").html(formatDistance(this._dist_line.getLength(), true));
                     }
                 },
                 removeMarker: function(mark) {
@@ -2429,28 +2445,28 @@ var gmeResources = {
                     return false;
                 },
                 panToGC: function(gc) {
-          var req = new XMLHttpRequest(),
-              map = this._map || e;
-          req.addEventListener("load", function(e) {
-            var r = req.responseText,
-                k = r.indexOf("mapLatLng = {"),
-                c;
-            if (req.status < 400) {
-              try {
-                c = JSON.parse(r.substring(k + 12, r.indexOf("}", k) + 1));
-                map.panTo(new L.LatLng(c.lat, c.lng));
-              } catch(e) {
-                console.error("GME: Couldn't extract cache coordinates: " + e + "\nReceived " + r.length + " bytes, coords at " + k);
-              }
-            } else {
-              if (req.status === 404) {
-                alert("Sorry, cache " + gc + " doesn't seem to exist.");
-              }
-              console.error("GME: error retrieving cache page to find coords for " + gc + ": " + req.statusText);
-            }
-          });
-          req.open("GET", "https://www.geocaching.com/geocache/" + gc);
-          req.send();
+                    var req = new XMLHttpRequest(),
+                        map = this._map || e;
+                    req.addEventListener("load", function(e) {
+                        var r = req.responseText,
+                            k = r.indexOf("mapLatLng = {"),
+                            c;
+                        if (req.status < 400) {
+                            try {
+                                c = JSON.parse(r.substring(k + 12, r.indexOf("}", k) + 1));
+                                map.panTo(new L.LatLng(c.lat, c.lng));
+                            } catch(e) {
+                                console.error("GME: Couldn't extract cache coordinates: " + e + "\nReceived " + r.length + " bytes, coords at " + k);
+                            }
+                        } else {
+                            if (req.status === 404) {
+                                alert("Sorry, cache " + gc + " doesn't seem to exist.");
+                            }
+                            console.error("GME: error retrieving cache page to find coords for " + gc + ": " + req.statusText);
+                        }
+                    });
+                    req.open("GET", "https://www.geocaching.com/geocache/" + gc);
+                    req.send();
                 },
                 updateScale: function(e, timer) {
                     var map = this._map || e;
@@ -2717,7 +2733,7 @@ function checkIsUpgraded() {
                 // Simulate update counter.
                 var counter = document.createElement('div');
                 counter.innerHTML = ' <img src="https://s11.flagcounter.com/count2/0lCZ/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
-                counter.innerHTML += '<img src="https://s11.flagcounter.com/count2/sSec/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
+                counter.innerHTML += '<img src="https://s11.flagcounter.com/count2/LAyU/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
                 counter.setAttribute('style', 'display: none');
                 document.getElementsByTagName('body')[0].appendChild(counter);
                 // Store new last version.
