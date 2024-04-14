@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
-// @version     0.8.2.2As.6
+// @version     0.8.2.2As.7
 //<-- $$001
 // @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
 // @include     /^https:\/\/www.geocaching.com\/(geocache\/GC|seek\/cache_details\.aspx|seek\/cache_details2\.aspx|map\/|hide\/planning\.aspx|hide\/typelocation\.aspx|hide\/waypoints\.aspx|seek\/$|\/seek\/default\.aspx|track\/map_gm\.aspx)/
 // @license     MIT License
 // @namespace   https://github.com/2Abendsegler/GME
-// @copyright   2011-2018 James Inge, 2022-2023 2Abendsegler
+// @copyright   2011-2018 James Inge, 2022-2024 2Abendsegler
 // @attribution GeoNames (http://www.geonames.org/)
 // @attribution Postcodes.io (https://postcodes.io/)
 // @attribution Chris Veness (http://www.movable-type.co.uk/scripts/latlong-gridref.html)
@@ -44,15 +44,16 @@ var gmeResources = {
     parameters: {
         // Defaults.
 //--> $$002
-        // Hier nur anpassen wenn die Version als nächstes Life geht.
-        version: "0.8.2.2As.6",
-        versionMsg: "\nFix further issues with the asynchronous or delayed loading of the minimap. Fix missing login check.",
+        // Hier nur anpassen wenn die Version als nächstes Live geht oder testweise neue Parameter in den Speicher sollen.
+        version: "0.8.2.2As.7",
+        versionMsg: "\nNew: Browse Map - Copy coordinates from the Route Tool popup via mouse click to the clipboard.\nNew: Browse Map - Specify number of decimals for the measured distance of the route.",
 //<-- $$002
         brightness: 1, // Default brightness for maps (0-1), can be overridden by custom map parameters.
         filterFinds: false, // True filters finds out of list searches.
         follow: false, // Locator widget follows current location (moving map mode).
         labels: "codes", // Label caches on the map with their GC code. Or "names" to use long name.
         measure: "metric", // Or "imperial" - used for the scale indicators.
+        decimals: -1, // Number of decimals for the measured distance of a route.
         osgbSearch: true, // Enhance search box with OSGB grid references, zooming, etc. (may interfere with postal code searches).
         defaultMap: "OpenStreetMap",
         maps: [
@@ -97,6 +98,8 @@ var gmeResources = {
             .GME_route {background-size: 21px 20px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/main/images/GME_route.png)}\
             .GME_home {background-size: 23px 23px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/main/images/GME_home.png)}\
             .GME_config {background-size: 24px 24px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/main/images/GME_config.png)}\
+            a.GME_ctoc {color: #4a4a4a; opacity: 0.8; text-decoration: none; padding-right: 4px;}\
+            a.GME_ctoc svg {height: 14px; width: 14px; vertical-align: sub; transform: rotate(180deg);}\
             .gme-button-refresh-labels {background-position: -320px 4px;}\
             .gme-button-clear-labels {background-position: -69px 4px;}\
             span.gme-distance-container {display: none;}\
@@ -110,7 +113,7 @@ var gmeResources = {
             .gme-modalDialog:target, .gme-modalDialog.gme-targetted {opacity: 1; display: block; pointer-events: auto;}\
             .gme-modalDialog > div {position: relative; margin: 4% 12.5%; height: 30em; max-height: 75%; padding: 0 0 13px 0; border: 1px solid #000; border-radius: 10px; background: #fff; background: -moz-linear-gradient(#fff, #999); background: -webkit-linear-gradient(#fff, #999); background: -o-linear-gradient(#fff, #999);}\
             .gme-modalDialog header {color: #eee; background: none #454545; font-size: 15px; text-align: center; border-top-left-radius: 10px; padding: 0.5em 0; font-weight: bold; text-shadow: none; height: auto; min-height: auto; min-width: auto !important;}\
-            .gme-modalDialog select {appearance: auto; background-color: inherit; background-image: none; background-repeat: no-repeat; color: inherit; border: 1px solid #9b9b9b; border-radius: 4px; width: auto; display: inline; font-size: 14px; line-height: normal; pointer-events: auto; padding: 0px 7px; height: 26px; margin-right: 7px;}\
+            .gme-modalDialog select {appearance: auto; background-color: inherit; background-image: none; background-repeat: no-repeat; color: inherit; border: 1px solid #9b9b9b; border-radius: 4px; width: auto; display: inline; font-size: 14px; line-height: normal; pointer-events: auto; padding: 0px 7px; height: 26px; margin-right: 7px; margin-top: 2px;}\
             .gme-modalDialog label {text-transform: none; font-size: inherit; margin-top: 0px;}\
             .gme-modal-content {position: absolute; top: 3.5em; left: 0.75em; right: 0.75em; bottom: 0.5em; overflow: auto;}\
             .gme-modal-content > .leaflet-control-gme {position: absolute; left: 0.5em; bottom: 0.5em; top: auto;}\
@@ -209,6 +212,16 @@ var gmeResources = {
                         <label>Map brightness:\
                             <input type="range" name="GME_brightness" id="GME_brightness" value="100" min="0" max="100" />\
                         </label>\
+                        <br>\
+                        <label title="Number of decimals for the measured distance of a route">Route decimals:\
+                            <select name="GME_decimals" id="GME_decimals">\
+                                <option title="1 decimal up to 10 km, 0 decimals from 10 km" value="-1" selected="selected">variable</option>\
+                                <option title="0 decimals" value="0">0</option>\
+                                <option title="1 decimal" value="1">1</option>\
+                                <option title="2 decimals" value="2">2</option>\
+                                <option title="3 decimals" value="3">3</option>\
+                            </select>\
+                        </label>\
                     </div>\
                 </div>\
             </section>\
@@ -218,7 +231,7 @@ var gmeResources = {
                 <div class="gme-tab-content">\
                     <div class="gme-fieldgroup">\
                         <h3>Geocaching Map Enhancements</h3><br />\
-                        <p>v<span id="GME_version"></span> &copy; 2011-2018 James Inge; 2022-2023 2Abendsegler. Geocaching Map Enhancements is licensed under the <a target="_blank" rel="noopener noreferrer" href="https://raw.githubusercontent.com/2Abendsegler/GME/main/License">MIT License</a>.<br>A short description of the tool and FAQ can be found <a target="_blank" rel="noopener noreferrer" href="https://github.com/2Abendsegler/GME/tree/main#readme">here</a>. A documentation can be found <a target="_blank" rel="noopener noreferrer" href="http://geo.inge.org.uk/gme.htm">here</a>.</p>\
+                        <p>v<span id="GME_version"></span> &copy; 2011-2018 James Inge; 2022-2024 2Abendsegler. Geocaching Map Enhancements is licensed under the <a target="_blank" rel="noopener noreferrer" href="https://raw.githubusercontent.com/2Abendsegler/GME/main/License">MIT License</a>.<br>A short description of the tool and FAQ can be found <a target="_blank" rel="noopener noreferrer" href="https://github.com/2Abendsegler/GME/tree/main#readme">here</a>. A documentation can be found <a target="_blank" rel="noopener noreferrer" href="http://geo.inge.org.uk/gme.htm">here</a>.</p>\
                         <p>Elevation and reverse geocoding data provided by <a target="_blank" rel="noopener noreferrer" href="http://www.geonames.org/">GeoNames</a> and used under a <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> (CC-BY) License.</p>\
                         <p>Grid reference manipulation is adapted from code &copy; 2005-2014 Chris Veness (<a target="_blank" rel="noopener noreferrer" href="http://www.movable-type.co.uk/scripts/latlong-gridref.html">www.movable-type.co.uk/scripts/latlong-gridref.html</a>, used under a <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> (CC-BY) License.</p>\
                         <p>Photos provided by Geograph are copyright their respective owners - hover mouse over thumbnails or click through for attribution details. They may be re-used under a <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by-sa/2.0/">Creative Commons Attribution-ShareAlike 2.0</a> (CC-BY-SA) License.</p>\
@@ -244,6 +257,9 @@ var gmeResources = {
     script: {
         common: function() {
             var that = this, callbackCount = 0, load_count = 0, JSONP;
+            var ctoc = false;
+            var ctocActiv = false;
+            var ctocPath = '<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"></path><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>';
             function setEnv() {
                 // The script waits for the Leaflet API to load, and will abort if it does not find it after a minute.
                 var maxTries = 60,
@@ -386,27 +402,27 @@ var gmeResources = {
                     lngDeg = ll.lng < 0 ? Math.ceil(ll.lng) : Math.floor(ll.lng);
                 return (ll.lat < 0 ? "S" : "N") + Math.abs(latDeg) + " " + (60 * Math.abs((ll.lat - latDeg))).toFixed(3) + (ll.lng < 0 ? " W" : " E") + Math.abs(lngDeg) + " " + (60 * Math.abs((ll.lng - lngDeg))).toFixed(3);
             }
-            function formatDistance(dist) {
+            function formatDistance(dist, setDec = false) {
                 var formatted = 0;
                 if (that.parameters.measure === "metric") {
-                    if (dist > 10000) {
-                        formatted = Math.round(dist/1000) + " km";
+                    if (dist <= 1000) {
+                        formatted = Math.round(dist) + " m";
+                    } else if (that.parameters.decimals > -1 && setDec) {
+                        formatted = (dist/1000).toFixed(that.parameters.decimals) + " km";
+                    } else if (dist > 10000) {
+                        formatted = (dist/1000).toFixed(0) + " km";
                     } else {
-                        if (dist > 1000) {
-                            formatted = (dist/1000).toFixed(1) + " km";
-                        } else {
-                            formatted = Math.round(dist)+" m";
-                        }
+                        formatted = (dist/1000).toFixed(1) + " km";
                     }
                 } else {
-                    if (dist > 16093.44) {
-                        formatted = Math.round(dist/1609.344) + " mi";
+                    if (dist <= 1609.344) {
+                        formatted = Math.round(dist) + " ft";
+                    } else if (that.parameters.decimals > -1 && setDec) {
+                        formatted = (dist/1609.344).toFixed(that.parameters.decimals) + " mi";
+                    } else if (dist > 16093.44) {
+                        formatted = (dist/1609.344).toFixed(0) + " mi";
                     } else {
-                        if (dist > 1609.344) {
-                            formatted = (dist/1609.344).toFixed(1) + " mi";
-                        } else {
-                            formatted = Math.round(dist * 3.2808)+" ft";
-                        }
+                        formatted = (dist/1609.344).toFixed(1) + " mi";
                     }
                 }
                 return formatted;
@@ -660,6 +676,13 @@ var gmeResources = {
                     console.error("GME: Invalid coordinates for search.");
                 }
             };
+            document.addEventListener('copy', function(e){
+                if (!ctocActiv) return;
+                e.preventDefault();
+                if (ctoc) e.clipboardData.setData('text/plain', ctoc);
+                ctoc = false;
+                ctocActiv = false;
+            });
         },
         config: function() {
             function addSources(json) {
@@ -752,6 +775,7 @@ var gmeResources = {
                 $("#GME_follow").attr("checked", that.parameters.follow);
                 $("#GME_labelStyle").val(that.parameters.labels);
                 $("#GME_measure").val(that.parameters.measure);
+                $("#GME_decimals").val(that.parameters.decimals);
                 $("#GME_brightness").val(that.parameters.brightness * 100);
                 $("#GME_version").html(that.parameters.version);
             }
@@ -787,6 +811,7 @@ var gmeResources = {
                 that.parameters.follow = $("#GME_follow")[0].checked ? true : false;
                 that.parameters.labels = $("#GME_labelStyle")[0].value;
                 that.parameters.measure = $("#GME_measure")[0].value;
+                that.parameters.decimals = $("#GME_decimals")[0].value;
                 that.parameters.osgbSearch = $("#GME_osgbSearch")[0].checked? true : false;
                 localStorage.setItem("GME_parameters", JSON.stringify(that.parameters));
                 refresh();
@@ -799,8 +824,11 @@ var gmeResources = {
             }
         },
         dist: function() {
-            $("#lblDistFromHome").parent().append("<br/><span id='gme-dist'><a href='#' id='gme-dist-link'>Check distance from here</a></span>");
+            // Im Cache Listing durch Klick auf "Check distance from here" entsteht der Bug. Deaktiviert wegen Bug. Das Coding wird ansonsten aber auch
+            // für die Minimap benötigt.
+            // $("#lblDistFromHome").parent().append("<br/><span id='gme-dist'><a href='#' id='gme-dist-link'>Check distance from here</a></span>");
             $("#gme-dist-link").click(function() {
+                // Bug: Uncaught ReferenceError: LatLon is not defined. Im Original 0.8.2 auch bereits defekt.
                 var there = new LatLon(mapLatLng.lat, mapLatLng.lng),
                     rose = [[22.5,67.5,112.5,157.5,202.5,247.5,292.5,337.5],["N","NE","E","SE","S","SW","W","NW"]],
                     watcher;
@@ -1523,7 +1551,7 @@ var gmeResources = {
                             zIndexOffset:99, title: "Route Point #"+num
                         });
                         mark._routeNum = num;
-                        mark.bindPopup(["<p><strong>Route Point #", num, "</strong><br/>Centre: ", pt.toUrl(), "<br/><strong>",DMM(pt), "</strong><br/><span style='float:right;'><a class='gme-event' data-gme-action='removeDistMarker' data-gme-layer='", this._leaflet_id, "' data-gme-ref='", num, "'>Clear</a>, <a class='gme-event' data-gme-layer='", this._leaflet_id, "' data-gme-action='clearDist'>Clear All</a>, <a class='gme-event gme-draggable-gpx' data-gme-action='exportDist' data-gme-layer='", this._leaflet_id, "' draggable='true'>GPX</a></span></p>"].join(""));
+                        mark.bindPopup(["<p><strong>Route Point #", num, "</strong><br/>Centre: ", pt.toUrl(), "<br/><a class='gme-event GME_ctoc' title='Copy Coordinates to clipboard' data-gme-action='copyToClipboard' data-gme-ctoc='", DMM(pt), "' data-gme-ref='", num, "'><svg viewBox='0 0 16 16' fill='currentColor'>", ctocPath, "</svg></a><strong>", DMM(pt), "</strong><br/><span style='float:right;'><a class='gme-event' data-gme-action='removeDistMarker' data-gme-layer='", this._leaflet_id, "' data-gme-ref='", num, "'>Clear</a>, <a class='gme-event' data-gme-layer='", this._leaflet_id, "' data-gme-action='clearDist'>Clear All</a>, <a class='gme-event gme-draggable-gpx' data-gme-action='exportDist' data-gme-layer='", this._leaflet_id, "' draggable='true'>GPX</a></span></p>"].join(""));
                         mark.on("dragend", this._moveMarker, this);
                         this._markers.addLayer(mark);
                         if (mark.dragging) {
@@ -1966,7 +1994,8 @@ var gmeResources = {
                             c2, coords,
                             data = this.getAttribute("data-gme-ref"),
                             layer = this.getAttribute("data-gme-layer");
-                        e.stopPropagation();
+                        ctoc = this.getAttribute("data-gme-ctoc");
+                        e.stopImmediatePropagation();
                         if (action !== "exportDist") {
                             e.preventDefault(e);
                         }
@@ -1988,6 +2017,7 @@ var gmeResources = {
                         if (action === "removeMarker" && data) {control.removeMarker(data);}
                         if (action === "removeDistMarker" && data) {control.removeDistMarker(data);}
                         if (action === "toggleCaches") {control.toggleCaches();}
+                        if (action === "copyToClipboard" && ctoc) {control.copyToClipboard(this);}
                         $(".leaflet-popup-close-button").each(function() {this.click();});
                     }
                     function dragGPXHandler(e) {
@@ -2037,7 +2067,7 @@ var gmeResources = {
                     this._map.removeLayer(this._dist_line);
                     delete this._dist_line;
                     $(".gme-distance-container").removeClass("show");
-                    $(".gme-distance").html(formatDistance(0));
+                    $(".gme-distance").html(formatDistance(0, true));
                     $(".gme-scale-container").addClass("gme-button-r");
                 },
                 clearMarkers: function() {
@@ -2048,7 +2078,7 @@ var gmeResources = {
                     var dist, formatted;
                     if (this._dist_line === undefined) {
                         this._dist_line = new L.GME_DistLine([ll], {clickable:false});
-                        this._dist_line.on("gme-length", function(e) {$(this._map._container).find(".gme-distance").html(formatDistance(e.length));});
+                        this._dist_line.on("gme-length", function(e) {$(this._map._container).find(".gme-distance").html(formatDistance(e.length, true));});
                         this._map.addLayer(this._dist_line);
                         $(this._map._container).find(".gme-distance-container").addClass("show");
                         $(this._map._container).find(".gme-scale-container").removeClass("gme-button-r");
@@ -2138,10 +2168,15 @@ var gmeResources = {
                     }
                     return false;
                 },
+                copyToClipboard: function(icon) {
+                    icon.animate({opacity: 0.3}, {duration: 200, direction: 'reverse'});
+                    ctocActiv = true;
+                    document.execCommand('copy');
+                },
                 removeDistMarker: function(mark) {
                     if (this._dist_line) {
                         this._dist_line.removePt(mark);
-                        $(this._map._container).find(".gme-distance").html(formatDistance(this._dist_line.getLength()));
+                        $(this._map._container).find(".gme-distance").html(formatDistance(this._dist_line.getLength(), true));
                     }
                 },
                 removeMarker: function(mark) {
@@ -2151,6 +2186,10 @@ var gmeResources = {
                     this._markers.clearLayer(this._markers._layers[mark]);
                 },
                 showInfo: function(e) {
+                    if ($(this).hasClass('leaflet-popup-pane')) {
+                        L.DomEvent.stopPropagation(e);
+                        return;
+                    }
                     var control = this, popupContent = "<p>", popup = new L.Popup(), i;
                     for (i = 0; i < this.tools.length; i++) {
                         if (this.tools[i].isValid(e.latlng, control._map.getZoom())) {
@@ -2158,7 +2197,6 @@ var gmeResources = {
                         }
                     }
                     popupContent += "</p>";
-
                     popup.setLatLng(e.latlng);
                     popup.setContent(popupContent);
                     control._map.addLayer(popup);
@@ -2266,6 +2304,10 @@ var gmeResources = {
                     }
                 ],
                 showRoute: function(e) {
+                    if ($(this).hasClass('leaflet-popup-pane')) {
+                        L.DomEvent.stopPropagation(e);
+                        return;
+                    }
                     L.DomEvent.stopPropagation(e);
                     this.dropDist(e.latlng);
                 },
@@ -2284,11 +2326,13 @@ var gmeResources = {
                     var that = this, widgets = {
                         info: {
                             on: function() {
+                                $('.leaflet-popup-pane')[0].addEventListener("contextmenu", that.showInfo);
                                 that._map.on("click contextmenu", that.showInfo, that);
                                 $("#map_canvas").addClass("gme-xhair");
                                 $(".GME_info").addClass("gme-button-active").attr("title", "Disable location info tool");
                             },
                             off: function() {
+                                $('.leaflet-popup-pane')[0].removeEventListener("contextmenu", that.showInfo);
                                 that._map.off("click contextmenu", that.showInfo, that);
                                 $("#map_canvas").removeClass("gme-xhair");
                                 $(".GME_info").removeClass("gme-button-active").attr("title", "Enable location info tool");
@@ -2297,11 +2341,13 @@ var gmeResources = {
                         none: {on: function() {}, off: function() {}},
                         route: {
                             on: function() {
+                                $('.leaflet-popup-pane')[0].addEventListener("contextmenu", that.showRoute);
                                 that._map.on("click contextmenu", that.showRoute, that);
                                 $("#map_canvas").addClass("gme-xhair");
                                 $(".GME_route").addClass("gme-button-active").attr("title", "Disable route tool");
                             },
                             off: function() {
+                                $('.leaflet-popup-pane')[0].removeEventListener("contextmenu", that.showRoute);
                                 that._map.off("click contextmenu", that.showRoute, that);
                                 $("#map_canvas").removeClass("gme-xhair");
                                 $(".GME_route").removeClass("gme-button-active").attr("title", "Enable route tool");
@@ -2399,28 +2445,28 @@ var gmeResources = {
                     return false;
                 },
                 panToGC: function(gc) {
-          var req = new XMLHttpRequest(),
-              map = this._map || e;
-          req.addEventListener("load", function(e) {
-            var r = req.responseText,
-                k = r.indexOf("mapLatLng = {"),
-                c;
-            if (req.status < 400) {
-              try {
-                c = JSON.parse(r.substring(k + 12, r.indexOf("}", k) + 1));
-                map.panTo(new L.LatLng(c.lat, c.lng));
-              } catch(e) {
-                console.error("GME: Couldn't extract cache coordinates: " + e + "\nReceived " + r.length + " bytes, coords at " + k);
-              }
-            } else {
-              if (req.status === 404) {
-                alert("Sorry, cache " + gc + " doesn't seem to exist.");
-              }
-              console.error("GME: error retrieving cache page to find coords for " + gc + ": " + req.statusText);
-            }
-          });
-          req.open("GET", "https://www.geocaching.com/geocache/" + gc);
-          req.send();
+                    var req = new XMLHttpRequest(),
+                        map = this._map || e;
+                    req.addEventListener("load", function(e) {
+                        var r = req.responseText,
+                            k = r.indexOf("mapLatLng = {"),
+                            c;
+                        if (req.status < 400) {
+                            try {
+                                c = JSON.parse(r.substring(k + 12, r.indexOf("}", k) + 1));
+                                map.panTo(new L.LatLng(c.lat, c.lng));
+                            } catch(e) {
+                                console.error("GME: Couldn't extract cache coordinates: " + e + "\nReceived " + r.length + " bytes, coords at " + k);
+                            }
+                        } else {
+                            if (req.status === 404) {
+                                alert("Sorry, cache " + gc + " doesn't seem to exist.");
+                            }
+                            console.error("GME: error retrieving cache page to find coords for " + gc + ": " + req.statusText);
+                        }
+                    });
+                    req.open("GET", "https://www.geocaching.com/geocache/" + gc);
+                    req.send();
                 },
                 updateScale: function(e, timer) {
                     var map = this._map || e;
@@ -2585,8 +2631,7 @@ function insertPage(div, src, title, back) {
     if (div && typeof src === 'string') {
         var d = document.createElement('div');
         d.id = div;
-        d.title = title || '';
-        d.innerHTML = ['<div><a href="#', back || '', '" title="Close" class="gme-close-dialog">X</a><header>', d.title, '</header><div class="gme-modal-content">', src, '</div></div>'].join('');
+        d.innerHTML = ['<div><a href="#', back || '', '" title="Close" class="gme-close-dialog">X</a><header>', title || '', '</header><div class="gme-modal-content">', src, '</div></div>'].join('');
         d.className = 'gme-modalDialog';
         document.documentElement.lastChild.appendChild(d);
     } else {
@@ -2687,6 +2732,7 @@ function checkIsUpgraded() {
                 // Simulate update counter.
                 var counter = document.createElement('div');
                 counter.innerHTML = ' <img src="https://s11.flagcounter.com/count2/0lCZ/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
+                counter.innerHTML += '<img src="https://s11.flagcounter.com/count2/LAyU/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
                 counter.setAttribute('style', 'display: none');
                 document.getElementsByTagName('body')[0].appendChild(counter);
                 // Store new last version.
