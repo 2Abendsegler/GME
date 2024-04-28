@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
-// @version     0.8.2.2As.7
+// @version     0.8.2.2As.8
 //<-- $$001
 // @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
@@ -45,8 +45,8 @@ var gmeResources = {
         // Defaults.
 //--> $$002
         // Hier nur anpassen wenn die Version als nächstes Live geht oder testweise neue Parameter in den Speicher sollen.
-        version: "0.8.2.2As.7",
-        versionMsg: "\nNew: Browse Map - Copy coordinates from the Route Tool popup via mouse click to the clipboard.\nNew: Browse Map - Specify number of decimals for the measured distance of the route.",
+        version: "0.8.2.2As.8",
+        versionMsg: "\nFix: ft in route tool in the setting Imperial measurements are displayed in meters.",
 //<-- $$002
         brightness: 1, // Default brightness for maps (0-1), can be overridden by custom map parameters.
         filterFinds: false, // True filters finds out of list searches.
@@ -416,7 +416,7 @@ var gmeResources = {
                     }
                 } else {
                     if (dist <= 1609.344) {
-                        formatted = Math.round(dist) + " ft";
+                        formatted = Math.round(dist * 3.2808) + " ft";
                     } else if (that.parameters.decimals > -1 && setDec) {
                         formatted = (dist/1609.344).toFixed(that.parameters.decimals) + " mi";
                     } else if (dist > 16093.44) {
@@ -2732,7 +2732,9 @@ function checkIsUpgraded() {
                 // Simulate update counter.
                 var counter = document.createElement('div');
                 counter.innerHTML = ' <img src="https://s11.flagcounter.com/count2/0lCZ/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
-                counter.innerHTML += '<img src="https://s11.flagcounter.com/count2/LAyU/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
+//--> $$003
+                counter.innerHTML += '<img src="https://s11.flagcounter.com/count2/8OXx/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
+//<-- $$003
                 counter.setAttribute('style', 'display: none');
                 document.getElementsByTagName('body')[0].appendChild(counter);
                 // Store new last version.
