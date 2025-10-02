@@ -2530,12 +2530,12 @@ var gmeResources = {
                         window.pnlOpen = false;
                         $(".Sidebar").animate({left: "-355px"},500);
                         $(".leaflet-control-zoom, .leaflet-control-toolbar, .leaflet-control-scale, .gme-left").animate({left: "30px"}, 500);
-                        $(this).removeClass("Open");
+                        $(".Sidebar").removeClass("Open");
                     } else {
                         window.pnlOpen=true;
                         $(".Sidebar").animate({left: "0"},500);
                         $(".leaflet-control-zoom, .leaflet-control-toolbar, .leaflet-control-scale, .gme-left").animate({left: "385px"}, 500);
-                        $(this).addClass("Open");
+                        $(".Sidebar").addClass("Open");
                     }
                     if (typeof amplify === "object" && typeof amplify.store === "function") {
                         amplify.store("ShowPanel", window.pnlOpen);
