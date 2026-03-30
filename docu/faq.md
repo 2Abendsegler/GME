@@ -7,6 +7,7 @@
 <a href="#3-en">3. What can I do if individual GME features don't work or don't always work?</a> | <a href="#3-de">3. Was kann ich tun, wenn einzelne GME Features nicht oder nicht immer funktionieren?</a>
 <a href="#4-en">4. Where can I get help with GME?</a> | <a href="#4-de">4. Wo bekomme ich Hilfe zu GME?</a>
 <a href="#5-en">5. How can I report a bug?</a> | <a href="#5-de">5. Wie kann ich einen Fehler melden?</a>
+<a href="#6-en">6. What should be considered when using the GC little helper II (GClh) script simultaneously?</a> | <a href="#6-de">6. Was ist zu beachten bei der gleichzeitigen Nutzung des Skriptes GC little helper II (GClh)?</a>
 
 ---
 <a id="en" href="#en"><img src="../images/flag_en.png"></a>
@@ -45,6 +46,13 @@ If you need help with GME, or if you have questions about GME, you can check out
 To report a bug you can create a <a href="https://github.com/2Abendsegler/GME/issues/new/choose">new issue</a> on our development platform at GitHub. Or you can create a note in one of the forums. See [FAQ 4](../docu/faq.md#4-en).<br>
 <br>
 
+<a id="6-en"></a>
+## 6. What should be considered when using the GC little helper II (GClh) script simultaneously?
+<a id="6.1-en"></a>
+1. Using map layers from GME or GClh:<br>To use map layers from GME, you must disable map layer processing in GClh. To do this, disable the parameter <a href="https://www.geocaching.com/my/#GClhShowConfig#a#settings_use_gclh_layercontrol_on_browse_map" title="Link to your GClh II Config">Replace map layers in Browse Map</a>. (The link only works if GClh is actually installed.) To use map layers from GClh, this parameter must remain enabled.<br>
+<br>
+<br>
+
 ---
 <a id="de" href="#de"><img src="../images/flag_de.png"></a>
 
@@ -80,4 +88,10 @@ Wenn du Hilfe zu GME benötigst, oder wenn du Fragen zu GME hast, dann kannst du
 <a id="5-de"></a>
 ## 5. Wie kann ich einen Fehler melden?
 Um einen Fehler zu melden, kannst du ein <a href="https://github.com/2Abendsegler/GME/issues/new/choose">neues Issue</a> auf unserer Entwicklungsplattform bei GitHub erstellen. Oder du kannst einen Beitrag in einem der Foren erstellen. Siehe [FAQ 4](../docu/faq.md#4-de).<br>
+<br>
+
+<a id="6-de"></a>
+## 6. Was ist zu beachten bei der gleichzeitigen Nutzung des Skriptes GC little helper II (GClh)?
+<a id="6.1-de"></a>
+1. Nutzung der Karten Layer von GME oder GClh:<br>Wenn die Karten Layer von GME genutzt werden sollen, muss die Verarbeitung der Karten Layer im GClh deaktiviert werden. Dazu muss der Parameter <a href="https://www.geocaching.com/my/#GClhShowConfig#a#settings_use_gclh_layercontrol_on_browse_map" title="Link to your GClh II Config">Replace map layers in Browse Map</a> deaktiviert werden. (Der Link funktioniert nur wenn der GClh auch tatsächlich installiert ist.) Wenn die Karten Layer vom GClh genutzt werden sollen, muss dieser Parameter aktiviert bleiben.<br>
 <br>
