@@ -1,6 +1,20 @@
+<a href="#v0822As8" title="GME version 0.8.2.2As.8 (28.04.2024)">v0.8.2.2As.8</a> &nbsp;
 <a href="#v0822As7" title="GME version 0.8.2.2As.7 (15.04.2024)">v0.8.2.2As.7</a> &nbsp;
 <a href="#v0822As6" title="GME version 0.8.2.2As.6 (31.01.2023)">v0.8.2.2As.6</a> &nbsp;
 <span id="readme"></span>
+
+---
+## v0.8.2.2As.8:
+&nbsp; &nbsp; <img src="../images/flag_ua.png" alt="" title="Stand with Ukraine"><br>
+<ul>
+	<li>
+		<strong>Fix:</strong> [Global] ft in route tool in the setting Imperial measurements are displayed in meters. [<a href="https://github.com/2Abendsegler/GME/issues/46" title="Issue 46">46</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+	</li>
+</ul>
+<br>
+(28.04.2024)<br>
+released by <a href="https://www.geocaching.com/profile/?u=2Abendsegler">2Abendsegler</a><br>
+<br>
 
 ---
 ## v0.8.2.2As.7:
@@ -38,6 +52,7 @@ released by <a href="https://www.geocaching.com/profile/?u=2Abendsegler">2Abends
 	</li>
 </ul>
 <br>
+
 (31.01.2023)<br>
 released by <a href="https://www.geocaching.com/profile/?u=2Abendsegler">2Abendsegler</a><br>
 <br>
