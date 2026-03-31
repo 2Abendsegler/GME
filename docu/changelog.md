@@ -1,7 +1,21 @@
+<a href="#v0822As9" title="GME version 0.8.2.2As.9 (02.10.2025)">v0.8.2.2As.9</a> &nbsp;
 <a href="#v0822As8" title="GME version 0.8.2.2As.8 (28.04.2024)">v0.8.2.2As.8</a> &nbsp;
 <a href="#v0822As7" title="GME version 0.8.2.2As.7 (15.04.2024)">v0.8.2.2As.7</a> &nbsp;
 <a href="#v0822As6" title="GME version 0.8.2.2As.6 (31.01.2023)">v0.8.2.2As.6</a> &nbsp;
 <span id="readme"></span>
+
+---
+## v0.8.2.2As.9:
+&nbsp; &nbsp; <img src="../images/flag_ua.png" alt="" title="Stand with Ukraine"><br>
+<ul>
+	<li>
+		<strong>Fix:</strong> [Browse Map] When printing the map parts on the left side are missing. [<a href="https://github.com/2Abendsegler/GME/issues/55" title="Issue 55">55</a> / <a href="https://www.geocaching.com/profile/?u=Die Batzen" title="Thanks to Die Batzen">Die Batzen</a>]<br>
+	</li>
+</ul>
+<br>
+(02.10.2025)<br>
+released by <a href="https://www.geocaching.com/profile/?u=2Abendsegler">2Abendsegler</a><br>
+<br>
 
 ---
 ## v0.8.2.2As.8:
