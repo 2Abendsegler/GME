@@ -8,11 +8,11 @@
 <ul>
 	<li>
 		<strong>New:</strong> [Browse Map] Specify number of decimals for the measured distance of the route. [<a href="https://github.com/2Abendsegler/GME/issues/40" title="Issue 40">40</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
-		Information can be found in <a href="https://github.com/2Abendsegler/GME/issues/#40" title="Issue 40">issue 40</a>.<br>
+		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/#40" title="Issue 40">issue 40</a>.<br>
 	</li>
 	<li>
 		<strong>New:</strong> [Browse Map] Copy coordinates from the Route Tool popup via mouse click to the clipboard. [<a href="https://github.com/2Abendsegler/GME/issues/38" title="Issue 38">38</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
-		Information can be found in <a href="https://github.com/2Abendsegler/GME/issues/#38" title="Issue 38">issue 38</a>.<br>
+		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/#38" title="Issue 38">issue 38</a>.<br>
 	</li>
 	<li>
 		<strong>Fix:</strong> [Browse Map] Right mouse on cache detail popup set route tool marker. [<a href="https://github.com/2Abendsegler/GME/issues/35" title="Issue 35">35</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
