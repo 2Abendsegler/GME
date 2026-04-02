@@ -56,17 +56,12 @@ var gmeResources = {
         osgbSearch: true, // Enhance search box with OSGB grid references, zooming, etc. (may interfere with postal code searches).
         defaultMap: "OpenStreetMap",
         maps: [
-        //  {alt: "Readable Name", tileUrl: "URL template including {s} (subdomain) and either {q} (quadkey) or {x},{y},{z} (Google/TMS tile coordinates + zoom)", subdomains: "0123", minZoom: 0, maxZoom: 24, attribution: "Copyright message (HTML allowed)", name: "shortname", overlay: false}
             {alt: "OpenStreetMap", tileUrl: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", name: "osm", subdomains: "abc"},
             {alt: "OpenCycleMap", tileUrl: "https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png", name: "ocm"},
             {alt: "Bing Maps", tileUrl: "https://ecn.t{s}.tiles.virtualearth.net/tiles/r{q}?g=864&mkt=en-gb&lbl=l1&stl=h&shading=hill&n=z", subdomains: "0123", minZoom: 1, maxZoom: 20, attribution: "<a href=\'https://www.bing.com/maps/\'>Bing</a> map data copyright Microsoft and its suppliers", name: "bingmap", ignore: true},
             {alt: "Bing Aerial View", tileUrl: "https://ecn.t{s}.tiles.virtualearth.net/tiles/a{q}?g=737&n=z", subdomains: "0123", minZoom: 1, maxZoom: 20, attribution: "<a href=\'https://www.bing.com/maps/\'>Bing</a> map data copyright Microsoft and its suppliers", name: "bingaerial"},
             {alt: "Google Maps", tileUrl: "https://mt.google.com/vt?&x={x}&y={y}&z={z}", name: "googlemaps", attribution: "<a href=\'https://maps.google.com/\'>Google</a> Maps", subdomains: "1234", tileSize: 256, maxZoom: 22},
-            {alt: "Google Satellite", tileUrl: "https://mt.google.com/vt?lyrs=s&x={x}&y={y}&z={z}", name: "googlemapssat", attribution: "<a href=\'https://maps.google.com/\'>Google</a> Maps Satellite", subdomains: "1234", tileSize: 256, maxZoom: 22},
-            {alt: "Freemap Slovakia Hiking", tileUrl: "http://t{s}.freemap.sk/T/{z}/{x}/{y}.jpeg", attribution: "Map &copy; <a href='http://www.freemap.sk/'>Freemap Slovakia</a>, data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors", subdomains: "1234", minZoom: 8, maxZoom: 16, ignore: true},
-            {alt: "Freemap Slovakia Bicycle", tileUrl: "http://t{s}.freemap.sk/C/{z}/{x}/{y}.jpeg", attribution: "Map &copy; <a href='http://www.freemap.sk/'>Freemap Slovakia</a>, data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors", subdomains: "1234", minZoom: 8, maxZoom: 16, ignore: true},
-            {alt: "Freemap Slovakia Car", tileUrl: "http://t{s}.freemap.sk/A/{z}/{x}/{y}.jpeg", attribution: "Map &copy; <a href='http://www.freemap.sk/'>Freemap Slovakia</a>, data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors", subdomains: "1234", minZoom: 8, maxZoom: 16, ignore: true},
-            {alt: "Hillshading", tileUrl: "http://{s}.tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png", subdomains: "abc", attribution: "Hillshading by <a     href=\'https://wiki.openstreetmap.org/wiki/Hike_%26_Bike_Map\'>Colin Marquardt</a> from NASA SRTM data", overlay: true}
+            {alt: "Google Satellite", tileUrl: "https://mt.google.com/vt?lyrs=s&x={x}&y={y}&z={z}", name: "googlemapssat", attribution: "<a href=\'https://maps.google.com/\'>Google</a> Maps Satellite", subdomains: "1234", tileSize: 256, maxZoom: 22}
         ]
     },
     css: {
@@ -555,7 +550,7 @@ var gmeResources = {
                             console.error("GME: Error processing JSON callback " + callback + ": " + e);
                         }
                     } else {
-                        console.erro("GME: Unexpected request to JSON callback handler: Couldn't find callback function " + callback);
+                        console.error("GME: Unexpected request to JSON callback handler: Couldn't find callback function " + callback);
                     }
                     return false;
                 });
