@@ -2728,6 +2728,8 @@ function checkIsUpgraded() {
                 var scriptVersion = GM_info.script.version;
                 var last_version = GM_getValue('last_version', '');
             }
+console.log('scriptVersion: '+scriptVersion);          
+console.log('last_version: '+last_version);          
             if (last_version != scriptVersion) {
                 // Simulate update counter.
                 var counter = document.createElement('div');
@@ -2739,7 +2741,7 @@ function checkIsUpgraded() {
                 document.getElementsByTagName('body')[0].appendChild(counter);
                 // Store new last version.
                 if (gmeResources.env.xhr === 'GM4') {
-                    GM.setValue('last_version', scriptVersion);
+                    await GM.setValue('last_version', scriptVersion);
                 } else {
                     GM_setValue('last_version', scriptVersion);
                 }
@@ -2771,7 +2773,7 @@ function checkForUpgrade() {
                 // Wait 24 hours for a new check for upgrade.
                 time += 24 * 60 * 60 * 1000;
                 if (gmeResources.env.xhr === 'GM4') {
-                    GM.setValue('update_next_check', time.toString());
+                    await GM.setValue('update_next_check', time.toString());
                 } else {
                     GM_setValue('update_next_check', time.toString());
                 }
