@@ -25,23 +25,23 @@
 	</li>
 	<li>
 		<strong>Fix:</strong> [Listing, Browse Map] Drag cache type with waypoints and drop to map doesn't work. [<a href="https://github.com/2Abendsegler/GME/issues/63" title="Issue 63">63</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
-		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/63" title="Issue 63">issue 63</a>.<br><br>
+		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/63" title="Issue 63">63</a>.<br><br>
 	</li>
 	<li>
 		<strong>Fix:</strong> [Browse Map] Reintegrate GME button into the sidebar. [<a href="https://github.com/2Abendsegler/GME/issues/67" title="Issue 67">67</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
-		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/67" title="Issue 67">issue 67</a>.<br><br>
+		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/67" title="Issue 67">67</a>.<br><br>
 	</li>
 	<li>
 		<strong>Fix:</strong> [Global] Reorganization of map layers that no longer work. [<a href="https://github.com/2Abendsegler/GME/issues/77" title="Issue 77">77</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
-		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/77" title="Issue 77">issue 77</a>.<br><br>
+		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/77" title="Issue 77">77</a>.<br><br>
 	</li>
 	<li>
 		<strong>New:</strong> [Browse Map] Improve the alignment of the icons on the left side. [<a href="https://github.com/2Abendsegler/GME/issues/69" title="Issue 69">69</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
-		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/69" title="Issue 69">issue 69</a>.<br><br>
+		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/69" title="Issue 69">69</a>.<br><br>
 	</li>
 	<li>
 		<strong>New:</strong> [Global] Improve the alignment of the settings. [<a href="https://github.com/2Abendsegler/GME/issues/74" title="Issue 74">74</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
-		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/74" title="Issue 74">issue 74</a>.<br><br>
+		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/74" title="Issue 74">74</a>.<br><br>
 	</li>
 	<li>
 		<strong>New:</strong> [Global] Improve notification of version changes. [<a href="https://github.com/2Abendsegler/GME/issues/73" title="Issue 73">73</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
