@@ -17,7 +17,8 @@
 		<strong>New:</strong> [Browse Map] Improve the enhanced search box. [<a href="https://github.com/2Abendsegler/GME/issues/68" title="Issue 68">68</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
 		With the enhance search feature you can search for an Address, a GC Code, for Coordinates and Zoom or Grid Ref.<br>
 		<img src="../images/0.8.2.2As.10/Screen02.jpg" alt="Screen02.jpg"><br>
-		<img src="../images/0.8.2.2As.10/Screen03.jpg" alt="Screen03.jpg"><br><br>
+		For example, a search by address.<br>
+		<img src="../images/0.8.2.2As.10/Screen03.jpg" alt="Screen03.jpg"><br>
 		This feature is not new. If you want to use it, maybe you have to activate it.<br>
 		<img src="../images/0.8.2.2As.10/Screen01.jpg" alt="Screen01.jpg"><br><br>
 	</li>
