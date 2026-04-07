@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
-// @version     0.8.2.2As.9
+// @version     0.8.2.2As.10
 //<-- $$001
 // @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
 // @include     /^https:\/\/www.geocaching.com\/(geocache\/GC|seek\/cache_details\.aspx|seek\/cache_details2\.aspx|map\/|hide\/planning\.aspx|hide\/typelocation\.aspx|hide\/waypoints\.aspx|seek\/$|\/seek\/default\.aspx|track\/map_gm\.aspx)/
 // @license     MIT License
 // @namespace   https://github.com/2Abendsegler/GME
-// @copyright   2011-2018 James Inge, 2022-2026 2Abendsegler
+// @copyright   2022-2026 2Abendsegler, (2011-2018 James Inge)
 // @attribution GeoNames (http://www.geonames.org/)
 // @attribution Postcodes.io (https://postcodes.io/)
 // @attribution Chris Veness (http://www.movable-type.co.uk/scripts/latlong-gridref.html)
@@ -45,7 +45,7 @@ var gmeResources = {
         // Defaults.
 //--> $$002
         // Hier nur anpassen wenn die Version als nächstes Live geht oder testweise neue Parameter in den Speicher sollen.
-        version: "0.8.2.2As.9",
+        version: "0.8.2.2As.10",
 //<-- $$002
         brightness: 1, // Default brightness for maps (0-1), can be overridden by custom map parameters.
         filterFinds: false, // True filters finds out of list searches.
@@ -2759,7 +2759,7 @@ function checkIsUpgraded() {
                 var counter = document.createElement('div');
                 counter.innerHTML = ' <img src="https://s11.flagcounter.com/count2/0lCZ/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
 //--> $$003
-                counter.innerHTML += '<img src="https://s11.flagcounter.com/count2/AN6U/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
+                counter.innerHTML += '<img src="https://s11.flagcounter.com/count2/bHF1/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
 //<-- $$003
                 counter.setAttribute('style', 'display: none');
                 document.getElementsByTagName('body')[0].appendChild(counter);
