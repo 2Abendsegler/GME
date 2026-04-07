@@ -2765,18 +2765,21 @@ function checkIsUpgraded() {
                 document.getElementsByTagName('body')[0].appendChild(counter);
                 // Store new last version.
                 if (gmeResources.env.xhr === 'GM4') {
-                    GM.setValue('last_version', scriptVersion);
+                    await GM.setValue('last_version', scriptVersion);
                 } else {
                     GM_setValue('last_version', scriptVersion);
                 }
                 // Set update message.
-                setTimeout(function() {
-                    var url = 'https://github.com/2Abendsegler/GME/blob/master/docu/changelog.md#readme';
-                    var text = '';
-                    text += "Version " + scriptVersion + " of  Geocaching Map Enhancements was successfully installed.\n\n";
-                    text += "Do you want to open the changelog in a new tab, to have a quick look at changes and new features?\n";
-                    if (window.confirm(text)) window.open(url, '_blank');
-                }, 1500);
+                var url = 'https://github.com/2Abendsegler/GME/blob/main/docu/changelog.md#readme';
+                var text = '';
+                if (last_version) {
+                    text += "Geocaching Map Enhancements has been updated to version " + scriptVersion;
+                } else {
+                    text += "Geocaching Map Enhancements was installed with version " + scriptVersion;
+                }
+                console.log('GME: ' + text);
+                text += ".\n\nDo you want to open the changelog in a new tab, to have a quick look at changes and new features?\n";
+                if (window.confirm(text)) window.open(url, '_blank');
             }
         } catch(e) {console.error("GME: Check if it is upgraded run into error (function checkIsUpgraded). " + e);}
     })();
@@ -2799,7 +2802,7 @@ function checkForUpgrade() {
                 // Wait 24 hours for a new check for upgrade.
                 time += 24 * 60 * 60 * 1000;
                 if (gmeResources.env.xhr === 'GM4') {
-                    GM.setValue('update_next_check', time.toString());
+                    await GM.setValue('update_next_check', time.toString());
                 } else {
                     GM_setValue('update_next_check', time.toString());
                 }
