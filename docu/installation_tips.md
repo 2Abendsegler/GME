@@ -12,7 +12,7 @@
 * Install the script [GME](https://github.com/2Abendsegler/GME/raw/main/Geocaching_Map_Enhancements.user.js) under the script manager.<br>
 
 ### <a href="//" id="edge_de"><img src="../images/microsoft_edge_logo_small.png" title="Microsoft Edge" alt="Microsoft Edge"></a> Microsoft Edge:
-* Install the script manager [Tampermonkey](https://www.microsoft.com/en-us/store/p/tampermonkey/9nblggh5162s) or [Violentmonkey](https://microsoftedge.microsoft.com/addons/detail/eeagobfjdenkkddmbclomhiblgggliao) as Add-on in Edge.<br>
+* Install the script manager [Tampermonkey](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd) or [Violentmonkey](https://microsoftedge.microsoft.com/addons/detail/eeagobfjdenkkddmbclomhiblgggliao) as Add-on in Edge.<br>
 * Install the script [GME](https://github.com/2Abendsegler/GME/raw/main/Geocaching_Map_Enhancements.user.js) under the script manager.<br>
 
 ### <a href="//" id="opera_de"><img src="../images/opera_logo_small.png" title="Opera" alt="Opera"></a> Opera:
@@ -39,7 +39,7 @@
 * Installiere das Script [GME](https://github.com/2Abendsegler/GME/raw/main/Geocaching_Map_Enhancements.user.js) unter dem Scriptmanager.<br>
 
 ### <a href="//" id="edge_de"><img src="../images/microsoft_edge_logo_small.png" title="Microsoft Edge" alt="Microsoft Edge"></a> Microsoft Edge:
-* Installiere den Scriptmanager [Tampermonkey](https://www.microsoft.com/en-us/store/p/tampermonkey/9nblggh5162s) oder [Violentmonkey](https://microsoftedge.microsoft.com/addons/detail/eeagobfjdenkkddmbclomhiblgggliao) als Add-On in Edge.<br>
+* Installiere den Scriptmanager [Tampermonkey](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd) oder [Violentmonkey](https://microsoftedge.microsoft.com/addons/detail/eeagobfjdenkkddmbclomhiblgggliao) als Add-On in Edge.<br>
 * Installiere das Script [GME](https://github.com/2Abendsegler/GME/raw/main/Geocaching_Map_Enhancements.user.js) unter dem Scriptmanager.<br>
 
 ### <a href="//" id="opera_de"><img src="../images/opera_logo_small.png" title="Opera" alt="Opera"></a> Opera:

@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
-// @version     0.8.2.2As.9
+// @version     0.8.2.2As.10
 //<-- $$001
 // @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
 // @include     /^https:\/\/www.geocaching.com\/(geocache\/GC|seek\/cache_details\.aspx|seek\/cache_details2\.aspx|map\/|hide\/planning\.aspx|hide\/typelocation\.aspx|hide\/waypoints\.aspx|seek\/$|\/seek\/default\.aspx|track\/map_gm\.aspx)/
 // @license     MIT License
 // @namespace   https://github.com/2Abendsegler/GME
-// @copyright   2011-2018 James Inge, 2022-2025 2Abendsegler
+// @copyright   2022-2026 2Abendsegler, (2011-2018 James Inge)
 // @attribution GeoNames (http://www.geonames.org/)
 // @attribution Postcodes.io (https://postcodes.io/)
 // @attribution Chris Veness (http://www.movable-type.co.uk/scripts/latlong-gridref.html)
@@ -45,8 +45,7 @@ var gmeResources = {
         // Defaults.
 //--> $$002
         // Hier nur anpassen wenn die Version als nächstes Live geht oder testweise neue Parameter in den Speicher sollen.
-        version: "0.8.2.2As.9",
-        versionMsg: "\nFix: When printing the browse map parts on the left side are missing.",
+        version: "0.8.2.2As.10",
 //<-- $$002
         brightness: 1, // Default brightness for maps (0-1), can be overridden by custom map parameters.
         filterFinds: false, // True filters finds out of list searches.
@@ -57,99 +56,101 @@ var gmeResources = {
         osgbSearch: true, // Enhance search box with OSGB grid references, zooming, etc. (may interfere with postal code searches).
         defaultMap: "OpenStreetMap",
         maps: [
-        //  {alt: "Readable Name", tileUrl: "URL template including {s} (subdomain) and either {q} (quadkey) or {x},{y},{z} (Google/TMS tile coordinates + zoom)", subdomains: "0123", minZoom: 0, maxZoom: 24, attribution: "Copyright message (HTML allowed)", name: "shortname", overlay: false}
             {alt: "OpenStreetMap", tileUrl: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", name: "osm", subdomains: "abc"},
             {alt: "OpenCycleMap", tileUrl: "https://tile.thunderforest.com/cycle/{z}/{x}/{y}.png", name: "ocm"},
             {alt: "Bing Maps", tileUrl: "https://ecn.t{s}.tiles.virtualearth.net/tiles/r{q}?g=864&mkt=en-gb&lbl=l1&stl=h&shading=hill&n=z", subdomains: "0123", minZoom: 1, maxZoom: 20, attribution: "<a href=\'https://www.bing.com/maps/\'>Bing</a> map data copyright Microsoft and its suppliers", name: "bingmap", ignore: true},
             {alt: "Bing Aerial View", tileUrl: "https://ecn.t{s}.tiles.virtualearth.net/tiles/a{q}?g=737&n=z", subdomains: "0123", minZoom: 1, maxZoom: 20, attribution: "<a href=\'https://www.bing.com/maps/\'>Bing</a> map data copyright Microsoft and its suppliers", name: "bingaerial"},
             {alt: "Google Maps", tileUrl: "https://mt.google.com/vt?&x={x}&y={y}&z={z}", name: "googlemaps", attribution: "<a href=\'https://maps.google.com/\'>Google</a> Maps", subdomains: "1234", tileSize: 256, maxZoom: 22},
-            {alt: "Google Satellite", tileUrl: "https://mt.google.com/vt?lyrs=s&x={x}&y={y}&z={z}", name: "googlemapssat", attribution: "<a href=\'https://maps.google.com/\'>Google</a> Maps Satellite", subdomains: "1234", tileSize: 256, maxZoom: 22},
-            {alt: "Freemap Slovakia Hiking", tileUrl: "http://t{s}.freemap.sk/T/{z}/{x}/{y}.jpeg", attribution: "Map &copy; <a href='http://www.freemap.sk/'>Freemap Slovakia</a>, data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors", subdomains: "1234", minZoom: 8, maxZoom: 16, ignore: true},
-            {alt: "Freemap Slovakia Bicycle", tileUrl: "http://t{s}.freemap.sk/C/{z}/{x}/{y}.jpeg", attribution: "Map &copy; <a href='http://www.freemap.sk/'>Freemap Slovakia</a>, data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors", subdomains: "1234", minZoom: 8, maxZoom: 16, ignore: true},
-            {alt: "Freemap Slovakia Car", tileUrl: "http://t{s}.freemap.sk/A/{z}/{x}/{y}.jpeg", attribution: "Map &copy; <a href='http://www.freemap.sk/'>Freemap Slovakia</a>, data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors", subdomains: "1234", minZoom: 8, maxZoom: 16, ignore: true},
-            {alt: "Hillshading", tileUrl: "http://{s}.tiles.wmflabs.org/hillshading/{z}/{x}/{y}.png", subdomains: "abc", attribution: "Hillshading by <a     href=\'https://wiki.openstreetmap.org/wiki/Hike_%26_Bike_Map\'>Colin Marquardt</a> from NASA SRTM data", overlay: true}
+            {alt: "Google Satellite", tileUrl: "https://mt.google.com/vt?lyrs=s&x={x}&y={y}&z={z}", name: "googlemapssat", attribution: "<a href=\'https://maps.google.com/\'>Google</a> Maps Satellite", subdomains: "1234", tileSize: 256, maxZoom: 22}
         ]
     },
     css: {
-        main: '.leaflet-control-gme, .leaflet-control-zoomwarning {border-radius: 7px; filter: progid:DXImageTransform.Microsoft.gradient(startColorStr="#3F000000",EndColorStr="#3F000000"); padding: 5px; z-index: 8;}\
-            .leaflet-control-gme {display: inline-block; padding: 0; background: rgba(0, 0, 0, 0.2); box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);}\
-            .gme-control-scale {bottom: 5em !important; margin-left: 13px !important; left: 385px;}\
-            .gme-left {left: 385px; margin-left: 13px !important;}\
-            div.gme-identify-layer {margin-top: -1em; margin-left: 1em; padding-left: 0.1em; font-weight: bold; background: rgba(255,255,255,0.57);}\
-            #gme_caches table {margin-top: 0.5em;}\
-            .GME_search_list {border: 1px solid #679300; border-radius: 7px; padding: 0.5em;}\
-            div.GME_search_results {margin-right: -65px;}\
-            .GME_search_results.hidden {display: none;}\
-            .groundspeak-control-findmylocation {border: 1px solid #888; border-radius: 5px; box-shadow: 0 0 8px rgba(0, 0, 0, 0.4); padding: 0; background: rgba(255,255,255,0.8);}\
-            .groundspeak-control-findmylocation a {padding: 3px;}\
-            .gme-button {display: inline-block; box-sizing: content-box; -moz-box-sizing: content-box; padding: 2px; vertical-align: middle; background: no-repeat #eee; background-color: rgba(255,255,255,0.8); border: 1px solid #888; height: 22px; width: 22px; text-decoration: none;}\
-            .gme-button-l {border-bottom-left-radius: 5px; border-top-left-radius: 5px;}\
-            .gme-button-r {border-right: 1px solid #888; border-bottom-right-radius: 5px; border-top-right-radius: 5px; margin-right: 0.5em;}\
-            .gme-button:hover {background-color: #fff;}\
-            .gme-button-active {border: solid 3px #02b; padding: 0px; background-color: #fff;}\
-            .gme-button-active:hover {border-color: #63f; filter: alpha(opacity=100);}\
-            span.gme-button, .gme-button-wide {padding-left: 5px; padding-right: 5px; font-size: 12px; font-weight: bold; width: auto; background-image: none; color: #424242; font-family: inherit;}\
-            span.gme-text {vertical-align: text-top;}\
-            a.gme-text {display: inline; padding: 5px;}\
-            a.gme-text-small {display: inline;}\
-            #GME_brightness {margin: 0px; height: 14px;}\
-            .GME_info {background-size: 26px 26px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/main/images/GME_info.png)}\
-            .GME_hide {background-size: 22px 22px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/main/images/GME_hide.png)}\
-            .GME_route {background-size: 21px 20px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/main/images/GME_route.png)}\
-            .GME_home {background-size: 23px 23px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/main/images/GME_home.png)}\
-            .GME_config {background-size: 24px 24px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/main/images/GME_config.png)}\
-            a.GME_ctoc {color: #4a4a4a; opacity: 0.8; text-decoration: none; padding-right: 4px;}\
-            a.GME_ctoc svg {height: 14px; width: 14px; vertical-align: sub; transform: rotate(180deg);}\
-            .gme-button-refresh-labels {background-position: -320px 4px;}\
-            .gme-button-clear-labels {background-position: -69px 4px;}\
-            span.gme-distance-container {display: none;}\
-            span.gme-distance-container.show {display: inline-block;}\
-            #GME_loc, a.gme-button.leaflet-active {outline: none;}\
-            .leaflet-control-zoomwarning {top: 94px;}\
-            .leaflet-control-zoomwarning a {filter: progid:DXImageTransform.Microsoft.gradient(startColorStr="#BFC80000",EndColorStr="#BFC80000"); background-color: rgba(200,0,0,0.75); margin-left: -4px; background-position: -502px 2px; height: 14px; width: 14px; border-color: #b00; box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);}\
-            .leaflet-control-zoomwarning a:hover {background-color: rgba(230,0,0,0.75);}\
-            .gme-event {cursor: pointer;}\
-            .gme-modalDialog {position: fixed; top: 0; right: 0; bottom: 0; left: 0; background: rgba(0,0,0,0.5); z-index: 1000; opacity: .5; -webkit-transition: opacity 400ms ease-in; -moz-transition: opacity 400ms ease-in; transition: opacity 400ms ease-in; pointer-events: none; display: none;}\
-            .gme-modalDialog:target, .gme-modalDialog.gme-targetted {opacity: 1; display: block; pointer-events: auto;}\
-            .gme-modalDialog > div {position: relative; margin: 4% 12.5%; height: 30em; max-height: 75%; padding: 0 0 13px 0; border: 1px solid #000; border-radius: 10px; background: #fff; background: -moz-linear-gradient(#fff, #999); background: -webkit-linear-gradient(#fff, #999); background: -o-linear-gradient(#fff, #999);}\
-            .gme-modalDialog header {color: #eee; background: none #454545; font-size: 15px; text-align: center; border-top-left-radius: 10px; padding: 0.5em 0; font-weight: bold; text-shadow: none; height: auto; min-height: auto; min-width: auto !important;}\
-            .gme-modalDialog select {appearance: auto; background-color: inherit; background-image: none; background-repeat: no-repeat; color: inherit; border: 1px solid #9b9b9b; border-radius: 4px; width: auto; display: inline; font-size: 14px; line-height: normal; pointer-events: auto; padding: 0px 7px; height: 26px; margin-right: 7px; margin-top: 2px;}\
-            .gme-modalDialog label {text-transform: none; font-size: inherit; margin-top: 0px;}\
-            .gme-modal-content {position: absolute; top: 3.5em; left: 0.75em; right: 0.75em; bottom: 0.5em; overflow: auto;}\
-            .gme-modal-content > .leaflet-control-gme {position: absolute; left: 0.5em; bottom: 0.5em; top: auto;}\
-            .gme-close-dialog {background: #606061; color: #fff; line-height: 25px; position: absolute; right: -12px; text-align: center; top: -10px; width: 24px; text-decoration: none; font-weight: bold; -webkit-border-radius: 12px; -moz-border-radius: 12px; border-radius: 12px; -moz-box-shadow: 1px 1px 3px #000; -webkit-box-shadow: 1px 1px 3px #000; box-shadow: 1px 1px 3px #000;}\
-            .gme-close-dialog:hover {background: #00d9ff;}\
-            #searchtabs li a {padding: 1em 0.5em;}\
-            @media print {#search {display: none !important}}\
-            .tab-switcher {position: relative; font-family: Arial, sans-serif; font-size: 14px;}\
-            .gme-tab {float: left;}\
-            .gme-tab-label {border-radius: 8px 8px 0 0; border: 1px solid #ccc; color: #454545; background: #ddd; display: block; position: relative; margin-left: 15px; padding: 3px 0; font-weight: bold; z-index: 0;}\
-            .gme-tab-label:after {border-bottom: 1px solid #ccc; border-bottom-left-radius: 8px; border-left: 1px solid #ccc; box-shadow: -2px 2px 0 #ddd; bottom: -8px; content: ""; display: inline-block; height: 8px; left: 9px; position: relative; width: 8px; z-index: 3;}\
-            .gme-tab-label:before {border-bottom: 1px solid #ccc; border-bottom-right-radius: 8px; border-right: 1px solid #ccc; box-shadow: 2px 2px 0 #ddd; bottom: -8px; content: ""; display: inline-block; height: 8px; left: -9px; position: relative; width: 8px; z-index: 3;}\
-            .gme-tab-label:hover {cursor: pointer;}\
-            .gme-tab-content {position: absolute; top: 25px; bottom: 3.5em; left: 0; right: 0; padding: 0.5em; background: #000; border: 1px solid #ccc; border-radius: 8px; color: #555; z-index: 1; opacity: 0; overflow: auto;}\
-            .gme-tab-content ul {margin: 0.5em 0;}\
-            .gme-tab input[type=radio] {display: none;}\
-            .gme-tab input[type=radio]:checked ~ .gme-tab-content {z-index: 2; opacity: 1; background: #fff; color: #454545;}\
-            .gme-tab input[type=radio]:checked ~ .gme-tab-label {background: #fff; color: #454545; border-bottom: 1px solid #fff; z-index: 3;}\
-            .gme-tab input[type=radio]:checked ~ .gme-tab-label:after {box-shadow: -2px 2px 0 #fff;}\
-            .gme-tab input[type=radio]:checked ~ .gme-tab-label:before {box-shadow: 2px 2px 0 #fff;}\
-            .gme-fieldgroup {position: relative; border: 1px solid #ccc; border-radius: 6px; background: #eee; margin: 0.5em 0 1.5em; padding: 0.5em;}\
-            .gme-fieldgroup h3 {position: absolute; top: -0.7em; left: 0.5em; padding: 0 0.5em; background: #eee; border-top: 1px solid #ccc; border-radius: 6px; z-index:1; display: inline-block; font-weight: bold; font-size: 12px;}\
-            .gme-fieldgroup ul {margin: 0.5em 0; padding: 0;}\
-            .gme-fieldgroup li {display: inline-block; margin: 0 -1px -1px 0; background: #ddd; border: 1px solid #ccc; border-radius: 6px; padding: 0 0.5em; height: 28px;}\
-            .gme-fieldgroup label {display: inline;}\
-            .gme-fieldgroup input {margin: 7px 0; padding-bottom: 6px; padding-top: 3px; height: 16px;}\
-            #GME_map_custom {width: 200px; box-sizing: inherit; border: 1px solid #9b9b9b; border-radius: 4px;}\
-            .gme-xhair {cursor: crosshair;}\
-            .map-button-container {margin-right: 5em;}\
-            .leaflet-top.leaflet-right {z-index: 7;}\
-            #centerMap {margin-right: 100px;}\
-            #map_canvas .leaflet-control-layers-toggle, #map_canvas2 .leaflet-control-layers-toggle {background-image: url(/js/leaflet/0.5.1/images/layers.png)}\
-            #map_canvas label, #map_canvas2 label {text-transform: unset; display: block;}\
-            #map_canvas .leaflet-popup-content, #map_canvas2 .leaflet-popup-content {text-align: unset;}',
-        drag: '#cacheDetails .cacheImage {border: solid 1px #ccc; border-radius: 7px; padding-left: 5px;}\
-            .moveable {cursor: move; box-shadow: 0 1px 4px rgba(102, 51, 255, 0.3);}'
+        main: '.leaflet-control-gme, .leaflet-control-zoomwarning {border-radius: 7px; filter: progid:DXImageTransform.Microsoft.gradient(startColorStr="#3F000000",EndColorStr="#3F000000"); padding: 5px; z-index: 8;} '
+            + '.leaflet-control-gme {display: inline-block; padding: 0; background: rgba(0, 0, 0, 0.2); box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);} '
+            + '.gme-control-scale {bottom: 45px !important; margin-bottom: 5px !important; margin-left: 1px !important; left: 385px;} '
+            + '.leaflet-control-scale-line:first-child {box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.2) !important;} '
+            + '.gme-left {left: 385px; margin-left: 1px !important;} '
+            + 'div.gme-identify-layer {margin-top: -1em; margin-left: 1em; padding-left: 0.1em; font-weight: bold; background: rgba(255,255,255,0.57);} '
+            + '#gme_caches table {margin-top: 0.5em;} '
+            + '.GME_search_list {border: 1px solid #679300; border-radius: 7px; padding: 0.5em;} '
+            + '.GME_search_results {margin-top: 5px; margin-right: -56px;} '
+            + '.GME_search_results p {margin-top: 5px; margin-bottom: 10px;} '
+            + '.GME_search_results.hidden, .GME_search_info.hidden {display: none;} '
+            + '.GME_search_info {font-size: 12px !important; padding: 4px 12px 0px 12px !important; line-height: 1rem !important;} '
+            + '.groundspeak-control-findmylocation a {padding: 3px;} '
+            + '.gme-button {display: inline-block; box-sizing: content-box; -moz-box-sizing: content-box; padding: 2px; vertical-align: middle; background: no-repeat #eee; background-color: rgba(255,255,255,0.8); border: 1px solid #888; height: 22px; width: 22px; text-decoration: none;} '
+            + '.gme-button-l {border-bottom-left-radius: 5px; border-top-left-radius: 5px;} '
+            + '.gme-button-r {border-right: 1px solid #888; border-bottom-right-radius: 5px; border-top-right-radius: 5px; margin-right: 0.5em;} '
+            + '.gme-button:hover {background-color: #fff;} '
+            + '.gme-button-active {border: solid 3px #02b; padding: 0px; background-color: #fff;} '
+            + '.gme-button-active:hover {border-color: #63f; filter: alpha(opacity=100);} '
+            + 'span.gme-button, .gme-button-wide {padding-left: 5px; padding-right: 5px; font-size: 12px; font-weight: bold; width: auto; background-image: none; color: #424242; font-family: inherit;} '
+            + 'span.gme-text {vertical-align: text-top;} '
+            + 'a.gme-text {display: inline; padding: 5px;} '
+            + 'a.gme-text-small {display: inline;} '
+            + '#GME_brightness {margin: 0px; height: 2px;} '
+            + '.GME_info {background-size: 26px 26px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/main/images/GME_info.png)} '
+            + '.GME_hide {background-size: 22px 22px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/main/images/GME_hide.png)} '
+            + '.GME_route {background-size: 21px 20px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/main/images/GME_route.png)} '
+            + '.GME_home {background-size: 23px 23px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/main/images/GME_home.png)} '
+            + '.GME_config {background-size: 24px 24px; background-position: center; background-image: url(https://github.com/2Abendsegler/GME/raw/main/images/GME_config.png)} '
+            + 'a.GME_ctoc {color: #4a4a4a; opacity: 0.8; text-decoration: none; padding-right: 4px;} '
+            + 'a.GME_ctoc svg {height: 14px; width: 14px; vertical-align: sub; transform: rotate(180deg);} '
+            + '.gme-button-refresh-labels {background-position: -320px 4px;} '
+            + '.gme-button-clear-labels {background-position: -69px 4px;} '
+            + 'span.gme-distance-container {display: none;} '
+            + 'span.gme-distance-container.show {display: inline-block;} '
+            + '#GME_loc, a.gme-button.leaflet-active {outline: none;} '
+            + '.leaflet-control-zoomwarning {top: 94px;} '
+            + '.leaflet-control-zoomwarning a {filter: progid:DXImageTransform.Microsoft.gradient(startColorStr="#BFC80000",EndColorStr="#BFC80000"); background-color: rgba(200,0,0,0.75); margin-left: -4px; background-position: -502px 2px; height: 14px; width: 14px; border-color: #b00; box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);} '
+            + '.leaflet-control-zoomwarning a:hover {background-color: rgba(230,0,0,0.75);} '
+            + '.gme-event {cursor: pointer;} '
+            + '.gme-modalDialog {position: fixed; top: 0; right: 0; bottom: 0; left: 0; background: rgba(0,0,0,0.5); z-index: 2501; opacity: .5; -webkit-transition: opacity 400ms ease-in; -moz-transition: opacity 400ms ease-in; transition: opacity 400ms ease-in; pointer-events: none; display: none;} '
+            + '.gme-modalDialog:target, .gme-modalDialog.gme-targetted {opacity: 1; display: block; pointer-events: auto;} '
+            + '.gme-modalDialog > div {position: relative; margin: 4% 12.5%; height: 30em; max-height: 75%; padding: 0 0 13px 0; border: 1px solid #000; border-radius: 10px; background: #fff; background: -moz-linear-gradient(#fff, #999); background: -webkit-linear-gradient(#fff, #999); background: -o-linear-gradient(#fff, #999);} '
+            + '.gme-modalDialog header {color: #eee; background: none #454545; font-size: 15px; text-align: center; border-top-left-radius: 10px; padding: 0.5em 0; font-weight: bold; text-shadow: none; height: auto; min-height: auto; min-width: auto !important;} '
+            + '.gme-modalDialog select {appearance: auto; background-color: inherit; background-image: none; background-repeat: no-repeat; color: inherit; border: 1px solid #9b9b9b; border-radius: 4px; width: auto; display: inline; font-size: 14px; line-height: normal; pointer-events: auto; padding: 0px 7px; height: 26px; margin-right: 7px; margin-top: 2px;} '
+            + '.gme-modalDialog label {text-transform: none; font-size: inherit; margin-top: 0px;} '
+            + '.gme-modal-content {position: absolute; top: 3.5em; left: 0.75em; right: 0.75em; bottom: 0.5em; overflow: auto;} '
+            + '.gme-modal-content > .leaflet-control-gme {position: absolute; left: 0.5em; bottom: 0.5em; top: auto;} '
+            + '.gme-modal-content a:not(.gme-button) {text-decoration-line: none; color: rgb(61, 118, 197); outline: none;} '
+            + '.gme-modal-content a:not(.gme-button):hover {text-decoration-line: underline;} '
+            + '.gme-modal-content a.gme-button {text-decoration-line: none !important; color: #424242 !important; outline: none;} '
+            + '.gme-modal-content ul {list-style-type: none; padding-left: 0;} '
+            + '.gme-close-dialog {background: #606061; color: #fff !important; line-height: 25px; position: absolute; right: -12px; text-align: center; top: -10px; width: 24px; text-decoration: none !important; font-weight: bold; -webkit-border-radius: 12px; -moz-border-radius: 12px; border-radius: 12px; -moz-box-shadow: 1px 1px 3px #000; -webkit-box-shadow: 1px 1px 3px #000; box-shadow: 1px 1px 3px #000;} '
+            + '#searchtabs li a {padding: 1em 0.5em;} '
+            + '@media print {#search {display: none !important}} '
+            + '.tab-switcher {position: relative; font-family: Arial, sans-serif; font-size: 14px;} '
+            + '.gme-tab {float: left;} '
+            + '.gme-tab {float: left; line-height: 18.2px;} '
+            + '.gme-tab-label {border-radius: 8px 8px 0 0; border: 1px solid #ccc; color: #454545; background: #ddd; display: block; position: relative; margin-left: 15px; padding: 3px 0; font-weight: bold; z-index: 0;} '
+            + '.gme-tab-label:after {border-bottom: 1px solid #ccc; border-bottom-left-radius: 8px; border-left: 1px solid #ccc; box-shadow: -2px 2px 0 #ddd; bottom: -8px; content: ""; display: inline-block; height: 8px; left: 9px; position: relative; width: 8px; z-index: 3;} '
+            + '.gme-tab-label:before {border-bottom: 1px solid #ccc; border-bottom-right-radius: 8px; border-right: 1px solid #ccc; box-shadow: 2px 2px 0 #ddd; bottom: -8px; content: ""; display: inline-block; height: 8px; left: -9px; position: relative; width: 8px; z-index: 3;} '
+            + '.gme-tab-label:hover {cursor: pointer;} '
+            + '.gme-tab-content {position: absolute; top: 25px; bottom: 3.5em; left: 0; right: 0; padding: 0.5em 0.5em 0 0.5em; background: #000; border: 1px solid #ccc; border-radius: 8px; color: #555; z-index: 1; opacity: 0; overflow: auto;} '
+            + '.gme-tab-content ul {margin: 0.5em 0;} '
+            + '.gme-tab input[type=radio] {display: none;} '
+            + '.gme-tab input[type=radio]:checked ~ .gme-tab-content {z-index: 2; opacity: 1; background: #fff; color: #454545;} '
+            + '.gme-tab input[type=radio]:checked ~ .gme-tab-label {background: #fff; color: #454545; border-bottom: 1px solid #fff; z-index: 3;} '
+            + '.gme-tab input[type=radio]:checked ~ .gme-tab-label:after {box-shadow: -2px 2px 0 #fff;} '
+            + '.gme-tab input[type=radio]:checked ~ .gme-tab-label:before {box-shadow: 2px 2px 0 #fff;} '
+            + '.gme-fieldgroup {position: relative; border: 1px solid #ccc; border-radius: 6px; background: #eee; margin: 0.5em 0 1em; padding: 0.5em;} '
+            + '.gme-fieldgroup h3 {position: absolute; line-height: 16px; top: -10px; left: 2px; padding: 0 0.5em; margin-top: 0px; margin-bottom: 0px; background: #eee; border-top: 1px solid #ccc; border-radius: 6px; z-index:1; display: inline-block; font-weight: bold; font-size: 12px;} '
+            + '.gme-fieldgroup ul {margin: 0.5em 0; padding: 0;} '
+            + '.gme-fieldgroup li {display: inline-block; margin: 0 2px 2px 0; background: #ddd; border: 1px solid #ccc; border-radius: 6px; padding: 0 0.5em; height: 28px;} '
+            + '.gme-fieldgroup label {display: inline;} '
+            + '.gme-fieldgroup input {margin: 7px 0; padding: 3px 6px 6px 6px; outline: none;} '
+            + '.gme-fieldgroup input[type="text"] {height: 17px;} '
+            + '#GME_map_custom {width: 200px; box-sizing: inherit; border: 1px solid #9b9b9b; border-radius: 4px;} '
+            + '.gme-xhair {cursor: crosshair;} '
+            + '.map-button-container {margin-right: 5em;} '
+            + '.leaflet-top.leaflet-right {z-index: 7;} '
+            + '#centerMap {margin-right: 100px;} '
+            + '#map_canvas .leaflet-control-layers-toggle, #map_canvas2 .leaflet-control-layers-toggle {background-image: url(/js/leaflet/0.5.1/images/layers.png)} '
+            + '#map_canvas label, #map_canvas2 label {text-transform: unset; display: block;} '
+            + '#map_canvas .leaflet-popup-content, #map_canvas2 .leaflet-popup-content {text-align: unset;}',
+        drag: '#cacheDetails .activity-type-icon {border: solid 1px #ccc; border-radius: 7px;} '
+            + '.moveable {cursor: move; box-shadow: 0 1px 4px rgba(102, 51, 255, 0.3);} '
     },
     env: {
         dragdrop: (document.createElement('span').draggable !== undefined),
@@ -160,99 +161,103 @@ var gmeResources = {
         xhr: (typeof GM_xmlhttpRequest === 'function') ? 'GM' : ((typeof GM === 'object' && typeof GM.xmlHttpRequest === 'function') ? 'GM4': '')
     },
     html: {
-        config: '<section class="gme-tab">\
-                <input type="radio" name="gme-tab-row" id="gme-tab-maps" checked />\
-                <label class="gme-tab-label" for="gme-tab-maps">Map display</label>\
-                <div class="gme-tab-content">\
-                    <div class="gme-fieldgroup">\
-                        <h3>Maps to show in selector widget</h3>\
-                        <ul id="GME_mapfields"></ul>\
-                        <label>Default map source: &nbsp;<select name="GME_map_default" id="GME_map_default"></select></label>\
-                    </div>\
-                </div>\
-            </section>\
-            <section class="gme-tab">\
-                <input type="radio" name="gme-tab-row" id="gme-tab-manage" />\
-                <label class="gme-tab-label" for="gme-tab-manage">Manage maps</label>\
-                <div class="gme-tab-content">\
-                    <div class="gme-fieldgroup">\
-                        <h3>Add map sources</h3>\
-                        <label>Mapsource: <input type="text" name="GME_map_custom" id="GME_map_custom">&nbsp;</label>\
-                        <div class="leaflet-control-gme"><button type="button" id="GME_custom_add" class="gme-button gme-button-wide gme-button-l gme-button-r" title="Add custom map source">Add</button> <a href="#GME_format" title="Map source format info" class="gme-button gme-button-wide gme-button-l gme-text">Mapsource format info</a><button type="button" id="GME_custom_export" title="Export custom map source JSON" class="gme-button gme-button-wide gme-button-r">Export custom maps</button></div>\
-                    </div>\
-                    <div class="gme-fieldgroup">\
-                        <h3>Remove map sources</h3>\
-                        <ul id="GME_mapfields_del"></ul>\
-                    </div>\
-                </div>\
-            </section>\
-            <section class="gme-tab">\
-                <input type="radio" name="gme-tab-row" id="gme-tab-other" />\
-                <label class="gme-tab-label" for="gme-tab-other">Other</label>\
-                <div class="gme-tab-content">\
-                    <div class="gme-fieldgroup">\
-                        <h3>Miscellaneous settings</h3>\
-                        <ul>\
-                            <li><label title="Only list unfound caches in search"><input type="checkbox" name="GME_filterFinds" id="GME_filterFinds" /> Filter finds</label></li>\
-                            <li><label><input type="checkbox" checked="checked" name="GME_osgbSearch" id="GME_osgbSearch" /> Enhance search</label></li>\
-                            <li><label title="Location widget constantly updates position"><input type="checkbox" name="GME_follow" id="GME_follow" /> FollowMe Mode</label></li>\
-                        </ul>\
-                        <label>Labels:\
-                            <select name="GME_labelStyle" id="GME_labelStyle">\
-                                <option value="names">Names</option>\
-                                <option value="codes" selected="selected">Codes</option>\
-                            </select>\
-                        </label>\
-                        <label>Scale:\
-                            <select name="GME_measure" id="GME_measure">\
-                                <option value="metric" selected="selected">Metric</option>\
-                                <option value="imperial">Imperial</option>\
-                            </select>\
-                        </label>\
-                        <label>Map brightness:\
-                            <input type="range" name="GME_brightness" id="GME_brightness" value="100" min="0" max="100" />\
-                        </label>\
-                        <br>\
-                        <label title="Number of decimals for the measured distance of a route">Route decimals:\
-                            <select name="GME_decimals" id="GME_decimals">\
-                                <option title="1 decimal up to 10 km, 0 decimals from 10 km" value="-1" selected="selected">variable</option>\
-                                <option title="0 decimals" value="0">0</option>\
-                                <option title="1 decimal" value="1">1</option>\
-                                <option title="2 decimals" value="2">2</option>\
-                                <option title="3 decimals" value="3">3</option>\
-                            </select>\
-                        </label>\
-                    </div>\
-                </div>\
-            </section>\
-            <section class="gme-tab">\
-                <input type="radio" name="gme-tab-row" id="gme-tab-about" />\
-                <label class="gme-tab-label" for="gme-tab-about">About</label>\
-                <div class="gme-tab-content">\
-                    <div class="gme-fieldgroup">\
-                        <h3>Geocaching Map Enhancements</h3><br />\
-                        <p>v<span id="GME_version"></span> &copy; 2011-2018 James Inge; 2022-2025 2Abendsegler. Geocaching Map Enhancements is licensed under the <a target="_blank" rel="noopener noreferrer" href="https://raw.githubusercontent.com/2Abendsegler/GME/main/License">MIT License</a>.<br>A short description of the tool and FAQ can be found <a target="_blank" rel="noopener noreferrer" href="https://github.com/2Abendsegler/GME/tree/main#readme">here</a>. A documentation can be found <a target="_blank" rel="noopener noreferrer" href="http://geo.inge.org.uk/gme.htm">here</a>.</p>\
-                        <p>Elevation and reverse geocoding data provided by <a target="_blank" rel="noopener noreferrer" href="http://www.geonames.org/">GeoNames</a> and used under a <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> (CC-BY) License.</p>\
-                        <p>Grid reference manipulation is adapted from code &copy; 2005-2014 Chris Veness (<a target="_blank" rel="noopener noreferrer" href="http://www.movable-type.co.uk/scripts/latlong-gridref.html">www.movable-type.co.uk/scripts/latlong-gridref.html</a>, used under a <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> (CC-BY) License.</p>\
-                        <p>Photos provided by Geograph are copyright their respective owners - hover mouse over thumbnails or click through for attribution details. They may be re-used under a <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by-sa/2.0/">Creative Commons Attribution-ShareAlike 2.0</a> (CC-BY-SA) License.</p>\
-                    </div>\
-                </div>\
-            </section>\
-            <div class="leaflet-control-gme">\
-                <a href="#" class="gme-button gme-button-wide gme-button-l gme-text" rel="back" title="Cancel">Cancel</a><button type="button" class="gme-button gme-button-wide" id="GME_default" title="Reset to defaults">Defaults</button><button type="button" class="gme-button gme-button-wide gme-button-r" id="GME_set" title="Confirm settings">Save</button>\
-            </div>',
-        customInfo: '<p>Custom mapsources can be added by supplying entering a <a rel="external" href="http://www.json.org/">JSON</a> configuration string that tells GME what to call the map, where to find it, and how it is set up. e.g.</p>\
-            <p><code>{"alt":"OS NPE (GB only)","tileUrl":"https://ooc.openstreetmap.org/npe/{z}/{x}/{y}.png", "minZoom":6, "maxZoom": 15, "attribution": "OpenStreetMap NPE"}</code></p>\
-            <p>The <code>"alt"</code> and <code>"tileUrl"</code> parameters are mandatory. <code>"tileUrl"</code> can contain {x}, {y} and {z} for Google-style coordinate systems (also works with TMS systems like Eniro, but needs the <code>"scheme":"tms"</code> parameter), or {q} for Bing-style quadkeys. GME can also connect with WMS servers, in which case a <code>"layers"</code> parameter is required.</p>\
-            <p>The other parameters are the same as those used by the <a rel="external" href="http://leafletjs.com/reference-versions.html">Leaflet API</a>, with the addition of a <code>"overlay":true</code> option, that makes the mapsource appear as a selectable overlay.</p>\
-            <ul><li><a rel="external" href="http://geo.inge.org.uk/gme_config.htm">Detailed documentation</a></li><li><a rel="external" href="http://geo.inge.org.uk/gme_maps.htm">More mapsource examples</a></li></ul>',
-        search: '<input type="text" placeholder="Address, coordinates, GC-code, keyword, etc." id="SearchBox_Text" title="Jump to a specific zoom level by typing zoom then a number. Zoom 1 shows the whole world, maxiumum zoom is normally 18-22. To search using a British National Grid reference, just type it in the search box and hit the button! You can use 2, 4, 6, 8 or 10-digit grid refs with the 2-letter prefix but no spaces in the number (e.g. SU12344225) or absolute grid refs with a comma but no prefix (e.g. 439668,1175316)." />\
-            <button id="SearchBox_OS" title="Search">Search</button>\
-            <div class="GME_search_results hidden">\
-                <h3 class="GME_search_heading">GeoNames search results</h3>\
-                <ul class="GME_search_list"></ul>\
-                <p>Or try the <a href="#" class="GME_link_GSSearch">Geocaching.com search</a>\
-            </div>'
+        config: ''
+            + '<section class="gme-tab"> '
+            + '    <input type="radio" name="gme-tab-row" id="gme-tab-maps" checked /> '
+            + '    <label class="gme-tab-label" for="gme-tab-maps">Map display</label> '
+            + '    <div class="gme-tab-content"> '
+            + '        <div class="gme-fieldgroup"> '
+            + '            <h3>Maps to show in selector widget</h3> '
+            + '            <ul id="GME_mapfields"></ul> '
+            + '            <label>Default map source: &nbsp;<select name="GME_map_default" id="GME_map_default"></select></label> '
+            + '        </div> '
+            + '    </div> '
+            + '</section> '
+            + '<section class="gme-tab"> '
+            + '    <input type="radio" name="gme-tab-row" id="gme-tab-manage" /> '
+            + '    <label class="gme-tab-label" for="gme-tab-manage">Manage maps</label> '
+            + '    <div class="gme-tab-content"> '
+            + '        <div class="gme-fieldgroup"> '
+            + '            <h3>Add map sources</h3> '
+            + '            <label>Mapsource: <input type="text" name="GME_map_custom" id="GME_map_custom">&nbsp;</label> '
+            + '            <div class="leaflet-control-gme"><button type="button" id="GME_custom_add" class="gme-button gme-button-wide gme-button-l gme-button-r" title="Add custom map source">Add</button> <a href="#GME_format" title="Map source format info" class="gme-button gme-button-wide gme-button-l gme-text">Mapsource format info</a><button type="button" id="GME_custom_export" title="Export custom map source JSON" class="gme-button gme-button-wide gme-button-r">Export custom maps</button></div> '
+            + '        </div> '
+            + '        <div class="gme-fieldgroup"> '
+            + '            <h3>Remove map sources</h3> '
+            + '            <ul id="GME_mapfields_del"></ul> '
+            + '        </div> '
+            + '    </div> '
+            + '</section> '
+            + '<section class="gme-tab"> '
+            + '    <input type="radio" name="gme-tab-row" id="gme-tab-other" /> '
+            + '    <label class="gme-tab-label" for="gme-tab-other">Other</label> '
+            + '    <div class="gme-tab-content"> '
+            + '        <div class="gme-fieldgroup"> '
+            + '            <h3>Miscellaneous settings</h3> '
+            + '            <ul> '
+            + '                <li><label title="Only list unfound caches in search"><input type="checkbox" name="GME_filterFinds" id="GME_filterFinds" /> Filter finds</label></li> '
+            + '                <li><label><input type="checkbox" checked="checked" name="GME_osgbSearch" id="GME_osgbSearch" /> Enhance search</label></li> '
+            + '                <li><label title="Location widget constantly updates position"><input type="checkbox" name="GME_follow" id="GME_follow" /> FollowMe Mode</label></li> '
+            + '            </ul> '
+            + '            <label>Labels: '
+            + '                <select name="GME_labelStyle" id="GME_labelStyle"> '
+            + '                    <option value="names">Names</option> '
+            + '                    <option value="codes" selected="selected">Codes</option> '
+            + '                </select> '
+            + '            </label> '
+            + '            <label>Scale: '
+            + '                <select name="GME_measure" id="GME_measure"> '
+            + '                    <option value="metric" selected="selected">Metric</option> '
+            + '                    <option value="imperial">Imperial</option> '
+            + '                </select> '
+            + '            </label> '
+            + '            <label>Map brightness: '
+            + '                <input type="range" name="GME_brightness" id="GME_brightness" value="100" min="0" max="100" /> '
+            + '            </label> '
+            + '            <br> '
+            + '            <label title="Number of decimals for the measured distance of a route">Route decimals: '
+            + '                <select name="GME_decimals" id="GME_decimals"> '
+            + '                    <option title="1 decimal up to 10 km, 0 decimals from 10 km" value="-1" selected="selected">variable</option> '
+            + '                    <option title="0 decimals" value="0">0</option> '
+            + '                    <option title="1 decimal" value="1">1</option> '
+            + '                    <option title="2 decimals" value="2">2</option> '
+            + '                    <option title="3 decimals" value="3">3</option> '
+            + '                </select> '
+            + '            </label> '
+            + '        </div> '
+            + '    </div> '
+            + '</section> '
+            + '<section class="gme-tab"> '
+            + '    <input type="radio" name="gme-tab-row" id="gme-tab-about" /> '
+            + '    <label class="gme-tab-label" for="gme-tab-about">About</label> '
+            + '    <div class="gme-tab-content"> '
+            + '        <div class="gme-fieldgroup"> '
+            + '            <h3>Geocaching Map Enhancements</h3><br /> '
+            + '            <p>v<span id="GME_version"></span> &copy; 2022-2026 2Abendsegler, (2011-2018 James Inge). Geocaching Map Enhancements is licensed under the <a target="_blank" rel="noopener noreferrer" href="https://raw.githubusercontent.com/2Abendsegler/GME/main/License">MIT License</a>.<br>A short description and FAQ can be found <a target="_blank" rel="noopener noreferrer" href="https://github.com/2Abendsegler/GME/tree/main#readme">here</a>. The changelog can be found <a target="_blank" rel="noopener noreferrer" href="https://github.com/2Abendsegler/GME/blob/main/docu/changelog.md#readme">here</a>. An older documentation can be found <a target="_blank" rel="noopener noreferrer" href="http://geo.inge.org.uk/gme.htm">here</a>.</p> '
+            + '            <p>Elevation and reverse geocoding data provided by <a target="_blank" rel="noopener noreferrer" href="http://www.geonames.org/">GeoNames</a> and used under a <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> (CC-BY) License.</p> '
+            + '            <p>Grid reference manipulation is adapted from code &copy; 2005-2014 Chris Veness (<a target="_blank" rel="noopener noreferrer" href="http://www.movable-type.co.uk/scripts/latlong-gridref.html">www.movable-type.co.uk/scripts/latlong-gridref.html</a>, used under a <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a> (CC-BY) License.</p> '
+            + '            <p>Photos provided by Geograph are copyright their respective owners - hover mouse over thumbnails or click through for attribution details. They may be re-used under a <a target="_blank" rel="noopener noreferrer" href="https://creativecommons.org/licenses/by-sa/2.0/">Creative Commons Attribution-ShareAlike 2.0</a> (CC-BY-SA) License.</p> '
+            + '        </div> '
+            + '    </div> '
+            + '</section> '
+            + '<div class="leaflet-control-gme"> '
+            + '    <a href="#" class="gme-button gme-button-wide gme-button-l gme-text" rel="back" title="Cancel">Cancel</a><button type="button" class="gme-button gme-button-wide" id="GME_default" title="Reset to defaults">Defaults</button><button type="button" class="gme-button gme-button-wide gme-button-r" id="GME_set" title="Confirm settings">Save</button> '
+            + '</div>',
+        customInfo: ''
+            + '<p>Custom mapsources can be added by supplying entering a <a rel="external" href="http://www.json.org/">JSON</a> configuration string that tells GME what to call the map, where to find it, and how it is set up. e.g.</p> '
+            + '<p><code>{"alt":"OS NPE (GB only)","tileUrl":"https://ooc.openstreetmap.org/npe/{z}/{x}/{y}.png", "minZoom":6, "maxZoom": 15, "attribution": "OpenStreetMap NPE"}</code></p> '
+            + '<p>The <code>"alt"</code> and <code>"tileUrl"</code> parameters are mandatory. <code>"tileUrl"</code> can contain {x}, {y} and {z} for Google-style coordinate systems (also works with TMS systems like Eniro, but needs the <code>"scheme":"tms"</code> parameter), or {q} for Bing-style quadkeys. GME can also connect with WMS servers, in which case a <code>"layers"</code> parameter is required.</p> '
+            + '<p>The other parameters are the same as those used by the <a rel="external" href="http://leafletjs.com/reference-versions.html">Leaflet API</a>, with the addition of a <code>"overlay":true</code> option, that makes the mapsource appear as a selectable overlay.</p> '
+            + '<ul><li><a rel="external" href="http://geo.inge.org.uk/gme_config.htm">Detailed documentation</a></li><li><a rel="external" href="http://geo.inge.org.uk/gme_maps.htm">More mapsource examples</a></li></ul>',
+        search: ''
+            + '<input type="text" placeholder="Address, Coordinates, GC Code, Zoom, Grif Ref" id="SearchBox_Text" class="h-10 box-border bg-white border border-solid border-green-500 rounded-tr-none rounded-br-none border-r-0 m-0 py-2.5 px-3 w-full"/> '
+            + '<button id="SearchBox_OS" title="Search" class="h-10 box-border bg-green-500 bg-[url(\'/images/icons/search.png\')] bg-no-repeat bg-center border-none rounded-l-none rounded-r-[3px] text-transparent cursor-pointer absolute top-0 right-0 indent-[9999px] overflow-clip w-14 hover:bg-legacy-sea active:bg-legacy-sea focus:bg-legacy-sea">Search</button> '
+            + '<div class="GME_search_results hidden"> '
+            + '    <h3 class="GME_search_heading">GeoNames search results</h3> '
+            + '    <ul class="GME_search_list"></ul> '
+            + '    <p>Or try the <a class="GME_link_GSSearch" href="#">Geocaching.com</a> search.</p> '
+            + '</div> '
+            + '<div class="GME_search_info"></div>'
     },
     script: {
         common: function() {
@@ -331,6 +336,9 @@ var gmeResources = {
                                         function checkForSettingsNew(waitCount) {
                                             if ($('ul.menu-user')[0] && !$('#gme-config-link-new')[0]) {
                                                 $('ul.menu-user').append("<li class='li-settings'><a class='icon-settings' id='gme-config-link-new' href='#GME_config' title='Configure Geocaching Map Enhancements extension'>Geocaching Map Enhancements</a></li>");
+                                                if ($('#logout-form button')[0]) {
+                                                    $('#gme-config-link-new').addClass($('#logout-form button').attr('class'));
+                                                }
                                             } else {waitCount++; if (waitCount <= 50) setTimeout(function(){checkForSettingsNew(waitCount);}, 100);}
                                         }
                                         checkForSettingsNew(0);
@@ -542,7 +550,7 @@ var gmeResources = {
                             console.error("GME: Error processing JSON callback " + callback + ": " + e);
                         }
                     } else {
-                        console.erro("GME: Unexpected request to JSON callback handler: Couldn't find callback function " + callback);
+                        console.error("GME: Unexpected request to JSON callback handler: Couldn't find callback function " + callback);
                     }
                     return false;
                 });
@@ -718,6 +726,9 @@ var gmeResources = {
                 }
             }
             function exportCustom() {
+                if (!$('#gme_fancybox')[0] && $('head')[0] && document.location.pathname.match(/^\/map/)) {
+                    $('head').append('<style id ="gme_fancybox" type="text/css">#fancybox-overlay, #fancybox-wrap {z-index: 2502;}</style>');
+                }
                 $.fancybox($("<p/>").text(JSON.stringify(that.parameters.maps)).html());
             }
             function setDefault() {
@@ -1023,6 +1034,7 @@ var gmeResources = {
                     e.preventDefault();
                     var i, data, dt = e.originalEvent.dataTransfer, file, files = dt.files, pts, reader;
                     try {
+                        // Hier kommen die Drag Daten vom Cache Typ an. Vielleicht auch noch andere Dinge.
                         data = dt.getData("application/gme-cache-coords");
                         if (data) {
                             console.info("GME: Received GME data.");
@@ -1269,10 +1281,16 @@ var gmeResources = {
                     }
                 };
                 $("#searchtabs ul").append("<li id='gme_caches_button'><a href='#gme_caches' title='GME Cache Label List' id='gme_caches_link'>GME</a></li>");
-                $("#searchtabs li").css("width", 100 / $("#searchtabs li").length + "%");
+                for (var i = 0; i < $("#searchtabs li").length; i++) {
+                    $("#searchtabs li")[i].style.setProperty("width", 100 / $("#searchtabs li").length + "%", "important");
+                }
                 $("#pqlink").html("PQs");
-                $("#clistButton").html("GCVote");
-                document.getElementById("pqlink").innerHTML = "PQs";
+                if ($("#pqlink_button")[0] && $("#pqlink")[0]) {
+                    $("#pqlink")[0].style.setProperty("border-top-right-radius", "0px", "important");
+                    $("#pqlink")[0].style.setProperty("border-bottom-right-radius", "0px", "important");
+                    $("#gme_caches_button").addClass($('#pqlink_button').attr('class'));
+                    $("#gme_caches_link").addClass($('#pqlink').attr('class'));
+                }
                 $(div).append("<div id='gme_caches'>\
                     <div class='leaflet-control-gme'>\
                         <a title='Refresh cache labels' class='gme-event gme-button-wide gme-button-refresh-labels gme-button gme-button-l gme-text-small' data-gme-action='refresh'>Refresh</a><a title='Empty cache list and remove labels from map' class='gme-event gme-button-wide gme-button gme-button-clear-labels gme-text-small' data-gme-action='clear'>Clear</a><a class='gme-event gme-button gme-button-wide gme-button-labels-show gme-text-small' data-gme-action='show'>Show labels</a><a class='gme-event gme-button gme-button-r gme-button-wide gme-button-labels-auto gme-text-small' data-gme-action='auto'>Auto update</a>\
@@ -1304,9 +1322,9 @@ var gmeResources = {
                 }
                 $("#map_canvas").replaceWith("<div style=\'width: 325px; height: 325px; position: relative;\' id=\'map_canvas2\'></div>");
                 if (gmeConfig.env.dragdrop) {
-                    $("#cacheDetails .cacheImage").hover(function(e) {$("#cacheDetails .cacheImage").addClass("moveable");},function(e) {$("#cacheDetails .cacheImage").removeClass("moveable");});
-                    $("#cacheDetails .cacheImage").attr("draggable","true").on("dragstart", that.dragStart);
-                    $("#cacheDetails .cacheImage a").removeAttr("href");
+                    $("#cacheDetails .activity-type-icon").hover(function(e) {$("#cacheDetails .activity-type-icon").addClass("moveable");},function(e) {$("#cacheDetails .activity-type-icon").removeClass("moveable");});
+                    $("#cacheDetails .activity-type-icon").attr("draggable","true").on("dragstart", that.dragStart);
+                    $("#cacheDetails .cacheDetailsTitle a").removeAttr("href");
                 }
                 window.GME_Map = new L.Map("map_canvas2",{center: new L.LatLng(mapLatLng.lat, mapLatLng.lng), zoom:14});
                 GME_Map.addControl(new L.control.scale());
@@ -1365,7 +1383,10 @@ var gmeResources = {
                 if (gmeConfig.parameters.osgbSearch) {
                     $("#SearchBox_OS").on("click keypress", goSearch);
                     $(".SearchBox").on("keydown", goSearch);
-                    $("#search p")[0].innerHTML = "Search by <span style='cursor:help;' title='Enhanced by Geonames'>Address</span>, Coordinates, GC-code,<br/><span style='cursor:help;' title='Jump to a specific zoom level by typing zoom then a number. Zoom 1 shows the whole world, maxiumum zoom is normally 18-22.'>zoom</span> or <span style='cursor:help;' title='To search using a British National Grid reference, just type it in the search box and hit the button! You can use 2, 4, 6, 8 or 10-digit grid refs with the 2-letter prefix but no spaces in the number (e.g. SU12344225) or absolute grid refs with a comma but no prefix (e.g. 439668,1175316).'>Grid Ref</span>";
+                    var titleZoom = 'Search by Zoom: Jump to a specific zoom level by typing zoom then a number. Zoom 1 shows the whole world, maxiumum zoom is normally 18-22.';
+                    var titleGridRef = 'Search by Grid Ref: To search using a British National Grid reference, just type it in the search box and hit the button. You can use 2, 4, 6, 8 or 10-digit grid refs with the 2-letter prefix but no spaces in the number (e.g. SU12344225) or absolute grid refs with a comma but no prefix (e.g. 439668,1175316).';
+                    var tag = '<span style="cursor: help; font-style: italic;"';
+                    $('.GME_search_info')[0].innerHTML = '<span>Search by '+tag+' title="Enhanced by Geonames">Address</span>, Coordinates, GC Code, '+tag+' title="'+titleZoom+'">Zoom</span> or '+tag+' title="'+titleGridRef+'">Grid Ref</span>.</span>';
                 }
                 if (window.pnlOpen === false) {
                     $(".leaflet-control-toolbar, .groundspeak-control-findmylocation, .leaflet-control-scale, .gme-left").css("left", "30px");
@@ -2369,6 +2390,7 @@ var gmeResources = {
                     var gr, m, call, callbackPrefix = "GME_search_callback", coords = false, marker, that = this;
                     function searchGS(searchVal) {
                         $(".GME_search_results").addClass("hidden");
+                        $(".GME_search_info").removeClass("hidden");
                         $.getJSON("/api/geocode",{q:searchVal},function(a) {
                             if (a.status === "success") {
                                 that._map.panTo(new L.LatLng(a.data.lat, a.data.lng));
@@ -2385,9 +2407,11 @@ var gmeResources = {
                                 $(".GME_search_list").append("<li><a class='gme-event' data-gme-action='panTo' data-gme-coords='" + json.geonames[i].lat + "," + json.geonames[i].lng + "'>" + json.geonames[i].name + ", " + json.geonames[i].adminName1 + ", " + json.geonames[i].countryCode + "</a></li>");
                             }
                             $(".GME_search_results").removeClass("hidden");
-                            $(".GME_search_results.ui-collapsible-collapsed a.ui-collapsible-heading-toggle").click();
-                            $(".GME_link_GSSearch").off("click");
-                            $(".GME_link_GSSearch").click(function() {searchGS(searchVal);});
+                            $(".GME_search_info").addClass("hidden");
+                            $(".GME_link_GSSearch").click(function() {
+                                $('#search')[0].scrollIntoView({ block: "start" });
+                                searchGS(searchVal);
+                            });
                             that._map.panTo(new L.LatLng(json.geonames[0].lat, json.geonames[0].lng));
                         } else {
                             searchGS(searchVal);
@@ -2517,7 +2541,7 @@ var gmeResources = {
 
             function GME_load_widget(map) {
                 var control = new L.GME_Widget().addTo(map);
-                $(control._container).addClass("gme-left").css("top", "20px");
+                $(control._container).addClass("gme-left").css("top", "30px");
                 $(".groundspeak-control-findmylocation").remove();
                 if (L.GME_FollowMyLocationControl) {
                     map.addControl(new L.GME_FollowMyLocationControl());
@@ -2708,11 +2732,14 @@ function checkAlreadyRunning(waitCount) {
             }
         }
         if (alreadyRunning) {
-            var mess = 'Geocaching Map Enhancements v' + gmeResources.parameters.version + ' aborting.\nMessage: GME already running' + alreadyRunning + '.';
-            console.error(mess);
-            alert(mess);
+            alreadyRunningError = true;
+            var errMess = 'Geocaching Map Enhancements v' + gmeResources.parameters.version + ' aborting.\nMessage: GME already running' + alreadyRunning + '.';
+            console.error(errMess);
+            var userMess = 'Geocaching Map Enhancements v' + gmeResources.parameters.version + ' aborting:\n\nThe script is already running' + alreadyRunning + '. Please make sure that it runs only once.\n\nDo you want to see tips on how this could happen and what you can do about it?';
+            var url = 'https://github.com/2Abendsegler/GME/blob/main/docu/faq.md#2-en';
+            if (window.confirm(userMess)) window.open(url, '_blank');
             return;
-        } else {waitCount++; if (waitCount <= 100) setTimeout(function(){checkAlreadyRunning(waitCount);}, 100);}
+        } else {waitCount++; if (waitCount <= 250) setTimeout(function(){checkAlreadyRunning(waitCount);}, 20);}
     } catch(e) {console.error("GME: Check GME already running run into error (function checkAlreadyRunning). " + e);}
 }
 
@@ -2720,7 +2747,6 @@ function checkAlreadyRunning(waitCount) {
 function checkIsUpgraded() {
     (async () => {
         try {
-            var versionMsg = gmeResources.parameters.versionMsg;
             if (gmeResources.env.xhr === 'GM4') {
                 var scriptVersion = GM.info.script.version;
                 var last_version = await GM.getValue('last_version', '');
@@ -2733,22 +2759,27 @@ function checkIsUpgraded() {
                 var counter = document.createElement('div');
                 counter.innerHTML = ' <img src="https://s11.flagcounter.com/count2/0lCZ/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
 //--> $$003
-                counter.innerHTML += '<img src="https://s11.flagcounter.com/count2/AN6U/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
+                counter.innerHTML += '<img src="https://s11.flagcounter.com/count2/bHF1/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
 //<-- $$003
                 counter.setAttribute('style', 'display: none');
                 document.getElementsByTagName('body')[0].appendChild(counter);
                 // Store new last version.
                 if (gmeResources.env.xhr === 'GM4') {
-                    GM.setValue('last_version', scriptVersion);
+                    await GM.setValue('last_version', scriptVersion);
                 } else {
                     GM_setValue('last_version', scriptVersion);
                 }
                 // Set update message.
-                if (last_version == '') {
-                    alert("Geocaching Map Enhancements was installed with version " + scriptVersion + versionMsg);
+                var url = 'https://github.com/2Abendsegler/GME/blob/main/docu/changelog.md#readme';
+                var text = '';
+                if (last_version) {
+                    text += "Geocaching Map Enhancements has been updated to version " + scriptVersion;
                 } else {
-                    alert("Geocaching Map Enhancements has been updated to version " + scriptVersion + versionMsg);
+                    text += "Geocaching Map Enhancements was installed with version " + scriptVersion;
                 }
+                console.log('GME: ' + text);
+                text += ".\n\nDo you want to open the changelog in a new tab, to have a quick look at changes and new features?\n";
+                if (window.confirm(text)) window.open(url, '_blank');
             }
         } catch(e) {console.error("GME: Check if it is upgraded run into error (function checkIsUpgraded). " + e);}
     })();
@@ -2771,7 +2802,7 @@ function checkForUpgrade() {
                 // Wait 24 hours for a new check for upgrade.
                 time += 24 * 60 * 60 * 1000;
                 if (gmeResources.env.xhr === 'GM4') {
-                    GM.setValue('update_next_check', time.toString());
+                    await GM.setValue('update_next_check', time.toString());
                 } else {
                     GM_setValue('update_next_check', time.toString());
                 }
@@ -2838,12 +2869,6 @@ function startingWithPageRuns() {
                 }
                 publishVersion.setAttribute('data-gme-version', scriptVersion);
                 document.getElementsByTagName('head')[0].appendChild(publishVersion);
-                // Full check GME already running.
-                checkAlreadyRunning(0);
-                // Check is upgraded.
-                checkIsUpgraded();
-                // Check for upgrade.
-                checkForUpgrade();
                 break;
             }
         }
@@ -2880,7 +2905,6 @@ function startingWithStorage() {
                                 }
                             }
                             storedParams.version = gmeResources.parameters.version;
-                            storedParams.versionMsg = gmeResources.parameters.versionMsg;
                             localStorage.setItem("GME_parameters", JSON.stringify(storedParams));
                         }
                         if (typeof storedParams.maps === "string") {
@@ -3002,6 +3026,12 @@ function startingWithInsertScript() {
                 break;
             case "maps":
                 // On a Geocaching Maps page.
+                // Check if leaflet map environment is active.
+                if (!document.getElementsByClassName('leaflet-container')[0]) {
+                    if (document.getElementsByClassName('Google')[0]) console.error("GME: The Google Maps environment is active. GME requires the leaflet map environment. Stop running.");
+                    else  console.error("GME: Couldn't find leaflet map environment. Stop running");
+                    return;
+                }
                 // Check for click-thru cache data in URI.
                 var pop = document.location.href.match(/pop=([A-Za-z0-9+\/=]+)[\?&]?/);
                 if (pop && pop.length === 2) {
@@ -3016,7 +3046,21 @@ function startingWithInsertScript() {
                 if (gmeResources.parameters.osgbSearch) {
                     targets = document.getElementsByClassName("SearchBox");
                     if (targets[0]) {
-                        targets[0].innerHTML = gmeResources.html.search;
+                        if (gmeResources.env.xhr === 'GM4') {
+                            targets[0].innerHTML = gmeResources.html.search;
+                        } else {
+                            var newSearch = $(gmeResources.html.search);
+                            for (var i = 0; i < newSearch.length; i++) {
+                                if (newSearch[i].id == 'SearchBox_Text' && $(targets).find('#SearchBox_Text').attr('class')) {
+                                    $(newSearch[i]).addClass($(targets).find('#SearchBox_Text').attr('class'));
+                                }
+                                if (newSearch[i].id == 'SearchBox_OS' && $(targets).find('#SearchBox_Button').attr('class')) {
+                                    $(newSearch[i]).addClass($(targets).find('#SearchBox_Button').attr('class'));
+                                }
+                            }
+                            $(targets).children().remove();
+                            $(targets).append(newSearch);
+                        }
                     }
                 }
                 buildScript("GME_page_map", "common", gmeResources.env.storage ? "config" : "", "cssTransitionsFix", "map", "widget", "labels", "drop", gmeResources.parameters.osgbSearch ? "osgb" : "", "loadMap");
@@ -3041,10 +3085,19 @@ function checkLoggedInAndStarting(waitCount) {
         // 'user-menu' ist immer da, enthält gegebenenfalls die Buttons zum Anloggen.
         if (document.getElementsByClassName('user-menu')[0] && document.getElementsByClassName('player-profile')[0]) {
             startingWithPageRuns();
-            startingWithStorage();
-            startingWithOthers();
-            startingWithInsertScript();
-        } else {waitCount++; if (waitCount <= 100) setTimeout(function(){checkLoggedInAndStarting(waitCount);}, 100);}
+            setTimeout(function() {
+                if (!alreadyRunningError) {
+                    // Check is upgraded.
+                    checkIsUpgraded();
+                    // Check for upgrade.
+                    checkForUpgrade();
+                    // Further starting steps.
+                    startingWithStorage();
+                    startingWithOthers();
+                    startingWithInsertScript();
+                }
+            }, 250);
+        } else {waitCount++; if (waitCount <= 250) setTimeout(function(){checkLoggedInAndStarting(waitCount);}, 20);}
     } catch(e) {console.error("GME: Check logged in run into error (function checkLoggedInAndStarting). " + e);}
 }
 
@@ -3058,6 +3111,10 @@ if (!(typeof JSON === 'object' && typeof JSON.parse === 'function')) {
 
 // Trixie treats jQuery Mobile dialogs as new page loads, resetting GME's functions.
 if (window.GME !== undefined) {return;}
+
+// Full check GME already running.
+var alreadyRunningError = false;
+checkAlreadyRunning(0);
 
 // Prüfen ob angelogged und starten der Verarbeitung.
 checkLoggedInAndStarting(0);
