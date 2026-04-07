@@ -11,65 +11,35 @@
 <ul>
 	<li>
 		<strong>Note:</strong> [Docu] FAQ 6. What should be considered when using the GC little helper II (GClh) script simultaneously?. [<a href="https://github.com/2Abendsegler/GME/issues/65" title="Issue 65">65</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
-		To use map layers from GME, you must disable map layer processing in GClh. Help can be found in <a href="https://github.com/2Abendsegler/GME/blob/main/docu/faq.md#6-en" title="FAQ 6. on GitHub">FAQ 6</a>.<br><br>
-		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/74" title="Issue 74">issue 74</a>.<br><br>
+		To use map layers from GME, you must disable map layer processing in GClh. Further information can be found in <a href="https://github.com/2Abendsegler/GME/blob/main/docu/faq.md#6-en" title="FAQ 6. on GitHub">FAQ 6</a>.<br><br>
 	</li>
 	<li>
 		<strong>New:</strong> [Browse Map] Improve the enhanced search box. [<a href="https://github.com/2Abendsegler/GME/issues/68" title="Issue 68">68</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
-		...<br>
+		With the enhance search feature you can search for an Address, a GC Code, for Coordinates and Zoom or Grid Ref.<br>
+		<img src="../images/0.8.2.2As.10/Screen02.jpg" alt="Screen02.jpg"><br>
+		<img src="../images/0.8.2.2As.10/Screen03.jpg" alt="Screen03.jpg"><br><br>
+		This feature is not new. If you want to use this feature, maybe you have to activate.<br>
 		<img src="../images/0.8.2.2As.10/Screen01.jpg" alt="Screen01.jpg"><br><br>
-		If you want to use this feature, you have to activate it.<br><br>
-		This parameter is not new. If you want to use this feature, maybe you have to activate it.<br><br>
-		If you want to use this feature, you may need to do some customization.<br><br>
-		If you want to optimize the settings, you may need to change something.<br><br>
-		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/68" title="Issue 68">issue 68</a>.<br><br>
-		Further examples can be found in <a href="https://github.com/2Abendsegler/GME/issues/68" title="Issue 68">issue 68</a>.<br><br>
-		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/68" title="Issue 68">issue 68</a>.<br><br>
 	</li>
 	<li>
 		<strong>New:</strong> [Browse Map] Improve the alignment of the icons on the left side. [<a href="https://github.com/2Abendsegler/GME/issues/69" title="Issue 69">69</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
-		...<br>
-		<img src="../images/0.8.2.2As.10/Screen01.jpg" alt="Screen01.jpg"><br><br>
-		
-		If you want to use this feature, you have to activate it.<br><br>
-		This parameter is not new. If you want to use this feature, maybe you have to activate it.<br><br>
-		If you want to use this feature, you may need to do some customization.<br><br>
-		If you want to optimize the settings, you may need to change something.<br><br>
-		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/69" title="Issue 69">issue 69</a>.<br><br>
-		Further examples can be found in <a href="https://github.com/2Abendsegler/GME/issues/69" title="Issue 69">issue 69</a>.<br><br>
 		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/69" title="Issue 69">issue 69</a>.<br><br>
 	</li>
 	<li>
 		<strong>New:</strong> [Global] Improve the alignment of the settings. [<a href="https://github.com/2Abendsegler/GME/issues/74" title="Issue 74">74</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
-		...<br>
-		<img src="../images/0.8.2.2As.10/Screen01.jpg" alt="Screen01.jpg"><br><br>
-		
-		If you want to use this feature, you have to activate it.<br><br>
-		This parameter is not new. If you want to use this feature, maybe you have to activate it.<br><br>
-		If you want to use this feature, you may need to do some customization.<br><br>
-		If you want to optimize the settings, you may need to change something.<br><br>
-		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/74" title="Issue 74">issue 74</a>.<br><br>
-		Further examples can be found in <a href="https://github.com/2Abendsegler/GME/issues/74" title="Issue 74">issue 74</a>.<br><br>
 		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/74" title="Issue 74">issue 74</a>.<br><br>
 	</li>
 	<li>
 		<strong>New:</strong> [Global] Improve notification of version changes. [<a href="https://github.com/2Abendsegler/GME/issues/73" title="Issue 73">73</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
-		...<br>
-		<img src="../images/0.8.2.2As.10/Screen01.jpg" alt="Screen01.jpg"><br><br>
-		
-		If you want to use this feature, you have to activate it.<br><br>
-		This parameter is not new. If you want to use this feature, maybe you have to activate it.<br><br>
-		If you want to use this feature, you may need to do some customization.<br><br>
-		If you want to optimize the settings, you may need to change something.<br><br>
-		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/73" title="Issue 73">issue 73</a>.<br><br>
-		Further examples can be found in <a href="https://github.com/2Abendsegler/GME/issues/73" title="Issue 73">issue 73</a>.<br><br>
-		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/73" title="Issue 73">issue 73</a>.<br><br>
-	</li>
-	<li>
-		<strong>Fix:</strong> [Browse Map] Reintegrate GME button into the sidebar. [<a href="https://github.com/2Abendsegler/GME/issues/67" title="Issue 67">67</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+		<img src="../images/0.8.2.2As.10/Screen04.jpg" alt="Screen04.jpg"><br><br>
 	</li>
 	<li>
 		<strong>Fix:</strong> [Listing, Browse Map] Drag cache type with waypoints and drop to map doesn't work. [<a href="https://github.com/2Abendsegler/GME/issues/63" title="Issue 63">63</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/63" title="Issue 63">issue 63</a>.<br><br>
+	</li>
+	<li>
+		<strong>Fix:</strong> [Browse Map] Reintegrate GME button into the sidebar. [<a href="https://github.com/2Abendsegler/GME/issues/67" title="Issue 67">67</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/67" title="Issue 67">issue 67</a>.<br><br>
 	</li>
 	<li>
 		<strong>Fix:</strong> [Browse Map] Settings disappear behind the page header of the GClh. [<a href="https://github.com/2Abendsegler/GME/issues/70" title="Issue 70">70</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
@@ -82,6 +52,7 @@
 	</li>
 	<li>
 		<strong>Fix:</strong> [Global] Reorganization of map layers that no longer work. [<a href="https://github.com/2Abendsegler/GME/issues/77" title="Issue 77">77</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+		Further information can be found in <a href="https://github.com/2Abendsegler/GME/issues/77" title="Issue 77">issue 77</a>.<br><br>
 	</li>
 	<li>
 		<strong>Fix:</strong> [Global] Further problems with multiple executions of GME. [<a href="https://github.com/2Abendsegler/GME/issues/71" title="Issue 71">71</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
