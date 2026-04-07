@@ -10,7 +10,7 @@
 &nbsp; &nbsp; <img src="../images/flag_ua.png" alt="" title="Stand with Ukraine"><br>
 <ul>
 	<li>
-		<strong>Note:</strong> [Docu] FAQ 6. What should be considered when using the GC little helper II (GClh) script simultaneously?. [<a href="https://github.com/2Abendsegler/GME/issues/65" title="Issue 65">65</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+		<strong>Note:</strong> [Docu] FAQ 6. What should be considered when using the GC little helper II (GClh) script simultaneously? [<a href="https://github.com/2Abendsegler/GME/issues/65" title="Issue 65">65</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
 		To use map layers from GME, you must disable map layer processing in GClh. Further information can be found in <a href="https://github.com/2Abendsegler/GME/blob/main/docu/faq.md#6-en" title="FAQ 6. on GitHub">FAQ 6</a>.<br><br>
 	</li>
 	<li>
