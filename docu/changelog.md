@@ -18,7 +18,6 @@
 		<strong>New:</strong> [Browse Map] Improve the enhanced search box. [<a href="https://github.com/2Abendsegler/GME/issues/68" title="Issue 68">68</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
 		...<br>
 		<img src="../images/0.8.2.2As.10/Screen01.jpg" alt="Screen01.jpg"><br><br>
-		
 		If you want to use this feature, you have to activate it.<br><br>
 		This parameter is not new. If you want to use this feature, maybe you have to activate it.<br><br>
 		If you want to use this feature, you may need to do some customization.<br><br>
