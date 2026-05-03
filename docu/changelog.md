@@ -12,7 +12,7 @@
 <ul>
 	<li>
 		<strong>Fix:</strong> [Listing] Map layer button on the preview map not visible. [<a href="https://github.com/2Abendsegler/GME/issues/84" title="Issue 84">84</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
-		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/84" title="Issue 84">84</a>.<br>
+		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/84" title="Issue 84">84</a>.<br><br>
 	</li>
 	<li>
 		<strong>Fix:</strong> [Listing] Prevent the preview map border from being removed. [<a href="https://github.com/2Abendsegler/GME/issues/86" title="Issue 86">86</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
