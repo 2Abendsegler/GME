@@ -1,9 +1,27 @@
+<a href="#v0822As11" title="GME version 0.8.2.2As.11 (03.05.2026)">v0.8.2.2As.11</a> &nbsp;
 <a href="#v0822As10" title="GME version 0.8.2.2As.10 (08.04.2026)">v0.8.2.2As.10</a> &nbsp;
 <a href="#v0822As9" title="GME version 0.8.2.2As.9 (02.10.2025)">v0.8.2.2As.9</a> &nbsp;
 <a href="#v0822As8" title="GME version 0.8.2.2As.8 (28.04.2024)">v0.8.2.2As.8</a> &nbsp;
 <a href="#v0822As7" title="GME version 0.8.2.2As.7 (15.04.2024)">v0.8.2.2As.7</a> &nbsp;
 <a href="#v0822As6" title="GME version 0.8.2.2As.6 (31.01.2023)">v0.8.2.2As.6</a> &nbsp;
 <span id="readme"></span>
+
+---
+## v0.8.2.2As.11:
+&nbsp; &nbsp; <img src="../images/flag_ua.png" alt="" title="Stand with Ukraine"><br>
+<ul>
+	<li>
+		<strong>Fix:</strong> [Listing] Map layer button on the preview map not visible. [<a href="https://github.com/2Abendsegler/GME/issues/84" title="Issue 84">84</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/84" title="Issue 84">84</a>.<br><br>
+	</li>
+	<li>
+		<strong>Fix:</strong> [Listing] Prevent the preview map border from being removed. [<a href="https://github.com/2Abendsegler/GME/issues/86" title="Issue 86">86</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+	</li>
+</ul>
+<br>
+(03.05.2026)<br>
+released by <a href="https://www.geocaching.com/profile/?u=2Abendsegler">2Abendsegler</a><br>
+<br>
 
 ---
 ## v0.8.2.2As.10:

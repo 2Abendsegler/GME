@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
-// @version     0.8.2.2As.10
+// @version     0.8.2.2As.11
 //<-- $$001
 // @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
@@ -45,7 +45,7 @@ var gmeResources = {
         // Defaults.
 //--> $$002
         // Hier nur anpassen wenn die Version als nächstes Live geht oder testweise neue Parameter in den Speicher sollen.
-        version: "0.8.2.2As.10",
+        version: "0.8.2.2As.11",
 //<-- $$002
         brightness: 1, // Default brightness for maps (0-1), can be overridden by custom map parameters.
         filterFinds: false, // True filters finds out of list searches.
@@ -144,7 +144,6 @@ var gmeResources = {
             + '#GME_map_custom {width: 200px; box-sizing: inherit; border: 1px solid #9b9b9b; border-radius: 4px;} '
             + '.gme-xhair {cursor: crosshair;} '
             + '.map-button-container {margin-right: 5em;} '
-            + '.leaflet-top.leaflet-right {z-index: 7;} '
             + '#centerMap {margin-right: 100px;} '
             + '#map_canvas .leaflet-control-layers-toggle, #map_canvas2 .leaflet-control-layers-toggle {background-image: url(/js/leaflet/0.5.1/images/layers.png)} '
             + '#map_canvas label, #map_canvas2 label {text-transform: unset; display: block;} '
@@ -1320,7 +1319,7 @@ var gmeResources = {
                 if (L.LatLng.prototype.toUrl === undefined) {
                     L.LatLng.prototype.toUrl = function() {var obj = this; if (!(obj instanceof L.LatLng)) {return false;} return [L.Util.formatNum(obj.lat,5),L.Util.formatNum(obj.lng,5)].join(",");};
                 }
-                $("#map_canvas").replaceWith("<div style=\'width: 325px; height: 325px; position: relative;\' id=\'map_canvas2\'></div>");
+                $("#map_canvas").replaceWith("<div style=\'width: 325px; height: 325px; position: relative; border: 1px solid oklch(.7572 0 none);\' id=\'map_canvas2\'></div>");
                 if (gmeConfig.env.dragdrop) {
                     $("#cacheDetails .activity-type-icon").hover(function(e) {$("#cacheDetails .activity-type-icon").addClass("moveable");},function(e) {$("#cacheDetails .activity-type-icon").removeClass("moveable");});
                     $("#cacheDetails .activity-type-icon").attr("draggable","true").on("dragstart", that.dragStart);
@@ -2759,7 +2758,7 @@ function checkIsUpgraded() {
                 var counter = document.createElement('div');
                 counter.innerHTML = ' <img src="https://s11.flagcounter.com/count2/0lCZ/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
 //--> $$003
-                counter.innerHTML += '<img src="https://s11.flagcounter.com/count2/bHF1/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
+                counter.innerHTML += '<img src="https://s11.flagcounter.com/count2/e9CN/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
 //<-- $$003
                 counter.setAttribute('style', 'display: none');
                 document.getElementsByTagName('body')[0].appendChild(counter);
