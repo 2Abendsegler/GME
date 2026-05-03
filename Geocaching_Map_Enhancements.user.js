@@ -1319,7 +1319,7 @@ var gmeResources = {
                 if (L.LatLng.prototype.toUrl === undefined) {
                     L.LatLng.prototype.toUrl = function() {var obj = this; if (!(obj instanceof L.LatLng)) {return false;} return [L.Util.formatNum(obj.lat,5),L.Util.formatNum(obj.lng,5)].join(",");};
                 }
-                $("#map_canvas").replaceWith("<div style=\'width: 325px; height: 325px; position: relative;\' id=\'map_canvas2\'></div>");
+                $("#map_canvas").replaceWith("<div style=\'width: 325px; height: 325px; position: relative; border: 1px solid oklch(.7572 0 none);\' id=\'map_canvas2\'></div>");
                 if (gmeConfig.env.dragdrop) {
                     $("#cacheDetails .activity-type-icon").hover(function(e) {$("#cacheDetails .activity-type-icon").addClass("moveable");},function(e) {$("#cacheDetails .activity-type-icon").removeClass("moveable");});
                     $("#cacheDetails .activity-type-icon").attr("draggable","true").on("dragstart", that.dragStart);
