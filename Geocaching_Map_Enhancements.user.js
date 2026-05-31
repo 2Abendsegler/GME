@@ -2546,17 +2546,17 @@ var gmeResources = {
                     map.addControl(new L.GME_FollowMyLocationControl());
                 }
                 $(".leaflet-control-scale").addClass("gme-control-scale");
-                $("a.ToggleSidebar").unbind();
-                $("a.ToggleSidebar").click(function(a) {
-                    a.preventDefault();
+                $("button.ToggleSidebar").unbind();
+                $("button.ToggleSidebar").click(function(e) {
+                    e.preventDefault();
                     if (window.pnlOpen) {
                         window.pnlOpen = false;
-                        $(".Sidebar").animate({left: "-355px"},500);
+                        $(".Sidebar").animate({left: "-355px"}, 500);
                         $(".leaflet-control-zoom, .leaflet-control-toolbar, .leaflet-control-scale, .gme-left").animate({left: "30px"}, 500);
                         $(".Sidebar").removeClass("Open");
                     } else {
-                        window.pnlOpen=true;
-                        $(".Sidebar").animate({left: "0"},500);
+                        window.pnlOpen = true;
+                        $(".Sidebar").animate({left: "0"}, 500);
                         $(".leaflet-control-zoom, .leaflet-control-toolbar, .leaflet-control-scale, .gme-left").animate({left: "385px"}, 500);
                         $(".Sidebar").addClass("Open");
                     }
