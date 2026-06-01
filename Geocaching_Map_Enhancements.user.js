@@ -70,6 +70,13 @@ var gmeResources = {
             + '.gme-control-scale {bottom: 45px !important; margin-bottom: 5px !important; margin-left: 1px !important; left: 385px;} '
             + '.leaflet-control-scale-line:first-child {box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.2) !important;} '
             + '.gme-left {left: 385px; margin-left: 1px !important;} '
+            // Move zoom buttons again top left.
+            + '.leaflet-control-zoom {position: relative !important; top: 52px !important; bottom: 0px !important; right: 0px !important; margin: 0px 0px 0px 1px !important; transform: unset !important; z-index: 7 !important;} '
+            // Positions of sidebar and left map elements and animate left move. Standardization of GClh and GME.
+            + '.Sidebar {left: -355px !important; transition: left 0.5s ease-in-out !important;} '
+            + '.leaflet-control-toolbar, .leaflet-control-zoom, .leaflet-control-scale, .gme-left {left: 30px !important; transition: left 0.5s ease-in-out !important;} '
+            + 'body:has(.Sidebar.Open) .Sidebar {left: 0px !important;} '
+            + 'body:has(.Sidebar.Open) .leaflet-control-toolbar, body:has(.Sidebar.Open) .leaflet-control-zoom, body:has(.Sidebar.Open) .leaflet-control-scale, body:has(.Sidebar.Open) .gme-left {left: 385px !important;} '
             + 'div.gme-identify-layer {margin-top: -1em; margin-left: 1em; padding-left: 0.1em; font-weight: bold; background: rgba(255,255,255,0.57);} '
             + '#gme_caches table {margin-top: 0.5em;} '
             + '.GME_search_list {border: 1px solid #679300; border-radius: 7px; padding: 0.5em;} '
@@ -2546,19 +2553,11 @@ var gmeResources = {
                     map.addControl(new L.GME_FollowMyLocationControl());
                 }
                 $(".leaflet-control-scale").addClass("gme-control-scale");
-                $("button.ToggleSidebar").unbind();
-                $("button.ToggleSidebar").click(function(e) {
-                    e.preventDefault();
+                $('.ToggleSidebar').click(function(e) {
                     if (window.pnlOpen) {
                         window.pnlOpen = false;
-                        $(".Sidebar").animate({left: "-355px"}, 500);
-                        $(".leaflet-control-zoom, .leaflet-control-toolbar, .leaflet-control-scale, .gme-left").animate({left: "30px"}, 500);
-                        $(".Sidebar").removeClass("Open");
                     } else {
                         window.pnlOpen = true;
-                        $(".Sidebar").animate({left: "0"}, 500);
-                        $(".leaflet-control-zoom, .leaflet-control-toolbar, .leaflet-control-scale, .gme-left").animate({left: "385px"}, 500);
-                        $(".Sidebar").addClass("Open");
                     }
                     if (typeof amplify === "object" && typeof amplify.store === "function") {
                         amplify.store("ShowPanel", window.pnlOpen);
