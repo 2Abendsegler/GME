@@ -84,7 +84,6 @@ var gmeResources = {
             + '.GME_search_results p {margin-top: 5px; margin-bottom: 10px;} '
             + '.GME_search_results.hidden, .GME_search_info.hidden {display: none;} '
             + '.GME_search_info {font-size: 12px !important; padding: 4px 12px 0px 12px !important; line-height: 1rem !important;} '
-            + '.groundspeak-control-findmylocation a {padding: 3px;} '
             + '.gme-button {display: inline-block; box-sizing: content-box; -moz-box-sizing: content-box; padding: 2px; vertical-align: middle; background: no-repeat #eee; background-color: rgba(255,255,255,0.8); border: 1px solid #888; height: 22px; width: 22px; text-decoration: none;} '
             + '.gme-button-l {border-bottom-left-radius: 5px; border-top-left-radius: 5px;} '
             + '.gme-button-r {border-right: 1px solid #888; border-bottom-right-radius: 5px; border-top-right-radius: 5px; margin-right: 0.5em;} '
@@ -375,9 +374,7 @@ var gmeResources = {
                     },
                     "widget": function() {
                         L.GME_Widget = L.Control.extend(widgetControlObj);
-                        if (window.Groundspeak && Groundspeak.Map && Groundspeak.Map.Control && Groundspeak.Map.Control.FindMyLocation) {
-                            L.GME_FollowMyLocationControl = Groundspeak.Map.Control.FindMyLocation.extend(locationControlObj);
-                        }
+                        L.GME_FollowMyLocationControl = L.Control.extend(locationControlObj);
                         L.GME_ZoomWarning = L.Control.extend(zoomWarningObj);
                         if (L.LatLng.prototype.toUrl === undefined) {
                             L.LatLng.prototype.toUrl = function() {return this.lat.toFixed(6) + "," + this.lng.toFixed(6); };
@@ -1961,6 +1958,7 @@ var gmeResources = {
         },
         widget: function() {
             var locationControlObj = {
+                options: {position: "topleft"},
                 onAdd: function(map) {
                     var el, tracking = false, container = L.DomUtil.create("div", "leaflet-control-toolbar groundspeak-control-findmylocation gme-left");
                     function located(l) {
