@@ -1561,8 +1561,9 @@ var gmeResources = {
                         return L.Polyline.prototype.onRemove.call(this, map);
                     },
                     removePt: function(num) {
-                        this.spliceLatLngs(num-1,1);
-                        this._updateMarkers();
+                        var latlngs = this.getLatLngs();
+                        latlngs.splice(num-1,1);
+                        this.setLatLngs(latlngs);
                     },
                     setLatLngs: function(pts) {
                         L.Polyline.prototype.setLatLngs.call(this, pts);
@@ -1583,8 +1584,9 @@ var gmeResources = {
                         }
                     },
                     _moveMarker: function(e) {
-                        this.spliceLatLngs(e.target._routeNum - 1, 1, e.target.getLatLng());
-                        this._updateLength();
+                        var latlngs = this.getLatLngs();
+                        latlngs.splice(e.target._routeNum - 1, 1, e.target.getLatLng());
+                        this.setLatLngs(latlngs);
                     },
                     _updateLength: function() {
                         var i;
