@@ -1751,6 +1751,8 @@ var gmeResources = {
                 }
             }
             function GME_get_layerControl(map) {
+                // GClhII has the authority over the map layer.
+                if ($('#GClhII_map_layer_authority')[0]) return;
                 var maps = {}, overlays = {}, allMaps = that.parameters.maps, baseMaps, control, i, layer, src;
                 for (baseMaps = 0, i = 0; i < allMaps.length; i++) {
                     src = allMaps[i];
