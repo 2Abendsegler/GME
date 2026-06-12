@@ -2106,6 +2106,9 @@ var gmeResources = {
                     $(container.lastChild).addClass("gme-button-r");
                     container.innerHTML += "<span class=\'gme-button gme-button-l gme-button-r gme-scale-container\' title=\'Approximate width of the full map view\' style=\'cursor:help;\'><span class=\'gme-text\'>Width: </span><span class=\'gme-scale gme-text\'>-</span></span><span class=\'gme-distance-container gme-button gme-button-r\' title=\'Measured distance\'><span class=\'gme-text\'>Route: </span><span class=\'gme-distance gme-text\'>" + formatDistance(0) + "</span></span>";
                     contextmap.addControl(new L.GME_ZoomWarning()).on("layeradd", onPopup).on("layerremove", offPopup).on("viewreset", this.updateScale, this);
+                    // To calculate the distance covered across the width of the screen. Fired on start, on zoom change and on move end.
+                    // Required for the browse map due to the upgrade to Leaflet version 1.9.4.
+                    contextmap.on("viewreset", this.updateScale, this).on("zoom", this.updateScale, this).on("moveend", this.updateScale, this);
                     $(container).on("click", ".gme-button", this, widgetHandler);
                     $(window).on("resize", this, (function(context) {var t = {timer: null}; return function() {context.updateScale(context._map, t);};} (this)));
                     return container;
@@ -2307,7 +2310,7 @@ var gmeResources = {
                         name: "MAGIC",
                         getHTML: function(coords, zoom, map) {
                             var b = map.getBounds();
-                            return "<a title='Show MAGIC map of environmentally sensitive areas' target='_blank' rel='noopener noreferrer' href='http://magic.defra.gov.uk/MagicMap.aspx?srs=WGS84&startscale=" + (Math.cos(map.getCenter().lat * L.LatLng.DEG_TO_RAD) * 684090188 * Math.abs(b.getSouthWest().lng - b.getSouthEast().lng)) / map.getSize().x +    "&layers=LandBasedSchemes,12,24:HabitatsAndSpecies,38:Designations,6,10,13,16,34,37,40,72,94&box=" + b.toBBoxString().replace(/,/g,":") + "'>MAGIC</a>";
+                            return "<a title='Show MAGIC map of environmentally sensitive areas' target='_blank' rel='noopener noreferrer' href='http://magic.defra.gov.uk/MagicMap.aspx?srs=WGS84&startscale=" + (Math.cos(map.getCenter().lat * Math.PI / 180) * 684090188 * Math.abs(b.getSouthWest().lng - b.getSouthEast().lng)) / map.getSize().x +    "&layers=LandBasedSchemes,12,24:HabitatsAndSpecies,38:Designations,6,10,13,16,34,37,40,72,94&box=" + b.toBBoxString().replace(/,/g,":") + "'>MAGIC</a>";
                         },
                         isValid: function(coords, zoom) {
                             return that.isInUK(coords);
@@ -2527,7 +2530,7 @@ var gmeResources = {
                     }
                     function updateMap() {
                         var bound = map.getBounds();
-                        var width = formatDistance(Math.cos(map.getCenter().lat * L.LatLng.DEG_TO_RAD) * 111319.49079327358 * Math.abs(bound.getSouthWest().lng - bound.getSouthEast().lng));
+                        var width = formatDistance(Math.cos(map.getCenter().lat * Math.PI / 180) * 111319.49079327358 * Math.abs(bound.getSouthWest().lng - bound.getSouthEast().lng));
                         $(this._container).find(".gme-scale").html(width);
                     }
                     if (timer !== undefined) {
