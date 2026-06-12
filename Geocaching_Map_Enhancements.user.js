@@ -152,6 +152,11 @@ var gmeResources = {
             + 'body:has(.Sidebar) .leaflet-control-toolbar, body:has(.Sidebar) .leaflet-control-scale, body:has(.Sidebar) .gme-left {left: 30px !important; transition: left 0.5s ease-in-out !important;} '
             + 'body:has(.Sidebar.Open) .Sidebar {left: 0px !important;} '
             + 'body:has(.Sidebar.Open) .leaflet-control-toolbar, body:has(.Sidebar.Open) .leaflet-control-scale, body:has(.Sidebar.Open) .gme-left {left: 385px !important;} '
+            // Hide pages: Prevent center button and zoom buttons from overlapping the map layer selection dialog.
+            + '.map-wrapper:has(.map-setting-controls) .leaflet-top.leaflet-right {z-index: 1001;} '
+            // Hide pages: Align center button and zoom buttons.
+            + '.map-setting-controls {top: 62px !important; right: 8px !important;} '
+            + '.map-setting-controls .leaflet-control-zoom, .map-setting-controls #centerMap {margin-right: 0px !important;} '
             // Shared styles for GClh and GME:
             // - Resize map layer control button.
             + 'a.leaflet-control-layers-toggle {width: 36px !important; height: 36px !important;} '
