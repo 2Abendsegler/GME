@@ -70,13 +70,6 @@ var gmeResources = {
             + '.gme-control-scale {bottom: 45px !important; margin-bottom: 5px !important; margin-left: 1px !important; left: 385px;} '
             + '.leaflet-control-scale-line:first-child {box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.2) !important;} '
             + '.gme-left {left: 385px; margin-left: 1px !important;} '
-            // Move zoom buttons again top left.
-            + '.leaflet-control-zoom {position: relative !important; top: 52px !important; bottom: 0px !important; right: 0px !important; margin: 0px 0px 0px 1px !important; transform: unset !important; z-index: 7 !important;} '
-            // Positions of sidebar and left map elements and animate left move. Standardization of GClh and GME.
-            + '.Sidebar {left: -355px !important; transition: left 0.5s ease-in-out !important;} '
-            + '.leaflet-control-toolbar, .leaflet-control-zoom, .leaflet-control-scale, .gme-left {left: 30px !important; transition: left 0.5s ease-in-out !important;} '
-            + 'body:has(.Sidebar.Open) .Sidebar {left: 0px !important;} '
-            + 'body:has(.Sidebar.Open) .leaflet-control-toolbar, body:has(.Sidebar.Open) .leaflet-control-zoom, body:has(.Sidebar.Open) .leaflet-control-scale, body:has(.Sidebar.Open) .gme-left {left: 385px !important;} '
             + 'div.gme-identify-layer {margin-top: -1em; margin-left: 1em; padding-left: 0.1em; font-weight: bold; background: rgba(255,255,255,0.57);} '
             + '#gme_caches table {margin-top: 0.5em;} '
             + '.GME_search_list {border: 1px solid #679300; border-radius: 7px; padding: 0.5em;} '
@@ -107,7 +100,7 @@ var gmeResources = {
             + 'span.gme-distance-container {display: none;} '
             + 'span.gme-distance-container.show {display: inline-block;} '
             + '#GME_loc, a.gme-button.leaflet-active {outline: none;} '
-            + '.leaflet-control-zoomwarning {top: 94px;} '
+            + '.leaflet-control-zoomwarning {top: 40px; margin-left: 2px !important;} '
             + '.leaflet-control-zoomwarning a {filter: progid:DXImageTransform.Microsoft.gradient(startColorStr="#BFC80000",EndColorStr="#BFC80000"); background-color: rgba(200,0,0,0.75); margin-left: -4px; background-position: -502px 2px; height: 14px; width: 14px; border-color: #b00; box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);} '
             + '.leaflet-control-zoomwarning a:hover {background-color: rgba(230,0,0,0.75);} '
             + '.gme-event {cursor: pointer;} '
@@ -151,9 +144,36 @@ var gmeResources = {
             + '.gme-xhair {cursor: crosshair;} '
             + '.map-button-container {margin-right: 5em;} '
             + '#centerMap {margin-right: 100px;} '
-            + '#map_canvas .leaflet-control-layers-toggle, #map_canvas2 .leaflet-control-layers-toggle {background-image: url(/js/leaflet/0.5.1/images/layers.png)} '
-            + '#map_canvas label, #map_canvas2 label {text-transform: unset; display: block;} '
-            + '#map_canvas .leaflet-popup-content, #map_canvas2 .leaflet-popup-content {text-align: unset;}',
+            + '#map_canvas .leaflet-control-layers-toggle, #map_canvas2 .leaflet-control-layers-toggle {background-image: url(/app/dist/8f2c4d11474275fbc1614b9098334eae.png); background-size: 26px 26px;} '
+            + '#map_canvas label, #map_canvas2 label {text-transform: unset; display: block; font-weight: normal;} '
+            + '#map_canvas .leaflet-popup-content, #map_canvas2 .leaflet-popup-content {text-align: unset;} '
+            // Positions of sidebar and left map elements and animate left move on browse map.
+            + '.Sidebar {left: -355px !important; transition: left 0.5s ease-in-out !important;} '
+            + '#Content .leaflet-control-toolbar, #Content .leaflet-control-scale, #Content .gme-left {left: 30px !important; transition: left 0.5s ease-in-out !important;} '
+            + '#Content:has(.Sidebar.Open) .Sidebar {left: 0px !important;} '
+            + '#Content:has(.Sidebar.Open) .leaflet-control-toolbar, #Content:has(.Sidebar.Open) .leaflet-control-scale, #Content:has(.Sidebar.Open) .gme-left {left: 385px !important;} '
+            // Shared styles for GClh and GME:
+            // - Resize map layer control button.
+            + 'a.leaflet-control-layers-toggle {width: 36px !important; height: 36px !important;} '
+            // - Space of the right buttons from the right edge.
+            + '.leaflet-control {margin-right: 8px !important;} '
+            + '#search-map-cta {right: 8px !important;} '
+            // - Improve the scale lines on the left side.
+            + '.leaflet-control-scale {margin-left: 1px !important;} '
+            + '.leaflet-control-scale-line {box-shadow: none;} '
+            // - Lower part of the sidebar toggle is no longer working by click. (Bug on website 28.05.2026.)
+            + '.Sidebar footer {padding-right: 0px !important; margin-right: 24px !important;} '
+            // - Reduce the overly wide border of the "Find My Location" button.
+            + '.leaflet-touch .leaflet-control-toolbar {padding: 2px;} '
+            // - Prevent that zoom buttons overlap map selection dialog and align distance to the right to buttons top right.
+            + '.legacy-map-zoom-wrapper {z-index: auto; right: 0px !important;} '
+            // - Slight opacity for zoom buttons.
+            + '.leaflet-control-zoom {opacity: 0.8;} '
+            // - Prevent close button on cache details screen from overlapping GC code, make height and width of close button proportional and set a hover effect.
+            + '.leaflet-container a.leaflet-popup-close-button {padding: 0px; top: -8px; right: -8px; width: 22px; height: 22px; font: 16px/19px Tahoma, Verdana, sans-serif;} '
+            + '.leaflet-container a.leaflet-popup-close-button:hover, .leaflet-container a.leaflet-popup-close-button:focus {color: #fff;} '
+            // - Prevent a possible blue border around the map.
+            + '#map_canvas {outline-style: none;} ',
         drag: '#cacheDetails .activity-type-icon {border: solid 1px #ccc; border-radius: 7px;} '
             + '.moveable {cursor: move; box-shadow: 0 1px 4px rgba(102, 51, 255, 0.3);} '
     },
