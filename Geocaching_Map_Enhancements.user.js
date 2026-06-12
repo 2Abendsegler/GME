@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Geocaching Map Enhancements
 //--> $$001
-// @version     0.8.2.2As.11
+// @version     0.8.2.2As.12
 //<-- $$001
 // @author      JRI; 2Abendsegler
 // @description Adds extra maps and grid reference search to Geocaching.com, along with several other enhancements.
@@ -45,7 +45,7 @@ var gmeResources = {
         // Defaults.
 //--> $$002
         // Hier nur anpassen wenn die Version als nächstes Live geht oder testweise neue Parameter in den Speicher sollen.
-        version: "0.8.2.2As.11",
+        version: "0.8.2.2As.12",
 //<-- $$002
         brightness: 1, // Default brightness for maps (0-1), can be overridden by custom map parameters.
         filterFinds: false, // True filters finds out of list searches.
@@ -77,7 +77,6 @@ var gmeResources = {
             + '.GME_search_results p {margin-top: 5px; margin-bottom: 10px;} '
             + '.GME_search_results.hidden, .GME_search_info.hidden {display: none;} '
             + '.GME_search_info {font-size: 12px !important; padding: 4px 12px 0px 12px !important; line-height: 1rem !important;} '
-            + '.groundspeak-control-findmylocation a {padding: 3px;} '
             + '.gme-button {display: inline-block; box-sizing: content-box; -moz-box-sizing: content-box; padding: 2px; vertical-align: middle; background: no-repeat #eee; background-color: rgba(255,255,255,0.8); border: 1px solid #888; height: 22px; width: 22px; text-decoration: none;} '
             + '.gme-button-l {border-bottom-left-radius: 5px; border-top-left-radius: 5px;} '
             + '.gme-button-r {border-right: 1px solid #888; border-bottom-right-radius: 5px; border-top-right-radius: 5px; margin-right: 0.5em;} '
@@ -101,7 +100,7 @@ var gmeResources = {
             + 'span.gme-distance-container {display: none;} '
             + 'span.gme-distance-container.show {display: inline-block;} '
             + '#GME_loc, a.gme-button.leaflet-active {outline: none;} '
-            + '.leaflet-control-zoomwarning {top: 94px;} '
+            + '.leaflet-control-zoomwarning {top: 40px; margin-left: 2px !important;} '
             + '.leaflet-control-zoomwarning a {filter: progid:DXImageTransform.Microsoft.gradient(startColorStr="#BFC80000",EndColorStr="#BFC80000"); background-color: rgba(200,0,0,0.75); margin-left: -4px; background-position: -502px 2px; height: 14px; width: 14px; border-color: #b00; box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);} '
             + '.leaflet-control-zoomwarning a:hover {background-color: rgba(230,0,0,0.75);} '
             + '.gme-event {cursor: pointer;} '
@@ -145,9 +144,40 @@ var gmeResources = {
             + '.gme-xhair {cursor: crosshair;} '
             + '.map-button-container {margin-right: 5em;} '
             + '#centerMap {margin-right: 100px;} '
-            + '#map_canvas .leaflet-control-layers-toggle, #map_canvas2 .leaflet-control-layers-toggle {background-image: url(/js/leaflet/0.5.1/images/layers.png)} '
-            + '#map_canvas label, #map_canvas2 label {text-transform: unset; display: block;} '
-            + '#map_canvas .leaflet-popup-content, #map_canvas2 .leaflet-popup-content {text-align: unset;}',
+            + '#map_canvas .leaflet-control-layers-toggle, #map_canvas2 .leaflet-control-layers-toggle {background-image: url(/app/dist/8f2c4d11474275fbc1614b9098334eae.png); background-size: 26px 26px;} '
+            + '#map_canvas label, #map_canvas2 label {text-transform: unset; display: block; font-weight: normal;} '
+            + '#map_canvas .leaflet-popup-content, #map_canvas2 .leaflet-popup-content {text-align: unset;} '
+            // Positions of sidebar and left map elements and animate left move only on browse map.
+            + '.Sidebar {left: -355px !important; transition: left 0.5s ease-in-out !important;} '
+            + 'body:has(.Sidebar) .leaflet-control-toolbar, body:has(.Sidebar) .leaflet-control-scale, body:has(.Sidebar) .gme-left {left: 30px !important; transition: left 0.5s ease-in-out !important;} '
+            + 'body:has(.Sidebar.Open) .Sidebar {left: 0px !important;} '
+            + 'body:has(.Sidebar.Open) .leaflet-control-toolbar, body:has(.Sidebar.Open) .leaflet-control-scale, body:has(.Sidebar.Open) .gme-left {left: 385px !important;} '
+            // Hide pages: Prevent center button and zoom buttons from overlapping the map layer selection dialog.
+            + '.map-wrapper:has(.map-setting-controls) .leaflet-top.leaflet-right {z-index: 1001;} '
+            // Hide pages: Align center button and zoom buttons.
+            + '.map-setting-controls {top: 62px !important; right: 8px !important;} '
+            + '.map-setting-controls .leaflet-control-zoom, .map-setting-controls #centerMap {margin-right: 0px !important;} '
+            // Shared styles for GClh and GME:
+            // - Resize map layer control button.
+            + 'a.leaflet-control-layers-toggle {width: 36px !important; height: 36px !important;} '
+            // - Space of the right buttons from the right edge.
+            + '.leaflet-control {margin-right: 8px !important;} '
+            + '#search-map-cta {right: 8px !important;} '
+            // - Improve the scale lines on the left side.
+            + '.leaflet-control-scale-line {box-shadow: none;} '
+            // - Lower part of the sidebar toggle is no longer working by click. (Bug on website 28.05.2026.)
+            + '.Sidebar footer {padding-right: 0px !important; margin-right: 24px !important;} '
+            // - Reduce the overly wide border of the "Find My Location" button.
+            + '.leaflet-touch .leaflet-control-toolbar {padding: 2px;} '
+            // - Prevent that zoom buttons overlap map selection dialog and align distance to the right to buttons top right.
+            + '.legacy-map-zoom-wrapper {z-index: auto; right: 0px !important;} '
+            // - Slight opacity for zoom buttons.
+            + '.leaflet-control-zoom {opacity: 0.8;} '
+            // - Prevent close button on cache details screen from overlapping GC code, make height and width of close button proportional and set a hover effect.
+            + '.leaflet-container a.leaflet-popup-close-button {padding: 0px; top: -8px; right: -8px; width: 22px; height: 22px; font: 16px/19px Tahoma, Verdana, sans-serif;} '
+            + '.leaflet-container a.leaflet-popup-close-button:hover, .leaflet-container a.leaflet-popup-close-button:focus {color: #fff;} '
+            // - Prevent a possible blue border around the map.
+            + '#map_canvas {outline-style: none;} ',
         drag: '#cacheDetails .activity-type-icon {border: solid 1px #ccc; border-radius: 7px;} '
             + '.moveable {cursor: move; box-shadow: 0 1px 4px rgba(102, 51, 255, 0.3);} '
     },
@@ -368,9 +398,7 @@ var gmeResources = {
                     },
                     "widget": function() {
                         L.GME_Widget = L.Control.extend(widgetControlObj);
-                        if (window.Groundspeak && Groundspeak.Map && Groundspeak.Map.Control && Groundspeak.Map.Control.FindMyLocation) {
-                            L.GME_FollowMyLocationControl = Groundspeak.Map.Control.FindMyLocation.extend(locationControlObj);
-                        }
+                        L.GME_FollowMyLocationControl = L.Control.extend(locationControlObj);
                         L.GME_ZoomWarning = L.Control.extend(zoomWarningObj);
                         if (L.LatLng.prototype.toUrl === undefined) {
                             L.LatLng.prototype.toUrl = function() {return this.lat.toFixed(6) + "," + this.lng.toFixed(6); };
@@ -1557,8 +1585,9 @@ var gmeResources = {
                         return L.Polyline.prototype.onRemove.call(this, map);
                     },
                     removePt: function(num) {
-                        this.spliceLatLngs(num-1,1);
-                        this._updateMarkers();
+                        var latlngs = this.getLatLngs();
+                        latlngs.splice(num-1,1);
+                        this.setLatLngs(latlngs);
                     },
                     setLatLngs: function(pts) {
                         L.Polyline.prototype.setLatLngs.call(this, pts);
@@ -1579,8 +1608,9 @@ var gmeResources = {
                         }
                     },
                     _moveMarker: function(e) {
-                        this.spliceLatLngs(e.target._routeNum - 1, 1, e.target.getLatLng());
-                        this._updateLength();
+                        var latlngs = this.getLatLngs();
+                        latlngs.splice(e.target._routeNum - 1, 1, e.target.getLatLng());
+                        this.setLatLngs(latlngs);
                     },
                     _updateLength: function() {
                         var i;
@@ -1745,6 +1775,8 @@ var gmeResources = {
                 }
             }
             function GME_get_layerControl(map) {
+                // GClhII has the authority over the map layer.
+                if ($('#GClhII_map_layer_authority')[0]) return;
                 var maps = {}, overlays = {}, allMaps = that.parameters.maps, baseMaps, control, i, layer, src;
                 for (baseMaps = 0, i = 0; i < allMaps.length; i++) {
                     src = allMaps[i];
@@ -1954,6 +1986,7 @@ var gmeResources = {
         },
         widget: function() {
             var locationControlObj = {
+                options: {position: "topleft"},
                 onAdd: function(map) {
                     var el, tracking = false, container = L.DomUtil.create("div", "leaflet-control-toolbar groundspeak-control-findmylocation gme-left");
                     function located(l) {
@@ -2078,6 +2111,9 @@ var gmeResources = {
                     $(container.lastChild).addClass("gme-button-r");
                     container.innerHTML += "<span class=\'gme-button gme-button-l gme-button-r gme-scale-container\' title=\'Approximate width of the full map view\' style=\'cursor:help;\'><span class=\'gme-text\'>Width: </span><span class=\'gme-scale gme-text\'>-</span></span><span class=\'gme-distance-container gme-button gme-button-r\' title=\'Measured distance\'><span class=\'gme-text\'>Route: </span><span class=\'gme-distance gme-text\'>" + formatDistance(0) + "</span></span>";
                     contextmap.addControl(new L.GME_ZoomWarning()).on("layeradd", onPopup).on("layerremove", offPopup).on("viewreset", this.updateScale, this);
+                    // To calculate the distance covered across the width of the screen. Fired on start, on zoom change and on move end.
+                    // Required for the browse map due to the upgrade to Leaflet version 1.9.4.
+                    contextmap.on("viewreset", this.updateScale, this).on("zoom", this.updateScale, this).on("moveend", this.updateScale, this);
                     $(container).on("click", ".gme-button", this, widgetHandler);
                     $(window).on("resize", this, (function(context) {var t = {timer: null}; return function() {context.updateScale(context._map, t);};} (this)));
                     return container;
@@ -2279,7 +2315,7 @@ var gmeResources = {
                         name: "MAGIC",
                         getHTML: function(coords, zoom, map) {
                             var b = map.getBounds();
-                            return "<a title='Show MAGIC map of environmentally sensitive areas' target='_blank' rel='noopener noreferrer' href='http://magic.defra.gov.uk/MagicMap.aspx?srs=WGS84&startscale=" + (Math.cos(map.getCenter().lat * L.LatLng.DEG_TO_RAD) * 684090188 * Math.abs(b.getSouthWest().lng - b.getSouthEast().lng)) / map.getSize().x +    "&layers=LandBasedSchemes,12,24:HabitatsAndSpecies,38:Designations,6,10,13,16,34,37,40,72,94&box=" + b.toBBoxString().replace(/,/g,":") + "'>MAGIC</a>";
+                            return "<a title='Show MAGIC map of environmentally sensitive areas' target='_blank' rel='noopener noreferrer' href='http://magic.defra.gov.uk/MagicMap.aspx?srs=WGS84&startscale=" + (Math.cos(map.getCenter().lat * Math.PI / 180) * 684090188 * Math.abs(b.getSouthWest().lng - b.getSouthEast().lng)) / map.getSize().x +    "&layers=LandBasedSchemes,12,24:HabitatsAndSpecies,38:Designations,6,10,13,16,34,37,40,72,94&box=" + b.toBBoxString().replace(/,/g,":") + "'>MAGIC</a>";
                         },
                         isValid: function(coords, zoom) {
                             return that.isInUK(coords);
@@ -2499,7 +2535,7 @@ var gmeResources = {
                     }
                     function updateMap() {
                         var bound = map.getBounds();
-                        var width = formatDistance(Math.cos(map.getCenter().lat * L.LatLng.DEG_TO_RAD) * 111319.49079327358 * Math.abs(bound.getSouthWest().lng - bound.getSouthEast().lng));
+                        var width = formatDistance(Math.cos(map.getCenter().lat * Math.PI / 180) * 111319.49079327358 * Math.abs(bound.getSouthWest().lng - bound.getSouthEast().lng));
                         $(this._container).find(".gme-scale").html(width);
                     }
                     if (timer !== undefined) {
@@ -2546,19 +2582,11 @@ var gmeResources = {
                     map.addControl(new L.GME_FollowMyLocationControl());
                 }
                 $(".leaflet-control-scale").addClass("gme-control-scale");
-                $("a.ToggleSidebar").unbind();
-                $("a.ToggleSidebar").click(function(a) {
-                    a.preventDefault();
+                $('.ToggleSidebar').click(function(e) {
                     if (window.pnlOpen) {
                         window.pnlOpen = false;
-                        $(".Sidebar").animate({left: "-355px"},500);
-                        $(".leaflet-control-zoom, .leaflet-control-toolbar, .leaflet-control-scale, .gme-left").animate({left: "30px"}, 500);
-                        $(".Sidebar").removeClass("Open");
                     } else {
-                        window.pnlOpen=true;
-                        $(".Sidebar").animate({left: "0"},500);
-                        $(".leaflet-control-zoom, .leaflet-control-toolbar, .leaflet-control-scale, .gme-left").animate({left: "385px"}, 500);
-                        $(".Sidebar").addClass("Open");
+                        window.pnlOpen = true;
                     }
                     if (typeof amplify === "object" && typeof amplify.store === "function") {
                         amplify.store("ShowPanel", window.pnlOpen);
@@ -2758,7 +2786,7 @@ function checkIsUpgraded() {
                 var counter = document.createElement('div');
                 counter.innerHTML = ' <img src="https://s11.flagcounter.com/count2/0lCZ/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
 //--> $$003
-                counter.innerHTML += '<img src="https://s11.flagcounter.com/count2/e9CN/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
+                counter.innerHTML += '<img src="https://s11.flagcounter.com/count2/9WM6/bg_FFFFFF/txt_000000/border_CCCCCC/columns_6/maxflags_60/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" style="border: none; visibility: hidden; width: 2px; height: 2px;" alt="">';
 //<-- $$003
                 counter.setAttribute('style', 'display: none');
                 document.getElementsByTagName('body')[0].appendChild(counter);
