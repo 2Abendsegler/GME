@@ -147,11 +147,11 @@ var gmeResources = {
             + '#map_canvas .leaflet-control-layers-toggle, #map_canvas2 .leaflet-control-layers-toggle {background-image: url(/app/dist/8f2c4d11474275fbc1614b9098334eae.png); background-size: 26px 26px;} '
             + '#map_canvas label, #map_canvas2 label {text-transform: unset; display: block; font-weight: normal;} '
             + '#map_canvas .leaflet-popup-content, #map_canvas2 .leaflet-popup-content {text-align: unset;} '
-            // Positions of sidebar and left map elements and animate left move on browse map.
+            // Positions of sidebar and left map elements and animate left move only on browse map.
             + '.Sidebar {left: -355px !important; transition: left 0.5s ease-in-out !important;} '
-            + '#Content .leaflet-control-toolbar, #Content .leaflet-control-scale, #Content .gme-left {left: 30px !important; transition: left 0.5s ease-in-out !important;} '
-            + '#Content:has(.Sidebar.Open) .Sidebar {left: 0px !important;} '
-            + '#Content:has(.Sidebar.Open) .leaflet-control-toolbar, #Content:has(.Sidebar.Open) .leaflet-control-scale, #Content:has(.Sidebar.Open) .gme-left {left: 385px !important;} '
+            + 'body:has(.Sidebar) .leaflet-control-toolbar, body:has(.Sidebar) .leaflet-control-scale, body:has(.Sidebar) .gme-left {left: 30px !important; transition: left 0.5s ease-in-out !important;} '
+            + 'body:has(.Sidebar.Open) .Sidebar {left: 0px !important;} '
+            + 'body:has(.Sidebar.Open) .leaflet-control-toolbar, body:has(.Sidebar.Open) .leaflet-control-scale, body:has(.Sidebar.Open) .gme-left {left: 385px !important;} '
             // Shared styles for GClh and GME:
             // - Resize map layer control button.
             + 'a.leaflet-control-layers-toggle {width: 36px !important; height: 36px !important;} '
@@ -159,7 +159,6 @@ var gmeResources = {
             + '.leaflet-control {margin-right: 8px !important;} '
             + '#search-map-cta {right: 8px !important;} '
             // - Improve the scale lines on the left side.
-            + '.leaflet-control-scale {margin-left: 1px !important;} '
             + '.leaflet-control-scale-line {box-shadow: none;} '
             // - Lower part of the sidebar toggle is no longer working by click. (Bug on website 28.05.2026.)
             + '.Sidebar footer {padding-right: 0px !important; margin-right: 24px !important;} '
