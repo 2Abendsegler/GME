@@ -34,10 +34,6 @@
 		<strong>Fix:</strong> [Browse Map] GME bar is no longer shifted when the sidebar is hidden (2). [<a href="https://github.com/2Abendsegler/GME/issues/91" title="Issue 91">91</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
 	</li>
 	<li>
-		<strong>Fix:</strong> [Hide cache] Prevent overlapping map layer selection dialog and align buttons. [<a href="https://github.com/2Abendsegler/GME/issues/100" title="Issue 100">100</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
-		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/100" title="Issue 100">100</a>.<br>
-	</li>
-	<li>
 		<strong>Fix:</strong> [Browse Map] Positions of sidebar and left map elements and animate left move only on browse map. [<a href="https://github.com/2Abendsegler/GME/issues/98" title="Issue 98">98</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
 	</li>
 	<li>
@@ -45,6 +41,10 @@
 	</li>
 	<li>
 		<strong>Fix:</strong> [Browse Map] Standardization of sidebar and left map elements positions and animate left move for GClh and GME. [<a href="https://github.com/2Abendsegler/GME/issues/92" title="Issue 92">92</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+	</li>
+	<li>
+		<strong>Fix:</strong> [Hide cache] Prevent overlapping map layer selection dialog and align buttons. [<a href="https://github.com/2Abendsegler/GME/issues/100" title="Issue 100">100</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/100" title="Issue 100">100</a>.<br>
 	</li>
 </ul>
 <br>
