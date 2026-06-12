@@ -1,3 +1,4 @@
+<a href="#v0822As12" title="GME version 0.8.2.2As.12 (13.06.2026)">v0.8.2.2As.12</a> &nbsp;
 <a href="#v0822As11" title="GME version 0.8.2.2As.11 (03.05.2026)">v0.8.2.2As.11</a> &nbsp;
 <a href="#v0822As10" title="GME version 0.8.2.2As.10 (08.04.2026)">v0.8.2.2As.10</a> &nbsp;
 <a href="#v0822As9" title="GME version 0.8.2.2As.9 (02.10.2025)">v0.8.2.2As.9</a> &nbsp;
@@ -5,6 +6,51 @@
 <a href="#v0822As7" title="GME version 0.8.2.2As.7 (15.04.2024)">v0.8.2.2As.7</a> &nbsp;
 <a href="#v0822As6" title="GME version 0.8.2.2As.6 (31.01.2023)">v0.8.2.2As.6</a> &nbsp;
 <span id="readme"></span>
+
+---
+## v0.8.2.2As.12:
+&nbsp; &nbsp; <img src="../images/flag_ua.png" alt="" title="Stand with Ukraine"><br>
+<ul>
+	<li>
+		<strong>Fix:</strong> [Browse Map] GME "Find my location" button is no longer being generated. [<a href="https://github.com/2Abendsegler/GME/issues/94" title="Issue 94">94</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+	</li>
+	<li>
+		<strong>Fix:</strong> [Browse Map] Route points are not always updated when clearing or moving them. [<a href="https://github.com/2Abendsegler/GME/issues/95" title="Issue 95">95</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/95" title="Issue 95">95</a>.<br>
+	</li>
+	<li>
+		<strong>Fix:</strong> [Browse Map] The distance covered across the width of the screen is no longer displayed. [<a href="https://github.com/2Abendsegler/GME/issues/99" title="Issue 99">99</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/99" title="Issue 99">99</a>.<br>
+	</li>
+	<li>
+		<strong>Fix:</strong> [Browse Map] Some small changes. [<a href="https://github.com/2Abendsegler/GME/issues/97" title="Issue 97">97</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/97" title="Issue 97">97</a>.<br>
+	</li>
+	<li>
+		<strong>Fix:</strong> [Browse Map] GME bar is no longer shifted when the sidebar is hidden. [<a href="https://github.com/2Abendsegler/GME/issues/90" title="Issue 90">90</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/90" title="Issue 90">90</a>.<br>
+	</li>
+	<li>
+		<strong>Fix:</strong> [Browse Map] GME bar is no longer shifted when the sidebar is hidden (2). [<a href="https://github.com/2Abendsegler/GME/issues/91" title="Issue 91">91</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+	</li>
+	<li>
+		<strong>Fix:</strong> [Hide cache] Prevent overlapping map layer selection dialog and align buttons. [<a href="https://github.com/2Abendsegler/GME/issues/100" title="Issue 100">100</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/100" title="Issue 100">100</a>.<br>
+	</li>
+	<li>
+		<strong>Fix:</strong> [Browse Map] Positions of sidebar and left map elements and animate left move only on browse map. [<a href="https://github.com/2Abendsegler/GME/issues/98" title="Issue 98">98</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+	</li>
+	<li>
+		<strong>Fix:</strong> [Browse Map] Prevent flickering caused by unnecessary switching of map layers. [<a href="https://github.com/2Abendsegler/GME/issues/96" title="Issue 96">96</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+	</li>
+	<li>
+		<strong>Fix:</strong> [Browse Map] Standardization of sidebar and left map elements positions and animate left move for GClh and GME. [<a href="https://github.com/2Abendsegler/GME/issues/92" title="Issue 92">92</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+	</li>
+</ul>
+<br>
+(13.06.2026)<br>
+released by <a href="https://www.geocaching.com/profile/?u=2Abendsegler">2Abendsegler</a><br>
+<br>
 
 ---
 ## v0.8.2.2As.11:
