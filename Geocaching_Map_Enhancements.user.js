@@ -147,6 +147,8 @@ var gmeResources = {
             + '#map_canvas .leaflet-control-layers-toggle, #map_canvas2 .leaflet-control-layers-toggle {background-image: url(/app/dist/8f2c4d11474275fbc1614b9098334eae.png); background-size: 26px 26px;} '
             + '#map_canvas label, #map_canvas2 label {text-transform: unset; display: block; font-weight: normal;} '
             + '#map_canvas .leaflet-popup-content, #map_canvas2 .leaflet-popup-content {text-align: unset;} '
+            // Prevent areas in preview map in listing from flashing white when zooming.
+            + '#map_canvas2.leaflet-container img.leaflet-tile {mix-blend-mode: normal !important;} '
             // Positions of sidebar and left map elements and animate left move only on browse map.
             + '.Sidebar {left: -355px !important; transition: left 0.5s ease-in-out !important;} '
             + 'body:has(.Sidebar) .leaflet-control-toolbar, body:has(.Sidebar) .leaflet-control-scale, body:has(.Sidebar) .gme-left {left: 30px !important; transition: left 0.5s ease-in-out !important;} '
@@ -1342,21 +1344,43 @@ var gmeResources = {
             var cache_coords = {};
             var mapLink = '';
             function load() {
-                mapLink = document.getElementById("ctl00_ContentBody_uxViewLargerMap");
+                function changePreviewMapAndLinks() {
+                    if ($('#uxLatLon')[0] && $('#mini-map-root a[href*="/map/"]')[0] && $('#mini-map-root .leaflet-container')[0]) {
+                        // Preview Map anpassen.
+                        $('#mini-map-root .leaflet-container').replaceWith("<div style=\'width: 325px; height: 325px; position: relative; border: 1px solid oklch(.7572 0 none);\' id=\'map_canvas2\'></div>");
+                        window.GME_Map = new L.Map("map_canvas2",{center: new L.LatLng(mapLatLng.lat, mapLatLng.lng), zoom:14});
+                        GME_Map.addControl(new L.control.scale());
+                        GME_load_map(GME_Map);
+                        if (gmeConfig.env.dragdrop) {
+                            GME_Map.addControl(new L.GME_dropHandler());
+                        }
+                        // Maplinks zur Search Map ändern in Browse Map.
+                        $('#ctl00_ContentBody_MapLinks_MapLinks a[href*="www.geocaching.com/play/map"]').each(function() {
+                            this.href = this.href.replace('www.geocaching.com/play/map', 'www.geocaching.com/map/');
+                        });
+                        // Wegpunkte in alle Browse Map Links einbauen.
+                        if (cache_coords.primary[0].oldLatLng || cache_coords.primary.length + cache_coords.additional.length > 1) {
+                            uri += b64encode(JSON.stringify(cache_coords));
+                            mapLink = $('#mini-map-root a[href*="/map/"]')[0];
+                            if (mapLink.href.match(/www.geocaching.com\/map\//)) {
+                                mapLink.href = mapLink.href + uri;
+                            }
+                            $('#ctl00_ContentBody_MapLinks_MapLinks a[href*="www.geocaching.com/map/"]').attr("href", function(i, val) {return val + uri;});
+                        }
+                        GME_displayPoints(cache_coords, GME_Map, "listing");
+                    }
+                }
                 var parkUrl = "", label = "", i, parking, uri = "#&pop=";
                 if (L.LatLng.prototype.toUrl === undefined) {
                     L.LatLng.prototype.toUrl = function() {var obj = this; if (!(obj instanceof L.LatLng)) {return false;} return [L.Util.formatNum(obj.lat,5),L.Util.formatNum(obj.lng,5)].join(",");};
                 }
-                $("#map_canvas").replaceWith("<div style=\'width: 325px; height: 325px; position: relative; border: 1px solid oklch(.7572 0 none);\' id=\'map_canvas2\'></div>");
                 if (gmeConfig.env.dragdrop) {
                     $("#cacheDetails .activity-type-icon").hover(function(e) {$("#cacheDetails .activity-type-icon").addClass("moveable");},function(e) {$("#cacheDetails .activity-type-icon").removeClass("moveable");});
                     $("#cacheDetails .activity-type-icon").attr("draggable","true").on("dragstart", that.dragStart);
                     $("#cacheDetails .cacheDetailsTitle a").removeAttr("href");
                 }
-                window.GME_Map = new L.Map("map_canvas2",{center: new L.LatLng(mapLatLng.lat, mapLatLng.lng), zoom:14});
-                GME_Map.addControl(new L.control.scale());
-                GME_load_map(GME_Map);
                 cache_coords = {primary:[mapLatLng], additional:[]};
+                // Wegpunkte aufbereiten.
                 if (cmapAdditionalWaypoints && cmapAdditionalWaypoints.length > 0) {
                     cache_coords.additional = cmapAdditionalWaypoints;
                     if (gmeConfig.env.home) {
@@ -1374,20 +1398,20 @@ var gmeResources = {
                         }
                     }
                 }
-                if (gmeConfig.env.dragdrop) {
-                    GME_Map.addControl(new L.GME_dropHandler());
-                }
-                if (cache_coords.primary[0].oldLatLng || cache_coords.primary.length + cache_coords.additional.length > 1) {
-                    uri += b64encode(JSON.stringify(cache_coords));
-                    if (mapLink.href.match(/www.geocaching.com\/map\//)) {
-                        mapLink.href = mapLink.href + uri;
-                    }
-                    $('#ctl00_ContentBody_MapLinks_MapLinks a[href*="www.geocaching.com/play/map"]').each(function() {
-                        this.href = this.href.replace('www.geocaching.com/play/map', 'www.geocaching.com/map/');
+                // Preview Map und Links anpassen, wenn die Preview Map schon aufgebaut ist.
+                changePreviewMapAndLinks();
+                if (!$('#map_canvas2')[0]) {
+                    // Ansonsten den Aufbau der Preview Map über Observer überwachen.
+                    const configPreviewMap = {childList: true, subtree: true, attributes: true};
+                    const observerPreviewMap = new MutationObserver(function(_, observer) {
+                        observer.disconnect();
+                        changePreviewMapAndLinks();
+                        if (!$('#map_canvas2')[0]) {
+                            observer.observe($('#mini-map-root')[0], configPreviewMap);
+                        }
                     });
-                    $('#ctl00_ContentBody_MapLinks_MapLinks a[href*="www.geocaching.com/map/"]').attr("href", function(i, val) {return val + uri;});
+                    observerPreviewMap.observe($('#mini-map-root')[0], configPreviewMap);
                 }
-                GME_displayPoints(cache_coords, GME_Map, "listing");
             }
             setEnv();
         },
