@@ -1,3 +1,4 @@
+<a href="#v0822As13" title="GME version 0.8.2.2As.13 (27.06.2026)">v0.8.2.2As.13</a> &nbsp;
 <a href="#v0822As12" title="GME version 0.8.2.2As.12 (13.06.2026)">v0.8.2.2As.12</a> &nbsp;
 <a href="#v0822As11" title="GME version 0.8.2.2As.11 (03.05.2026)">v0.8.2.2As.11</a> &nbsp;
 <a href="#v0822As10" title="GME version 0.8.2.2As.10 (08.04.2026)">v0.8.2.2As.10</a> &nbsp;
@@ -6,6 +7,28 @@
 <a href="#v0822As7" title="GME version 0.8.2.2As.7 (15.04.2024)">v0.8.2.2As.7</a> &nbsp;
 <a href="#v0822As6" title="GME version 0.8.2.2As.6 (31.01.2023)">v0.8.2.2As.6</a> &nbsp;
 <span id="readme"></span>
+
+---
+## v0.8.2.2As.13:
+&nbsp; &nbsp; <img src="../images/flag_ua.png" alt="" title="Stand with Ukraine"><br>
+<ul>
+	<li>
+		<strong>Fix:</strong> [Listing] No GME features on preview map. [<a href="https://github.com/2Abendsegler/GME/issues/104" title="Issue 104">104</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/104" title="Issue 104">104</a>.<br>
+	</li>
+	<li>
+		<strong>Fix:</strong> [Hide] Map rendering does not work correctly for cache types other than Traditional. [<a href="https://github.com/2Abendsegler/GME/issues/106" title="Issue 106">106</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/106" title="Issue 106">106</a>.<br>
+	</li>
+	<li>
+		<strong>Fix:</strong> [Hide] The map does not render correctly after changing the cache type. [<a href="https://github.com/2Abendsegler/GME/issues/107" title="Issue 107">107</a> / <a href="https://www.geocaching.com/profile/?u=2Abendsegler" title="Thanks to 2Abendsegler">2Abendsegler</a>]<br>
+		Further information can be found in issue <a href="https://github.com/2Abendsegler/GME/issues/107" title="Issue 107">107</a>.<br>
+	</li>
+</ul>
+<br>
+(27.06.2026)<br>
+released by <a href="https://www.geocaching.com/profile/?u=2Abendsegler">2Abendsegler</a><br>
+<br>
 
 ---
 ## v0.8.2.2As.12:
