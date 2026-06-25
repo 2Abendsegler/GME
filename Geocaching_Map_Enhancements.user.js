@@ -144,9 +144,9 @@ var gmeResources = {
             + '.gme-xhair {cursor: crosshair;} '
             + '.map-button-container {margin-right: 5em;} '
             + '#centerMap {margin-right: 100px;} '
-            + '#map_canvas .leaflet-control-layers-toggle, #map_canvas2 .leaflet-control-layers-toggle {background-image: url(/app/dist/8f2c4d11474275fbc1614b9098334eae.png); background-size: 26px 26px;} '
-            + '#map_canvas label, #map_canvas2 label {text-transform: unset; display: block; font-weight: normal;} '
-            + '#map_canvas .leaflet-popup-content, #map_canvas2 .leaflet-popup-content {text-align: unset;} '
+            + '#map_canvas .leaflet-control-layers-toggle, #map_canvas-multi .leaflet-control-layers-toggle, #map_canvas2 .leaflet-control-layers-toggle {background-image: url(/app/dist/8f2c4d11474275fbc1614b9098334eae.png); background-size: 26px 26px;} '
+            + '#map_canvas label, #map_canvas-multi label, #map_canvas2 label {text-transform: unset; display: block; font-weight: normal;} '
+            + '#map_canvas .leaflet-popup-content, #map_canvas-multi .leaflet-popup-content, #map_canvas2 .leaflet-popup-content {text-align: unset;} '
             // Prevent areas in preview map in listing from flashing white when zooming.
             + '#map_canvas2.leaflet-container img.leaflet-tile {mix-blend-mode: normal !important;} '
             // Positions of sidebar and left map elements and animate left move only on browse map.
@@ -155,7 +155,7 @@ var gmeResources = {
             + 'body:has(.Sidebar.Open) .Sidebar {left: 0px !important;} '
             + 'body:has(.Sidebar.Open) .leaflet-control-toolbar, body:has(.Sidebar.Open) .leaflet-control-scale, body:has(.Sidebar.Open) .gme-left {left: 385px !important;} '
             // Hide pages: Prevent center button and zoom buttons from overlapping the map layer selection dialog.
-            + '.map-wrapper:has(.map-setting-controls) .leaflet-top.leaflet-right {z-index: 1001;} '
+            + '.map-wrapper:has(.map-setting-controls) .leaflet-top.leaflet-right, .map-wrapper-multi:has(.map-setting-controls) .leaflet-top.leaflet-right {z-index: 1001;} '
             // Hide pages: Align center button and zoom buttons.
             + '.map-setting-controls {top: 62px !important; right: 8px !important;} '
             + '.map-setting-controls .leaflet-control-zoom, .map-setting-controls #centerMap {margin-right: 0px !important;} '
@@ -1514,6 +1514,7 @@ var gmeResources = {
                 if (gmeConfig.env.dragdrop) {
                     map.addControl(new L.GME_dropHandler());
                 }
+                GME_control._layerControl.setDefault();
                 setTimeout(function() {
                     map.eachLayer(function(layer) {
                         if (layer instanceof L.TileLayer) {
